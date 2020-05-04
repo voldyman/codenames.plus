@@ -1,3 +1,2 @@
-# Get Started!
-
-Add files and start typing 🎉
+# codenames.plus
+nodejs server for multiplayer codenames webapp game

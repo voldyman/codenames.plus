@@ -1,0 +1,8 @@
+version: "2"
+services:
+  codenames:
+    build: . 
+    ports:
+      - "2000:2000"
+    environment: 
+      - REQUIRE_HTTPS=false

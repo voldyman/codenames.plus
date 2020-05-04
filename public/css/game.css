@@ -1,0 +1,288 @@
+
+#info #score {
+  position: relative;
+  display: block;
+  color: #F8FDFF;
+  font-size: 40px;
+  font-weight: bold;
+  width: 33%;
+  height: 100%;
+  margin: 0;
+  line-height: 40px;
+  padding-top: 35px;
+  box-sizing: border-box;
+  float: left;
+  margin-left: 0.5%;
+}
+
+#info #score #score-red {
+  color: #B32728;
+}
+
+#info #score #score-blue {
+  color: #11779F;
+}
+
+#info #turn {
+  position: relative;
+  display: block;
+  width: 33%;
+  height: 100%;
+  margin: 0;
+  font-size: 35px;
+  text-align: center;
+  line-height: 1.2;
+  color: #F8FDFF;
+  float: left;
+}
+
+#info .red {
+  color: #B32728 !important;
+}
+
+#info .blue {
+  color: #11779F !important;
+}
+
+#info #clue-display {
+  display: block;
+  line-height: 1.2;
+}
+
+#info #end-turn {
+  position: absolute;
+  display: block;
+  float: right;
+  margin-right: 0.5%;
+  bottom: 0;
+  right: 0;
+  width: 19%;
+  font-size: 16px;
+  background: #323032;
+  border: 2px solid #F8FDFF;
+  color: #F8FDFF;
+  text-decoration: none;
+}
+
+#info #end-turn:hover {
+  background: #686c6d;
+}
+
+#info #end-turn:disabled {
+  background: #323032;
+  border: 2px solid #686c6d;
+  color: #686c6d;
+  cursor: default;
+}
+
+#clue-form {
+  text-align: center;
+}
+
+#clue-form #clue-word, #clue-form #clue-count, #clue-form #declare-clue {
+  font-size: 16px;
+  background: #323032;
+  border: 2px solid #F8FDFF;
+  color: #F8FDFF;
+  text-decoration: none;
+}
+
+#clue-form #declare-clue {
+  width: 19%;
+}
+
+#clue-form #declare-clue:hover {
+  background: #686c6d;
+}
+
+#clue-form #declare-clue:disabled {
+  background: #323032;
+  border: 2px solid #686c6d;
+  color: #686c6d;
+  cursor: default;
+}
+
+#board {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 0;
+}
+
+#board .row {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+#board .row .tile{
+  position: relative;
+  display: inline-block;
+  width: 19%;
+  height: 150px;
+  margin: 0.5%;
+  padding: 0;
+  box-sizing: border-box;
+  border: 2px solid #F8FDFF;
+  font-size: 25px;
+  background: #F8FDFF;
+  color: #323032;
+}
+
+#board .row .tile:hover{
+  border-color: #323032;
+}
+
+#board .s {
+  font-weight: bold;
+}
+
+#board .s.r {
+  color: #B32728;
+  background: rgb(236, 170, 170);
+  border-color: rgb(236, 170, 170);
+}
+
+#board .s.b {
+  color: #11779F;
+  background: rgb(168, 216, 235);
+  border-color: rgb(168, 216, 235);
+}
+
+#board .s.d {
+  background: #686c6d;
+  border-color: #686c6d;
+}
+
+#board .s.d.h {
+  background: #F8FDFF;
+  border-color: #F8FDFF;
+}
+
+#board .s.d.h:hover {
+  border-color: #323032;
+}
+
+#board .flipped.n {
+  background: rgb(211, 191, 175) !important;
+  border-color: rgb(211, 191, 175);
+  color: #F8FDFF;
+}
+
+#board .flipped.r {
+  border-color: #B32728;
+  background: #B32728;
+  color: #F8FDFF;
+}
+
+#board .flipped.b {
+  border-color: #11779F;
+  background: #11779F;
+  color: #F8FDFF;
+}
+
+#board .flipped.d {
+  border-color: #000000;
+  background: #000000;
+  color: #F8FDFF;
+}
+
+#board .tile.proposed {
+  border-color: #cead00;
+}
+
+#board .tile.proposed:hover {
+  border-color: #8a7400;
+}
+
+
+#toggles {
+  position: relative;
+  font-size: 0;
+  width: 100%;
+  margin-top: 20px;
+}
+
+#toggles .toggle {
+  position: relative;
+  width: 19%;
+  float: left;
+  margin: 0.5%;
+}
+
+#toggles #new-game {
+  position: relative;
+  width: 19%;
+  right: 0;
+  float: right;
+  margin: 0.5%;
+  font-size: 16px;
+  background: #323032;
+  border: 2px solid #F8FDFF;
+  color: #F8FDFF;
+  text-decoration: none;
+}
+
+#toggles #new-game:hover {
+  background: #686c6d;
+}
+
+#toggles .toggle button {
+  width: 50%;
+  margin: 0;
+  font-size: 16px;
+  background: #686c6d;
+  border: 2px solid #686c6d;
+  color: #323032;
+  text-decoration: none;
+}
+
+#toggles .toggle button:hover {
+  background: rgb(139, 139, 139);
+}
+
+#toggles .toggle button:disabled {
+  background: #323032;
+  border: 2px solid #686c6d;
+  color: #F8FDFF;
+  cursor: default;
+  text-decoration: underline;
+}
+
+#toggles .toggle button:disabled:hover {
+  background: #323032;
+  color: #F8FDFF;
+}
+
+#toggles #player-difficulty {
+  display: none;
+}
+
+#log {
+  clear: both;
+}
+
+#log::before {
+  clear: both;
+  content: "GAME LOG (newest first):";
+  color: #F8FDFF;
+  font-weight: bold;
+}
+
+#log span {
+  display: list-item;
+}
+
+#log .red {
+  color: #B32728;
+}
+
+#log .blue {
+  color: #11779F;
+}
+
+#log .declareClue {
+  font-weight: bold;
+}

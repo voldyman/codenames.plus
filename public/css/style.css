@@ -1,0 +1,692 @@
+/*
+Palette:
+
+Black: #323032
+Light-Black: #686c6d
+Blue: #11779F
+Red: #B32728
+White: #F8FDFF
+Grey: #D6D2C9
+
+*/
+
+
+@media(max-width: 1600px){
+  #board .row .tile{
+    height: 90px !important;
+    font-size: 18px;
+  }
+
+  #content {
+    width: 1300px !important;
+  }
+
+  #space {
+    width: 0px !important;
+  }
+}
+
+@media(max-width: 1100px){
+
+  #app {
+    width: 950px !important;
+  }
+  #content {
+    width: 950px !important;
+  }
+
+  #left {
+    position: relative;
+    width: 950px !important;
+  }
+
+  #players {
+    width: 48% !important;
+    margin-right: 2% !important;
+    float: left;
+  }
+
+  #card-packs {
+    width: 48% !important;
+    margin-left: 2% !important;
+    float: left;
+  }
+
+  #space {
+    width: 0px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  #app {
+    display: flex !important;
+    flex-direction: column;
+    clear: left;
+    float: none !important;
+    width: auto !important;
+  }
+
+  #title {
+    text-align: left !important;
+    padding: 20px !important;
+  }
+
+  #content {
+    position: static !important;
+    transform: none !important;
+    width: auto !important;
+  }
+
+  #left {
+    float: none !important;
+    margin: 40px 20px 0 !important;
+    width: auto !important;
+  }
+
+  #players {
+    width: auto !important;
+    margin: 0 0 20px !important;
+    float: none !important;
+  }
+
+  #card-packs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: auto !important;
+    margin: 0 !important;
+    float: none !important;
+  }
+
+  #card-packs h2 {
+    align-self: baseline;
+    text-align: left !important;
+    width: 50%;
+  }
+
+  #card-packs p {
+    align-self: baseline;
+    text-align: right;
+    width: 50%;
+  }
+
+  #card-packs button {
+    width: 45% !important;
+    margin: 0 0 10px !important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  #info {
+    margin: 50px 0 0 !important;
+  }
+
+  #info #score {
+    font-size: 20px !important;
+    padding: 0 0 0 20px !important;
+  }
+
+  #info #turn {
+    float: none !important;
+    font-size: 20px !important;
+    text-align: right !important;
+    margin-right: 110px !important;
+    width: auto !important;
+  }
+
+  #info #end-turn {
+    top: 0 !important;
+    bottom: auto !important;
+    width: auto !important;
+    right: 20px !important;
+  }
+
+  #board {
+    overflow: hidden;
+  }
+
+  #board .row .tile {
+    font-size: 14px !important;
+    line-height: 1.5;
+    hyphens: auto;
+    word-wrap: break-word;
+    vertical-align: top;
+    height: 70px !important;
+  }
+
+  #toggles {
+    padding-left: 20px;
+    order: -1;
+    width: auto !important;
+  }
+
+  #toggles .toggle:not(#player-difficulty) {
+    float: none !important;
+    display: inline-block !important;
+    width: auto !important;
+  }
+
+  #toggles .toggle:not(last-of-type) {
+    margin-right: 10px;
+  }
+
+  #toggles .toggle button {
+    font-size: 14px !important;
+    width: auto !important;
+  }
+
+  #toggles #new-game {
+    margin-top: 20px !important;
+    float: none !important;
+    width: auto !important;
+  }
+
+  #space {
+    width: 0px !important;
+  }
+
+  #leave-room {
+    right: 20px !important;
+    margin-top: 70px !important;
+  }
+
+  #server-message,
+  #afk-window,
+  #join-game {
+    max-width: 90%;
+  }
+}
+
+#donate {
+  position: absolute;
+  top: 0; 
+  display: none;
+  width: 100vw;
+  text-align: center;
+  font-size: 14px;
+  padding: 1px;
+  color: #323032;
+  background: #11779F;
+  box-sizing: border-box;
+  font-weight: bold;
+}
+
+#donate.hide {
+  display: none;
+}
+
+#donate-link {
+  color: #bbbbbb;
+  text-decoration: none;
+}
+
+#donate-link:hover {
+  color: #bbbbbb;
+  text-decoration: underline;
+}
+
+#donate-hide {
+  color: #1b1b1b;
+  text-decoration: none;
+  font-weight: normal;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+#app {
+  position: relative;
+  display: block;
+  float: left;
+  width: 1000px;
+}
+
+#info {
+  position: relative;
+  width: 100%;
+  height: 70px;
+  margin-bottom: 20px;
+}
+
+body {
+  margin: 0;
+  margin-top: 32px;
+  background: #323032;
+  color: #323032;
+  font-family: 'Changa', sans-serif;
+}
+
+* {
+  transition: 0.1s ease-in-out;
+  z-index: 1;
+}
+
+.above {
+  z-index: 3 !important;
+}
+
+#about-button {
+  position: absolute;
+  right: 0;
+  margin-right: 20px;
+  margin-top: 20px;
+  border: 2px solid #F8FDFF;
+  background: #323032;
+  color: #F8FDFF;
+  font-size: 16px;
+}
+
+#about-button.open {
+  color: #323032;
+  background: #F8FDFF;
+}
+
+#about-button:hover {
+  background: #686c6d;
+}
+
+#about-window {
+  position: absolute;
+  width: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #F8FDFF;
+  top: 20px;
+  border-radius: 10px;
+  margin-bottom: 200px;
+}
+
+#about-window ul {
+  position: relative;
+  list-style: square !important;
+  padding: 50px;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+#about-window h2 {
+  text-align: center;
+}
+
+#about-window h3 {
+  text-align: center;
+}
+
+#about-window a {
+  display: block;
+  width: 300px;
+  margin: 0 auto;
+  text-align: center;
+  text-decoration: none;
+  color: #323032;
+}
+
+#about-window a:hover {
+  color: #11779F;
+}
+
+#server-message {
+  position: fixed;
+  display: none;
+  width: 400px;
+  background: #F8FDFF;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  border-radius: 10px;
+}
+
+#server-message h3 {
+  text-align: center;
+}
+
+#server-message button {
+  position: relative;
+  margin: 2%;
+  border-radius: 3px;
+  border: 2px solid #686c6d;
+  box-sizing: border-box;
+  padding: 4px;
+  width: 96%;
+  font-size: 16px;
+  background: #686c6d;
+  color: #F8FDFF;
+}
+
+#server-message button:hover {
+  background: #11779F;
+}
+
+#afk-window {
+  position: fixed;
+  display: none;
+  width: 400px;
+  background: #F8FDFF;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  border-radius: 10px;
+}
+
+#afk-window h3 {
+  text-align: center;
+}
+
+#afk-window button {
+  position: relative;
+  margin: 2%;
+  border-radius: 3px;
+  border: 2px solid #686c6d;
+  box-sizing: border-box;
+  padding: 4px;
+  width: 96%;
+  font-size: 16px;
+  background: #686c6d;
+  color: #F8FDFF;
+}
+
+#afk-window button:hover {
+  background: #11779F;
+}
+
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  background: rgb(60,60,60, 0.9);
+  z-index: 2 !important;
+}
+
+#join-game {
+  position: absolute;
+  width: 400px;
+  background: #F8FDFF;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+}
+
+#join-game h1{
+  color: #323032;
+  font-size: 32px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+#join-game .join-input {
+  position: relative;
+  display: block;
+  width: 275px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#join-game .join-input input{
+  float: right;
+  line-height: 18px;
+}
+
+#join-game button {
+  position: relative;
+  margin: 1%;
+  border-radius: 3px;
+  border: 2px solid #686c6d;
+  box-sizing: border-box;
+  padding: 4px;
+  width: 48%;
+  font-size: 16px;
+  background: #686c6d;
+  color: #F8FDFF;
+}
+
+#join-game #join-enter {
+  float: left;
+}
+
+#join-game #join-enter:hover {
+  background: #B32728;
+}
+
+#join-game #join-create:hover {
+  background: #11779F
+}
+
+#join-game #error-message {
+  height: 15px;
+  text-align: center;
+  margin-top: 5px;
+}
+
+button {
+  cursor: pointer;
+  font-family: 'Changa', sans-serif;
+  border-radius: 3px !important;
+  border-style: solid;
+}
+
+#leave-room {
+  position: absolute;
+  margin-left: 20px;
+  margin-top: 20px;
+  border: 2px solid #F8FDFF;
+  background: #323032;
+  color: #F8FDFF;
+  font-size: 16px;
+}
+
+#leave-room:hover {
+  background: #686c6d;
+}
+
+#title {
+  text-align: center;
+  padding: 10px;
+}
+
+#title h1 {
+  color: #F8FDFF;
+  font-size: 22px;
+  margin: 0;
+  padding: 0;
+}
+
+#title #room-name {
+  font-size: 18px;
+  margin: 0;
+  padding: 0;
+  color: #F8FDFF;
+}
+
+#left {
+  position: relative;
+  width: 200px;
+  margin-right: 50px;
+  margin-top: 95px;
+  float: left;
+}
+
+#content {
+  position: absolute;
+  width: 1500px;
+  left: 50%;
+  transform: translateX(-50%)
+}
+
+#players {
+  position: relative;
+  width: 100%;
+  margin-bottom: 50px;
+}
+
+#players #panel{
+  position: relative;
+  width: 100%;
+  background: #F8FDFF;
+  border: 2px solid #F8FDFF;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+#players h2 {
+  color: #F8FDFF;
+  text-align: center;
+  margin: 0;
+}
+
+#players #panel #join-red{
+  position: relative;
+  width: 46%;
+  margin: 2%;
+  border: 2px solid #B32728;
+  box-sizing: border-box;
+  padding: 4px;
+  float: left;
+  font-size: 16px;
+  
+  color: #F8FDFF;
+  background: #B32728;
+}
+
+#players #panel #join-red:hover {
+  background: #323032;
+  color: #B32728;
+}
+
+#players #panel #join-blue{
+  position: relative;
+  width: 46%;
+  margin: 2%;
+  border: 2px solid #11779F;
+  box-sizing: border-box;
+  padding: 4px;
+  font-size: 16px;
+
+  color: #F8FDFF;
+  background: #11779F;
+}
+
+#players #panel #join-blue:hover {
+  background: #323032;
+  color: #11779F;
+}
+
+#players #panel #randomize-teams{
+  position: relative;
+  width: 96%;
+  margin: 2%;
+  border: 2px solid #686c6d;
+  box-sizing: border-box;
+  padding: 4px;
+  font-size: 16px;
+
+  color: #F8FDFF;
+  background: #686c6d;
+}
+
+#players #panel #randomize-teams:hover {
+  background: #323032;
+}
+
+#players #panel ul{
+  display: inline-block;
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 3px;
+  color: #323032;
+  padding: 3px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+#players #panel #undefined-list {
+  width: 100%;
+}
+
+#players #panel #red-team {
+  width: 50%;
+  float: left;
+  color: #B32728;
+}
+
+#players #panel #blue-team {
+  width: 50%;
+  text-align: center;
+  color: #11779F;
+}
+
+#players #panel .guess-proposal {
+  font-size: 0.8em;
+  line-height: 1;
+  padding-bottom: 0.5em;
+  display: block;
+}
+#players #panel .guess-proposal::before {
+  content: " (";
+}
+#players #panel .guess-proposal::after {
+  content: "?)";
+}
+
+#card-packs {
+  position: relative;
+  width: 100%;
+  margin: 0;
+}
+
+#card-packs h2 {
+  color: #F8FDFF;
+  text-align: center;
+  margin: 0;
+  line-height: 20px;
+}
+
+#card-packs p {
+  color: #F8FDFF;
+  text-align: center;
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+#card-packs button {
+  width: 100%;
+  margin: 0;
+  margin-bottom: 20px;
+  border: 2px solid #F8FDFF;
+  color: #F8FDFF;
+  background: #323032;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+#card-packs button.enabled {
+  background: #F8FDFF;
+  color: #323032;
+  font-weight: bold;
+}
+
+#card-packs button:hover {
+  background: #686c6d;
+}
+
+#controls {
+  position: relative;
+  width: 100%;
+}
+
+#controls label {
+  color: #F8FDFF;
+}
+
+#controls input {
+  width: 100%;
+  margin: 0;
+}
+
+#space {
+  position: relative;
+  width: 250px;
+}
