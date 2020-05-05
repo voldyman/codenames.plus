@@ -24,16 +24,6 @@ function listen(){
   }
 }
 
-//Keep session alive
-const http = require('http');
-app.get("/ping", (request, response) => {
-  console.log(Date.now() + " Ping Received");
-  response.sendStatus(200);
-});
-setInterval(() => {
-  http.get(`https://${process.env.PROJECT_DOMAIN}.glitch.me/ping`);
-}, 280000);
-
 // Force SSL
 app.use((req, res, next) => {
   if (requireHttps && req.header('x-forwarded-proto') !== 'https') {
@@ -42,6 +32,16 @@ app.use((req, res, next) => {
     next();
   }
 });
+
+//Keep session alive
+app.get("/ping", (request, response) => {
+  console.log(Date.now() + " Ping Received");
+  response.sendStatus(200);
+});
+const https = require('https');
+setInterval(() => {
+  https.get(`https://${process.env.PROJECT_DOMAIN}.glitch.me/ping`);
+}, 280000);
 
 // Files for client
 app.use(express.static('public'))

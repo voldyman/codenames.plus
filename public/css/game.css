@@ -45,6 +45,7 @@
 }
 
 #info #clue-display {
+  color: grey;
   display: block;
   line-height: 1.2;
 }
