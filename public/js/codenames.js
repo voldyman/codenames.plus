@@ -316,7 +316,7 @@ socket.on('gameState', (data) =>{           // Response to gamestate update
   updatePacks(data.game)                // Update the games pack information
   updatePlayerlist(data.players)        // Update the player list for the room
 
-  plet roposals = []
+  let proposals = []
   for (let i in data.players){
     let guessProposal = data.players[i].guessProposal
     if (guessProposal !== null){
@@ -395,7 +395,8 @@ function updatePacks(game){
    if (game.custom) buttonCustomcards.className = 'enabled'
   else buttonCustomcards.className = ''
   if (game.nsfw) buttonNsfwcards.className = 'enabled'
-  else buttonNsfwcards.className = ''  document.getElementById('word-pool').innerHTML = "Word Pool: " + game.words.length
+  else buttonNsfwcards.className = ''  
+  document.getElementById('word-pool').innerHTML = "Word Pool: " + game.words.length
 }
 
 // Update the board
@@ -520,11 +521,5 @@ function updateFragment() {
   window.location.hash = fragment;
 }
 
-// Client Side UI Elements
-
-// Hide donate banner
-document.getElementById('donate-hide').onclick = () => { 
-  document.getElementById('donate').className = 'hide'
-}
 
 

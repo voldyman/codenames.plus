@@ -24,6 +24,16 @@ function listen(){
   }
 }
 
+//Keep session alive
+const http = require('http');
+app.get("/ping", (request, response) => {
+  console.log(Date.now() + " Ping Received");
+  response.sendStatus(200);
+});
+setInterval(() => {
+  http.get(`https://${process.env.PROJECT_DOMAIN}.glitch.me/ping`);
+}, 280000);
+
 // Force SSL
 app.use((req, res, next) => {
   if (requireHttps && req.header('x-forwarded-proto') !== 'https') {
@@ -110,7 +120,7 @@ class Player {
     this.team = 'undecided'
     this.role = 'guesser'
     this.guessProposal = null
-    this.timeout = 2100         // # of seconds until kicked for afk (35min)
+    this.timeout = 10800         // # of seconds until kicked for afk (3 hrs)
     this.afktimer = this.timeout
 
     // Add player to player list and add their socket to the socket list
@@ -241,11 +251,13 @@ io.sockets.on('connection', function(socket){
       game.duet = !game.duet
     } else if (data.pack === 'undercover'){
       game.undercover = !game.undercover
-    } else if (data.pack === 'nlss'){
-      game.nlss = !game.nlss
+    } else if (data.pack === 'custom'){
+      game.custom = !game.custom
+    } else if (data.pack === 'nsfw'){
+      game.nsfw = !game.nsfw
     }
     // If all options are disabled, re-enable the base pack
-    if (!game.base && !game.duet && !game.undercover && !game.nlss) game.base = true
+    if (!game.base && !game.duet && !game.undercover && !game.custom && !game.nsfw) game.base = true
 
     game.updateWordPool()
     gameUpdate(room)
