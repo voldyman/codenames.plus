@@ -198,40 +198,13 @@ Grey: #D6D2C9
   }
 }
 
-#donate {
+#server-note {
   position: absolute;
-  top: 0; 
-  display: none;
-  width: 100vw;
+  color: #bbbbbb;
   text-align: center;
   font-size: 14px;
-  padding: 1px;
-  color: #323032;
-  background: #11779F;
-  box-sizing: border-box;
-  font-weight: bold;
-}
-
-#donate.hide {
-  display: none;
-}
-
-#donate-link {
-  color: #bbbbbb;
-  text-decoration: none;
-}
-
-#donate-link:hover {
-  color: #bbbbbb;
-  text-decoration: underline;
-}
-
-#donate-hide {
-  color: #1b1b1b;
-  text-decoration: none;
-  font-weight: normal;
-  cursor: pointer;
-  margin-left: 4px;
+  line-height: 15px;
+  padding: 5px;
 }
 
 #app {

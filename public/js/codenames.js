@@ -392,9 +392,10 @@ function updatePacks(game){
   else buttonDuetcards.className = ''
   if (game.undercover) buttonUndercovercards.className = 'enabled'
   else buttonUndercovercards.className = ''
-  if (game.nlss) buttonNLSScards.className = 'enabled'
-  else buttonNLSScards.className = ''
-  document.getElementById('word-pool').innerHTML = "Word Pool: " + game.words.length
+   if (game.custom) buttonCustomcards.className = 'enabled'
+  else buttonCustomcards.className = ''
+  if (game.nsfw) buttonNsfwcards.className = 'enabled'
+  else buttonNsfwcards.className = ''  document.getElementById('word-pool').innerHTML = "Word Pool: " + game.words.length
 }
 
 // Update the board

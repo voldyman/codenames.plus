@@ -1,2 +1,3 @@
-# codenames.plus
-nodejs server for multiplayer codenames webapp game
+# A fork of codenames.plus
+
+Original Repo: https://github.com/Joooop/codenames.plus

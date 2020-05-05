@@ -1,13 +1,13 @@
 <head>
-  <title>Codenames.plus</title>
+  <title>V4F Codenames</title>
   <!--meta-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
   <meta property="og:type" content="website">
   <!--title-->
-  <meta property="og:title" content="Codenames.plus">
+  <meta property="og:title" content="V4F Codenames">
   <!--page description-->
-  <meta name="description" content="Codenames.plus - The classic 'Codenames' card / boardgame in your browser! Play with your friends online instantly just by creating a new room and sharing the info.">
+  <meta name="description" content="A fork of Codenames.plus - The classic 'Codenames' card / boardgame in your browser! Play with your friends online instantly just by creating a new room and sharing the info.">
   <!--Javascript-->
   <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script>
   <!-- <script src='https://cdn.socket.io/socket.io-1.4.5.js'></script> -->
@@ -19,14 +19,12 @@
 </head>
 
 <body>
-  <p id='donate'>
-    <a id="donate-link" target='_blank' href="https://paypal.me/JoeMarchesi">Donate to help with hosting</a> 
-    <a id='donate-hide'>[hide]</a></p>
   <span id='server-stats' style='display: none'></span>
   <button id='about-button'class='above'>About</button>
   <div id = 'about-window' style="display:none"class='above'>
     <div>
-      <h2>Codenames.plus by Joooop</h3>
+      <h2>Forked version of Codenames.plus by Joooop<h2>
+      <h3>Actual version can be found <a href="https://codenames.plus/">here</a></h3>
       <a target='_blank' href="https://twitter.com/J0ooop">Follow me on Twitter @j0ooop</a>
       <a target='_blank' href="https://paypal.me/JoeMarchesi">Donate to help with hosting</a>
       <a target='_blank' href="https://joemar.me">Visit my Site: joemar.me</a>
@@ -57,7 +55,7 @@
   </div>
   <div id="overlay"> </div>
   <div id="join-game">
-    <h1>Codenames.plus</h1>
+    <h1>V4F Codenames</h1>
     <form>
       <div class='join-input'>
         <label for='join-nickname'>Nickname: </label>
@@ -75,6 +73,7 @@
     <p id='error-message'> </p>
     <button id='join-enter'>Enter Room</button>
     <button id='join-create'>Create Room</button>
+    <p id="server-note">Forked version of Codenames.plus by Joooop. Actual version can be found <a href="https://codenames.plus/">here</a></p>
   </div>
   <div id="game" style="display:none">
     <button id="leave-room">Leave Room</button>

@@ -10,13 +10,20 @@ readline.createInterface({
     terminal: false
 }).on('line', (line) => {basewords.push(line)})
 
-// Load NLSS words into an array
-let nlsswords = []
-filename = './server/nlss-words.txt'
+// Load Custom words into an array
+let customwords = []
+filename = './server/custom-words.txt'
 readline.createInterface({
     input: fs.createReadStream(filename),
     terminal: false
-}).on('line', (line) => {nlsswords.push(line)})
+}).on('line', (line) => {customwords.push(line)})
+// Load Nsfw words into an array
+let nsfwwords = []
+filename = './server/nsfw-words.txt'
+readline.createInterface({
+    input: fs.createReadStream(filename),
+    terminal: false
+}).on('line', (line) => {nsfwwords.push(line)})
 
 // Load Duet words into an array
 let duetwords = []
@@ -43,7 +50,8 @@ class Game{
     this.base = true
     this.duet = false
     this.undercover = false
-    this.nlss = false
+    this.custom = false
+    this.nsfw = false
 
     this.init();
 
@@ -207,7 +215,8 @@ class Game{
     if (this.base) pool = pool.concat(basewords)
     if (this.duet) pool = pool.concat(duetwords)
     if (this.undercover) pool = pool.concat(undercoverwords)
-    if (this.nlss) pool = pool.concat(nlsswords)
+    if (this.custom) pool = pool.concat(customwords)
+    if (this.nsfw) pool = pool.concat(nsfwwords)
     this.words = pool
   }
 
