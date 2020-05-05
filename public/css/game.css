@@ -47,14 +47,10 @@
 #info #clue-div {
   font-size: 20px;
   margin: 0;
+}
   
-  #clue-desc {
-    color: white;
-  }
-  
-  #clue-display {
+#info #clue-div #clue-head {
     color: grey;
-  }
 }
 
 #info #end-turn {
