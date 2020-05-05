@@ -50,8 +50,8 @@ let buttonServerMessageOkay = document.getElementById('server-message-okay')
 let buttonBasecards = document.getElementById('base-pack')
 let buttonDuetcards = document.getElementById('duet-pack')
 let buttonUndercovercards = document.getElementById('undercover-pack')
-let buttonNLSScards = document.getElementById('nlss-pack')
-// Clue entry
+let buttonCustomcards = document.getElementById('custom-pack')
+let buttonNsfwcards = document.getElementById('nsfw-pack')// Clue entry
 let clueWord = document.getElementById('clue-word')
 let clueCount = document.getElementById('clue-count')
 // Slider
@@ -202,11 +202,14 @@ buttonDuetcards.onclick = () => {
 buttonUndercovercards.onclick = () => {
   socket.emit('changeCards', {pack:'undercover'})
 }
-// User Clicks card pack
-buttonNLSScards.onclick = () => {
-  socket.emit('changeCards', {pack:'nlss'})
+/// User Clicks card pack
+buttonCustomcards.onclick = () => {
+  socket.emit('changeCards', {pack:'custom'})
 }
-
+// User Clicks card pack
+buttonNsfwcards.onclick = () => {
+  socket.emit('changeCards', {pack:'nsfw'})
+}
 // When the slider is changed
 timerSlider.addEventListener("input", () =>{
   socket.emit('timerSlider', {value:timerSlider.value})
@@ -313,7 +316,7 @@ socket.on('gameState', (data) =>{           // Response to gamestate update
   updatePacks(data.game)                // Update the games pack information
   updatePlayerlist(data.players)        // Update the player list for the room
 
-  proposals = []
+  plet roposals = []
   for (let i in data.players){
     let guessProposal = data.players[i].guessProposal
     if (guessProposal !== null){
@@ -522,3 +525,5 @@ function updateFragment() {
 document.getElementById('donate-hide').onclick = () => { 
   document.getElementById('donate').className = 'hide'
 }
+
+
