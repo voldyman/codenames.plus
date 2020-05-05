@@ -361,7 +361,7 @@ function updateInfo(game, team){
   }
   clueEntryDiv.style.display = playerRole === 'spymaster' && game.clue === null && team === game.turn ? '' : 'none'
   if (game.over || game.clue === null){
-    clueDisplay.innerText = ''
+    clueDisplay.innerText = '___'
   }
   else {
     clueDisplay.innerText = game.clue.word + " (" + (game.clue.count === 'unlimited' ? '∞' : game.clue.count) + ")"

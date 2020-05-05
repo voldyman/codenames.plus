@@ -44,10 +44,17 @@
   color: #11779F !important;
 }
 
-#info #clue-display {
-  color: grey;
+#info #clue-div {
   font-size: 20px;
   margin: 0;
+  
+  #clue-desc {
+    color: white;
+  }
+  
+  #clue-display {
+    color: grey;
+  }
 }
 
 #info #end-turn {
