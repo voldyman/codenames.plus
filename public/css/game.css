@@ -46,8 +46,8 @@
 
 #info #clue-display {
   color: grey;
-  display: block;
-  line-height: 1.2;
+  font-size: 20px;
+  margin: 0;
 }
 
 #info #end-turn {
