@@ -139,7 +139,10 @@ class Game{
   }
 
   // Reset the timer and swap the turn over to the other team
-  switchTurn(){
+  switchTurn(voluntary){
+    if(voluntary) {
+      this.log.push({ 'event': 'endTurn', 'team': this.turn })
+    }
     this.timer = this.timerAmount               // Reset timer
     if (this.turn === 'blue') this.turn = 'red' // Swith turn
     else this.turn = 'blue'

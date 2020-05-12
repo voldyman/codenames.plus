@@ -223,7 +223,7 @@ io.sockets.on('connection', function(socket){
   socket.on('endTurn', () => {
     if (!PLAYER_LIST[socket.id]) return // Prevent Crash
     let room = PLAYER_LIST[socket.id].room  // Get the room the client was in
-    ROOM_LIST[room].game.switchTurn()       // Switch the room's game's turn
+    ROOM_LIST[room].game.switchTurn(true)       // Switch the room's game's turn
     clearGuessProsposals(room)
     gameUpdate(room)                        // Update the game for everyone in this room
   })

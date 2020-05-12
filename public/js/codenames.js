@@ -496,6 +496,9 @@ function updateLog(log){
                               : logEntry.clue.count)
                            + ')')
     }
+    else if (logEntry.event === 'endTurn'){
+      logSpan.innerText = logEntry.team + " team ended their turn"
+    }
     logDiv.prepend(logSpan)
   })
 }
