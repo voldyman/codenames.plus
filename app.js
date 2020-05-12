@@ -13,6 +13,8 @@ let server = app.listen(process.env.PORT || 2000, listen);
 
 let requireHttps = (process.env.REQUIRE_HTTPS == "true");
 
+let crypto = require("crypto");
+
 // Callback function confirming server start
 function listen(){
   let host = server.address().address;
@@ -139,6 +141,8 @@ class Player {
 // Server logic
 ////////////////////////////////////////////////////////////////////////////
 io.sockets.on('connection', function(socket){
+  
+  let sessionId = crypto.randomBytes(16).toString("hex");
 
   // Alert server of the socket connection
   SOCKET_LIST[socket.id] = socket
@@ -147,7 +151,8 @@ io.sockets.on('connection', function(socket){
   // Pass server stats to client
   socket.emit('serverStats', {
     players: Object.keys(PLAYER_LIST).length,
-    rooms: Object.keys(ROOM_LIST).length
+    rooms: Object.keys(ROOM_LIST).length,
+    sessionId: sessionId
   })
 
   // LOBBY STUFF
