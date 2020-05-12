@@ -142,6 +142,8 @@ class Player {
 ////////////////////////////////////////////////////////////////////////////
 io.sockets.on('connection', function(socket){
   
+  let existingSessionId = socket.request._query.sessionId;
+  
   let sessionId = crypto.randomBytes(16).toString("hex");
 
   // Alert server of the socket connection

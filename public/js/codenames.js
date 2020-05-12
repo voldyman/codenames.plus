@@ -1,3 +1,9 @@
+//If a session already exists for this tab, take the user to the game
+if(sessionStorage.getItem("sessionId")) {
+  
+}
+
+
 let socket = io({
   path: window.location.pathname + 'socket.io',
   query: "sessionId=" + sessionStorage.getItem("sessionId")
