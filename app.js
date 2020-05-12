@@ -143,51 +143,34 @@ class Player {
 ////////////////////////////////////////////////////////////////////////////
 io.sockets.on('connection', function(socket){
   
-  let existingSessionId = socket.request._query.sessionId;
+  let isExistingPlayer = false;
+  let gameState = null;
+  let existingSessionId = socket.request._query.sessionId;  
+  
   if(existingSessionId == "null") {
+    // Initialize a new session
     let sessionId = crypto.randomBytes(16).toString("hex");
-
     // Alert server of the socket connection
     SOCKET_LIST[sessionId] = socket
     logStats('CONNECT: ' + sessionId)
     socket.sessionId = sessionId
-    
-    socket.emit('serverStats', {
-      players: Object.keys(PLAYER_LIST).length,
-      rooms: Object.keys(ROOM_LIST).length,
-      sessionId: socket.sessionId
-    })
   } else {
     // This means that the client is trying to reconnect, cancel deletion of session update the socket
     delete DELETE_SESSION_LIST[socket.sessionId];
     SOCKET_LIST[existingSessionId] = socket
     socket.sessionId = existingSessionId
-    let isExistingPlayer = socket.sessionId in PLAYER_LIST
-    let state = isExistingPlayer ? getGameState(PLAYER_LIST[socket.sessionId].room) : null
-    // Pass server stats to client
-    socket.emit('serverStats', {
-      players: Object.keys(PLAYER_LIST).length,
-      rooms: Object.keys(ROOM_LIST).length,
-      sessionId: socket.sessionId,
-      isExistingPlayer: isExistingPlayer,
-      gameState: state
-    })
+    isExistingPlayer = socket.sessionId in PLAYER_LIST
+    gameState = isExistingPlayer ? getGameState(PLAYER_LIST[socket.sessionId].room) : null
   }
   
-//   let sessionId = crypto.randomBytes(16).toString("hex");
-
-//   // Alert server of the socket connection
-//   SOCKET_LIST[socket.id] = socket
-//   logStats('CONNECT: ' + socket.id)
-//   socket.sessionId = sessionId
-
   // Pass server stats to client
-  // socket.emit('serverStats', {
-  //   players: Object.keys(PLAYER_LIST).length,
-  //   rooms: Object.keys(ROOM_LIST).length,
-  //   sessionId: socket.sessionId,
-  //   isExistingPlayer: socket.sessionId in PLAYER_LIST
-  // })
+  socket.emit('serverStats', {
+    players: Object.keys(PLAYER_LIST).length,
+    rooms: Object.keys(ROOM_LIST).length,
+    sessionId: socket.sessionId,
+    isExistingPlayer: isExistingPlayer,
+    gameState: gameState
+  })
 
   // LOBBY STUFF
   ////////////////////////////////////////////////////////////////////////////
@@ -205,12 +188,19 @@ io.sockets.on('connection', function(socket){
 
   // Client Disconnect
   socket.on('disconnect', (reason) => {
-    // Disconnect can be received for multiple reasons. Do not disconnect right away
+    let isExistingPlayer = socket.sessionId in PLAYER_LIST
+    if (!isExistingPlayer) {
+      // If the player was not in a game disconnect immediately
+      socketDisconnect(socket);
+    } else {  
+    // Disconnect can be received for multiple reasons. Do not disconnect an existing player right away
     // We give the client 10 mins to reconnect
     const timeoutObj = setTimeout(() => {
-      socketDisconnect(socket)
+      socketDisconnect(socket);
+      delete DELETE_SESSION_LIST[socket.sessionId];
     }, 60000);
     DELETE_SESSION_LIST[socket.sessionId] = timeoutObj;
+    }
   })
 
 
