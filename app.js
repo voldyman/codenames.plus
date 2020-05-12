@@ -198,7 +198,7 @@ io.sockets.on('connection', function(socket){
     const timeoutObj = setTimeout(() => {
       socketDisconnect(socket);
       delete DELETE_SESSION_LIST[socket.sessionId];
-    }, 60000);
+    }, 600000);
     DELETE_SESSION_LIST[socket.sessionId] = timeoutObj;
     }
   })
