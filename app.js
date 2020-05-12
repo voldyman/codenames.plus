@@ -206,10 +206,10 @@ io.sockets.on('connection', function(socket){
   // Client Disconnect
   socket.on('disconnect', (reason) => {
     // Disconnect can be received for multiple reasons. Do not disconnect right away
-    // We give the client 10 mins to either reconnect
+    // We give the client 10 mins to reconnect
     const timeoutObj = setTimeout(() => {
       socketDisconnect(socket)
-    }, 600000);
+    }, 60000);
     DELETE_SESSION_LIST[socket.sessionId] = timeoutObj;
   })
 

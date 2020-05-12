@@ -239,6 +239,7 @@ socket.on('serverStats', (data) => {        // Client gets server stats
   if(data.isExistingPlayer) {
     joinDiv.style.display = 'none'
     gameDiv.style.display = 'block'
+    updateGameState(data.gameState)
   }
   document.getElementById('server-stats').innerHTML = "Players: " + data.players + " | Rooms: " + data.rooms
 })
