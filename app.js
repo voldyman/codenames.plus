@@ -143,19 +143,30 @@ class Player {
 io.sockets.on('connection', function(socket){
   
   let existingSessionId = socket.request._query.sessionId;
-  
-  let sessionId = crypto.randomBytes(16).toString("hex");
+  if(existingSessionId == "null") {
+    let sessionId = crypto.randomBytes(16).toString("hex");
 
-  // Alert server of the socket connection
-  SOCKET_LIST[socket.id] = socket
-  logStats('CONNECT: ' + socket.id)
-  socket.sessionId = sessionId
+    // Alert server of the socket connection
+    SOCKET_LIST[sessionId] = socket
+    logStats('CONNECT: ' + sessionId)
+    socket.sessionId = sessionId
+  } else {
+    SOCKET_LIST[existingSessionId] = socket
+    socket.sessionId = existingSessionId
+  }
+  
+//   let sessionId = crypto.randomBytes(16).toString("hex");
+
+//   // Alert server of the socket connection
+//   SOCKET_LIST[socket.id] = socket
+//   logStats('CONNECT: ' + socket.id)
+//   socket.sessionId = sessionId
 
   // Pass server stats to client
   socket.emit('serverStats', {
     players: Object.keys(PLAYER_LIST).length,
     rooms: Object.keys(ROOM_LIST).length,
-    sessionId: sessionId
+    sessionId: socket.sessionId
   })
 
   // LOBBY STUFF
@@ -184,10 +195,10 @@ io.sockets.on('connection', function(socket){
   // Join Team. Called when client joins a team (red / blue)
   // Data: team color
   socket.on('joinTeam', (data) => {
-    if (!PLAYER_LIST[socket.id]) return // Prevent Crash
-    let player = PLAYER_LIST[socket.id];  // Get player who made request
-    player.team = data.team               // Update their team
-    gameUpdate(player.room)               // Update the game for everyone in their room
+    if (!PLAYER_LIST[socket.sessionId]) return     // Prevent Crash
+    let player = PLAYER_LIST[socket.sessionId];  // Get player who made request
+    player.team = data.team                     // Update their team
+    gameUpdate(player.room)                   // Update the game for everyone in their room
   })
 
   // Randomize Team. Called when client randomizes the teams
@@ -203,39 +214,39 @@ io.sockets.on('connection', function(socket){
   // Switch Difficulty. Called when spymaster switches to hard / normal
   // Data: New difficulty
   socket.on('switchDifficulty', (data) => {
-    if (!PLAYER_LIST[socket.id]) return // Prevent Crash
-    let room = PLAYER_LIST[socket.id].room        // Get room the client was in
-    ROOM_LIST[room].difficulty = data.difficulty  // Update the rooms difficulty
-    gameUpdate(room)                              // Update the game for everyone in this room
+    if (!PLAYER_LIST[socket.sessionId]) return           // Prevent Crash
+    let room = PLAYER_LIST[socket.sessionId].room        // Get room the client was in
+    ROOM_LIST[room].difficulty = data.difficulty        // Update the rooms difficulty
+    gameUpdate(room)                                    // Update the game for everyone in this room
   })
 
   // Switch Mode. Called when client switches to casual / timed
   // Data: New mode
   socket.on('switchMode', (data) => {
-    if (!PLAYER_LIST[socket.id]) return // Prevent Crash
-    let room = PLAYER_LIST[socket.id].room  // Get the room the client was in
-    ROOM_LIST[room].mode = data.mode;       // Update the rooms game mode
+    if (!PLAYER_LIST[socket.sessionId]) return     // Prevent Crash
+    let room = PLAYER_LIST[socket.sessionId].room  // Get the room the client was in
+    ROOM_LIST[room].mode = data.mode;             // Update the rooms game mode
     ROOM_LIST[room].game.timer = ROOM_LIST[room].game.timerAmount;   // Reset the timer in the room's game
-    gameUpdate(room)                        // Update the game for everyone in this room
+    gameUpdate(room)                              // Update the game for everyone in this room
   })
 
   // Switch Consensus Mode. Called when client switches to single / consensus
   // Data: New consensus mode
   socket.on('switchConsensus', (data) => {
-    if (!PLAYER_LIST[socket.id]) return // Prevent Crash
-    let room = PLAYER_LIST[socket.id].room  // Get the room the client was in
+    if (!PLAYER_LIST[socket.sessionId]) return     // Prevent Crash
+    let room = PLAYER_LIST[socket.sessionId].room  // Get the room the client was in
     clearGuessProsposals(room)
-    ROOM_LIST[room].consensus = data.consensus;       // Update the rooms consensus mode
-    gameUpdate(room)                        // Update the game for everyone in this room
+    ROOM_LIST[room].consensus = data.consensus;    // Update the rooms consensus mode
+    gameUpdate(room)                              // Update the game for everyone in this room
   })
 
   // End Turn. Called when client ends teams turn
   socket.on('endTurn', () => {
-    if (!PLAYER_LIST[socket.id]) return // Prevent Crash
-    let room = PLAYER_LIST[socket.id].room  // Get the room the client was in
+    if (!PLAYER_LIST[socket.sessionId]) return     // Prevent Crash
+    let room = PLAYER_LIST[socket.sessionId].room  // Get the room the client was in
     ROOM_LIST[room].game.switchTurn(true)       // Switch the room's game's turn
     clearGuessProsposals(room)
-    gameUpdate(room)                        // Update the game for everyone in this room
+    gameUpdate(room)                          // Update the game for everyone in this room
   })
 
   // Click Tile. Called when client clicks a tile
@@ -246,14 +257,14 @@ io.sockets.on('connection', function(socket){
 
   // Active. Called whenever client interacts with the game, resets afk timer
   socket.on('*', () => {
-    if (!PLAYER_LIST[socket.id]) return // Prevent Crash
-    PLAYER_LIST[socket.id].afktimer = PLAYER_LIST[socket.id].timeout
+    if (!PLAYER_LIST[socket.sessionId]) return // Prevent Crash
+    PLAYER_LIST[socket.sessionId].afktimer = PLAYER_LIST[socket.sessionId].timeout
   })
 
   // Change card packs
   socket.on('changeCards', (data) => {
-    if (!PLAYER_LIST[socket.id]) return // Prevent Crash
-    let room = PLAYER_LIST[socket.id].room  // Get the room the client was in
+    if (!PLAYER_LIST[socket.sessionId]) return // Prevent Crash
+    let room = PLAYER_LIST[socket.sessionId].room  // Get the room the client was in
     let game = ROOM_LIST[room].game
     if(data.pack === 'base'){               // Toggle packs in the game
       game.base = !game.base
@@ -276,8 +287,8 @@ io.sockets.on('connection', function(socket){
 
   // Change timer slider
   socket.on('timerSlider', (data) => {
-    if (!PLAYER_LIST[socket.id]) return // Prevent Crash
-    let room = PLAYER_LIST[socket.id].room  // Get the room the client was in
+    if (!PLAYER_LIST[socket.sessionId]) return     // Prevent Crash
+    let room = PLAYER_LIST[socket.sessionId].room  // Get the room the client was in
     let game = ROOM_LIST[room].game
     let currentAmount = game.timerAmount - 1  // Current timer amount
     let seconds = (data.value * 60) + 1       // the new amount of the slider
