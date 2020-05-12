@@ -1,10 +1,3 @@
-//If a session already exists for this tab, take the user to the game
-if(sessionStorage.getItem("sessionId")) {
-  joinDiv.style.display = 'none'
-  gameDiv.style.display = 'block'
-}
-
-
 let socket = io({
   path: window.location.pathname + 'socket.io',
   query: "sessionId=" + sessionStorage.getItem("sessionId")
@@ -243,6 +236,10 @@ socket.on('serverStats', (data) => {        // Client gets server stats
   if(!sessionStorage.getItem("sessionId")) {
     sessionStorage.setItem("sessionId", data.sessionId)
   }
+  if(data.isExistingPlayer) {
+    joinDiv.style.display = 'none'
+    gameDiv.style.display = 'block'
+  }
   document.getElementById('server-stats').innerHTML = "Players: " + data.players + " | Rooms: " + data.rooms
 })
 
@@ -317,7 +314,26 @@ socket.on('switchRoleResponse', (data) =>{  // Response to Switching Role
 })
 
 socket.on('gameState', (data) =>{           // Response to gamestate update
-  if (data.difficulty !== difficulty){  // Update the clients difficulty
+  updateGameState(data)
+})
+
+
+// Utility Functions
+////////////////////////////////////////////////////////////////////////////
+
+// Wipe all of the descriptor tile classes from each tile
+function wipeBoard(){
+  for (let x = 0; x < 5; x++){
+    let row = document.getElementById('row-' + (x+1))
+    for (let y = 0; y < 5; y++){
+      let button = row.children[y]
+      button.className = 'tile'
+    }
+  }
+}
+
+function updateGameState(data) {
+    if (data.difficulty !== difficulty){  // Update the clients difficulty
     difficulty = data.difficulty
     wipeBoard();                        // Update the appearance of the tiles
   }
@@ -339,21 +355,6 @@ socket.on('gameState', (data) =>{           // Response to gamestate update
   // Update the board display
   updateBoard(data.game.board, proposals, data.game.over)
   updateLog(data.game.log)
-})
-
-
-// Utility Functions
-////////////////////////////////////////////////////////////////////////////
-
-// Wipe all of the descriptor tile classes from each tile
-function wipeBoard(){
-  for (let x = 0; x < 5; x++){
-    let row = document.getElementById('row-' + (x+1))
-    for (let y = 0; y < 5; y++){
-      let button = row.children[y]
-      button.className = 'tile'
-    }
-  }
 }
 
 // Update the game info displayed to the client

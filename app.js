@@ -169,8 +169,8 @@ io.sockets.on('connection', function(socket){
   socket.emit('serverStats', {
     players: Object.keys(PLAYER_LIST).length,
     rooms: Object.keys(ROOM_LIST).length,
-    sessionId: socket.sessionId
-    isExistingPlayer: PLAYER_LIST[socket.sessionId]
+    sessionId: socket.sessionId,
+    isExistingPlayer: socket.sessionId in PLAYER_LIST
   })
 
   // LOBBY STUFF
@@ -575,6 +575,18 @@ function gameUpdate(room){
   for (let player in ROOM_LIST[room].players){ // For everyone in the passed room
     gameState.team = PLAYER_LIST[player].team  // Add specific clients team info
     SOCKET_LIST[player].emit('gameState', gameState)  // Pass data to the client
+  }
+}
+
+function getGameState(room) {
+  // Create data package to send to the client
+  return {
+    room: room,
+    players:ROOM_LIST[room].players,
+    game:ROOM_LIST[room].game,
+    difficulty:ROOM_LIST[room].difficulty,
+    mode:ROOM_LIST[room].mode,
+    consensus:ROOM_LIST[room].consensus
   }
 }
 
