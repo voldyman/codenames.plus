@@ -151,11 +151,27 @@ io.sockets.on('connection', function(socket){
     SOCKET_LIST[sessionId] = socket
     logStats('CONNECT: ' + sessionId)
     socket.sessionId = sessionId
+    
+    socket.emit('serverStats', {
+      players: Object.keys(PLAYER_LIST).length,
+      rooms: Object.keys(ROOM_LIST).length,
+      sessionId: socket.sessionId
+    })
   } else {
     // This means that the client is trying to reconnect, cancel deletion of session update the socket
     delete DELETE_SESSION_LIST[socket.sessionId];
     SOCKET_LIST[existingSessionId] = socket
     socket.sessionId = existingSessionId
+    let isExistingPlayer = socket.sessionId in PLAYER_LIST
+    let state = isExistingPlayer ? getGameState(PLAYER_LIST[socket.sessionId].room) : null
+    // Pass server stats to client
+    socket.emit('serverStats', {
+      players: Object.keys(PLAYER_LIST).length,
+      rooms: Object.keys(ROOM_LIST).length,
+      sessionId: socket.sessionId,
+      isExistingPlayer: isExistingPlayer,
+      gameState: state
+    })
   }
   
 //   let sessionId = crypto.randomBytes(16).toString("hex");
@@ -166,12 +182,12 @@ io.sockets.on('connection', function(socket){
 //   socket.sessionId = sessionId
 
   // Pass server stats to client
-  socket.emit('serverStats', {
-    players: Object.keys(PLAYER_LIST).length,
-    rooms: Object.keys(ROOM_LIST).length,
-    sessionId: socket.sessionId,
-    isExistingPlayer: socket.sessionId in PLAYER_LIST
-  })
+  // socket.emit('serverStats', {
+  //   players: Object.keys(PLAYER_LIST).length,
+  //   rooms: Object.keys(ROOM_LIST).length,
+  //   sessionId: socket.sessionId,
+  //   isExistingPlayer: socket.sessionId in PLAYER_LIST
+  // })
 
   // LOBBY STUFF
   ////////////////////////////////////////////////////////////////////////////
@@ -564,14 +580,7 @@ function clearGuessProsposals(room){
 // Update the gamestate for every client in the room that is passed to this function
 function gameUpdate(room){
   // Create data package to send to the client
-  let gameState = {
-    room: room,
-    players:ROOM_LIST[room].players,
-    game:ROOM_LIST[room].game,
-    difficulty:ROOM_LIST[room].difficulty,
-    mode:ROOM_LIST[room].mode,
-    consensus:ROOM_LIST[room].consensus
-  }
+  let gameState = getGameState(room)
   for (let player in ROOM_LIST[room].players){ // For everyone in the passed room
     gameState.team = PLAYER_LIST[player].team  // Add specific clients team info
     SOCKET_LIST[player].emit('gameState', gameState)  // Pass data to the client
