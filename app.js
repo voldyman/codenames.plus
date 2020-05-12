@@ -78,6 +78,7 @@ const Game = require('./server/game.js')
 let SOCKET_LIST = {}
 let ROOM_LIST = {}
 let PLAYER_LIST = {}
+let DELETE_SESSION_LIST = {}
 
 // Room class
 // Live rooms will have a name and password and keep track of game options / players in room
@@ -100,7 +101,7 @@ class Room {
 // When players log in, they give a nickname, have a socket and a room they're trying to connect to
 class Player {
   constructor(nickname, room, socket){
-    this.id = socket.id
+    this.id = socket.sessionId
 
     // If someone in the room has the same name, append (1) to their nickname
     let nameAvailable = false
@@ -151,6 +152,7 @@ io.sockets.on('connection', function(socket){
     logStats('CONNECT: ' + sessionId)
     socket.sessionId = sessionId
   } else {
+    // This means that the client is trying to reconnect, update the socket
     SOCKET_LIST[existingSessionId] = socket
     socket.sessionId = existingSessionId
   }
@@ -185,7 +187,12 @@ io.sockets.on('connection', function(socket){
 
   // Client Disconnect
   socket.on('disconnect', (reason) => {
-    socketDisconnect(socket)
+    // Disconnect can be received for multiple reasons. Do not disconnect right away
+    // We give the client 10 mins to either reconnect
+    const timeoutObj = setTimeout(() => {
+      socketDisconnect(socket)
+    }, 600000);
+    DELETE_SESSION_LIST[socket.sessionId] = timeoutObj;
   })
 
 
@@ -322,11 +329,11 @@ function createRoom(socket, data){
       } else {    // If the room name and nickname are both valid, proceed
         new Room(roomName, passName)                          // Create a new room
         let player = new Player(userName, roomName, socket)   // Create a new player
-        ROOM_LIST[roomName].players[socket.id] = player       // Add player to room
+        ROOM_LIST[roomName].players[socket.sessionId] = player       // Add player to room
         player.joinTeam()                                     // Distribute player to team
         socket.emit('createResponse', {success:true, msg: ""})// Tell client creation was successful
         gameUpdate(roomName)                                  // Update the game for everyone in this room
-        logStats(socket.id + "(" + player.nickname + ") CREATED '" + ROOM_LIST[player.room].room + "'(" + Object.keys(ROOM_LIST[player.room].players).length + ")")
+        logStats(socket.sessionId + "(" + player.nickname + ") CREATED '" + ROOM_LIST[player.room].room + "'(" + Object.keys(ROOM_LIST[player.room].players).length + ")")
       }
     }
   }
@@ -353,12 +360,12 @@ function joinRoom(socket, data){
         socket.emit('joinResponse', {success:false, msg:'Enter A Valid Nickname'})
       } else {  // If the room exists and the password / nickname are valid, proceed
         let player = new Player(userName, roomName, socket)   // Create a new player
-        ROOM_LIST[roomName].players[socket.id] = player       // Add player to room
+        ROOM_LIST[roomName].players[socket.sessionId] = player       // Add player to room
         player.joinTeam()                                     // Distribute player to team
         socket.emit('joinResponse', {success:true, msg:""})   // Tell client join was successful
         gameUpdate(roomName)                                  // Update the game for everyone in this room
         // Server Log
-        logStats(socket.id + "(" + player.nickname + ") JOINED '" + ROOM_LIST[player.room].room + "'(" + Object.keys(ROOM_LIST[player.room].players).length + ")")
+        logStats(socket.sessionId + "(" + player.nickname + ") JOINED '" + ROOM_LIST[player.room].room + "'(" + Object.keys(ROOM_LIST[player.room].players).length + ")")
       }
     }
   }
@@ -367,13 +374,13 @@ function joinRoom(socket, data){
 // Leave room function
 // Gets the client that left the room and removes them from the room's player list
 function leaveRoom(socket){
-  if (!PLAYER_LIST[socket.id]) return // Prevent Crash
-  let player = PLAYER_LIST[socket.id]              // Get the player that made the request
+  if (!PLAYER_LIST[socket.sessionId]) return // Prevent Crash
+  let player = PLAYER_LIST[socket.sessionId]              // Get the player that made the request
   delete PLAYER_LIST[player.id]                    // Delete the player from the player list
   delete ROOM_LIST[player.room].players[player.id] // Remove the player from their room
   gameUpdate(player.room)                          // Update everyone in the room
   // Server Log
-  logStats(socket.id + "(" + player.nickname + ") LEFT '" + ROOM_LIST[player.room].room + "'(" + Object.keys(ROOM_LIST[player.room].players).length + ")")
+  logStats(socket.sessionId + "(" + player.nickname + ") LEFT '" + ROOM_LIST[player.room].room + "'(" + Object.keys(ROOM_LIST[player.room].players).length + ")")
 
   // If the number of players in the room is 0 at this point, delete the room entirely
   if (Object.keys(ROOM_LIST[player.room].players).length === 0) {
@@ -386,15 +393,15 @@ function leaveRoom(socket){
 // Disconnect function
 // Called when a client closes the browser tab
 function socketDisconnect(socket){
-  let player = PLAYER_LIST[socket.id] // Get the player that made the request
-  delete SOCKET_LIST[socket.id]       // Delete the client from the socket list
-  delete PLAYER_LIST[socket.id]       // Delete the player from the player list
+  let player = PLAYER_LIST[socket.sessionId] // Get the player that made the request
+  delete SOCKET_LIST[socket.sessionId]       // Delete the client from the socket list
+  delete PLAYER_LIST[socket.sessionId]       // Delete the player from the player list
 
   if(player){   // If the player was in a room
-    delete ROOM_LIST[player.room].players[socket.id] // Remove the player from their room
+    delete ROOM_LIST[player.room].players[socket.sessionId] // Remove the player from their room
     gameUpdate(player.room)                          // Update everyone in the room
     // Server Log
-    logStats(socket.id + "(" + player.nickname + ") LEFT '" + ROOM_LIST[player.room].room + "'(" + Object.keys(ROOM_LIST[player.room].players).length + ")")
+    logStats(socket.sessionId + "(" + player.nickname + ") LEFT '" + ROOM_LIST[player.room].room + "'(" + Object.keys(ROOM_LIST[player.room].players).length + ")")
 
     // If the number of players in the room is 0 at this point, delete the room entirely
     if (Object.keys(ROOM_LIST[player.room].players).length === 0) {
@@ -403,14 +410,14 @@ function socketDisconnect(socket){
     }
   }
   // Server Log
-  logStats('DISCONNECT: ' + socket.id)
+  logStats('DISCONNECT: ' + socket.sessionId)
 }
 
 // Randomize Teams function
 // Will mix up the teams in the room that the client is in
 function randomizeTeams(socket){
-  if (!PLAYER_LIST[socket.id]) return // Prevent Crash
-  let room = PLAYER_LIST[socket.id].room   // Get the room that the client called from
+  if (!PLAYER_LIST[socket.sessionId]) return // Prevent Crash
+  let room = PLAYER_LIST[socket.sessionId].room   // Get the room that the client called from
   let players = ROOM_LIST[room].players    // Get the players in the room
 
   let color = 0;    // Get a starting color
@@ -441,8 +448,8 @@ function randomizeTeams(socket){
 // New game function
 // Gets client that requested the new game and instantiates a new game board for the room
 function newGame(socket){
-  if (!PLAYER_LIST[socket.id]) return // Prevent Crash
-  let room = PLAYER_LIST[socket.id].room  // Get the room that the client called from
+  if (!PLAYER_LIST[socket.sessionId]) return // Prevent Crash
+  let room = PLAYER_LIST[socket.sessionId].room  // Get the room that the client called from
   ROOM_LIST[room].game.init();      // Make a new game for that room
 
   // Make everyone in the room a guesser and tell their client the game is new
@@ -458,7 +465,7 @@ function newGame(socket){
 // Switch role function
 // Gets clients requested role and switches it
 function switchRole(socket, data){
-  let currentPlayer = PLAYER_LIST[socket.id]
+  let currentPlayer = PLAYER_LIST[socket.sessionId]
   if (!currentPlayer) return // Prevent Crash
   let room = currentPlayer.room // Get the room that the client called from
 
@@ -494,22 +501,22 @@ function switchRole(socket, data){
 // Click tile function
 // Gets client and the tile they clicked and pushes that change to the rooms game
 function clickTile(socket, data){
-  if (!PLAYER_LIST[socket.id]) return // Prevent Crash
-  let room = PLAYER_LIST[socket.id].room  // Get the room that the client called from
+  if (!PLAYER_LIST[socket.sessionId]) return // Prevent Crash
+  let room = PLAYER_LIST[socket.sessionId].room  // Get the room that the client called from
 
-  if (PLAYER_LIST[socket.id].team === ROOM_LIST[room].game.turn){ // If it was this players turn
+  if (PLAYER_LIST[socket.sessionId].team === ROOM_LIST[room].game.turn){ // If it was this players turn
     if (!ROOM_LIST[room].game.over){  // If the game is not over
-      if (PLAYER_LIST[socket.id].role !== 'spymaster'){ // If the client isnt spymaster
+      if (PLAYER_LIST[socket.sessionId].role !== 'spymaster'){ // If the client isnt spymaster
         var doFlip = true
         if (ROOM_LIST[room].consensus === 'consensus'){
           let guess = ROOM_LIST[room].game.board[data.i][data.j].word
           // If player already made this guess, then toggle to them not making any guess.
-          if (PLAYER_LIST[socket.id].guessProposal === guess){
-            PLAYER_LIST[socket.id].guessProposal = null
+          if (PLAYER_LIST[socket.sessionId].guessProposal === guess){
+            PLAYER_LIST[socket.sessionId].guessProposal = null
             gameUpdate(room)  // Update everyone in the room
             return
           }
-          PLAYER_LIST[socket.id].guessProposal = guess
+          PLAYER_LIST[socket.sessionId].guessProposal = guess
           var allAgree = true
           for (let player in ROOM_LIST[room].players){
             if (PLAYER_LIST[player].guessProposal !== guess && PLAYER_LIST[player].role !== 'spymaster' && PLAYER_LIST[player].team === ROOM_LIST[room].game.turn){
@@ -531,13 +538,13 @@ function clickTile(socket, data){
 // Declare clue function
 // Gets client and the clue they gave and pushes that change to the rooms game
 function declareClue(socket, data){
-  if (!PLAYER_LIST[socket.id]) return // Prevent Crash
-  let room = PLAYER_LIST[socket.id].room  // Get the room that the client called from
+  if (!PLAYER_LIST[socket.sessionId]) return // Prevent Crash
+  let room = PLAYER_LIST[socket.sessionId].room  // Get the room that the client called from
   let game = ROOM_LIST[room].game
 
-  if (PLAYER_LIST[socket.id].team === game.turn){ // If it was this players turn
+  if (PLAYER_LIST[socket.sessionId].team === game.turn){ // If it was this players turn
     if (!game.over){  // If the game is not over
-      if (PLAYER_LIST[socket.id].role === 'spymaster'){ // If the client is spymaster
+      if (PLAYER_LIST[socket.sessionId].role === 'spymaster'){ // If the client is spymaster
         if (game.declareClue(data)){
           gameUpdate(room)  // Update everyone in the room
         }
