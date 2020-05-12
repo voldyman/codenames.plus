@@ -152,7 +152,8 @@ io.sockets.on('connection', function(socket){
     logStats('CONNECT: ' + sessionId)
     socket.sessionId = sessionId
   } else {
-    // This means that the client is trying to reconnect, update the socket
+    // This means that the client is trying to reconnect, cancel deletion of session update the socket
+    delete DELETE_SESSION_LIST[socket.sessionId];
     SOCKET_LIST[existingSessionId] = socket
     socket.sessionId = existingSessionId
   }
@@ -169,6 +170,7 @@ io.sockets.on('connection', function(socket){
     players: Object.keys(PLAYER_LIST).length,
     rooms: Object.keys(ROOM_LIST).length,
     sessionId: socket.sessionId
+    isExistingPlayer: PLAYER_LIST[socket.sessionId]
   })
 
   // LOBBY STUFF

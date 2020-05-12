@@ -1,6 +1,7 @@
 //If a session already exists for this tab, take the user to the game
 if(sessionStorage.getItem("sessionId")) {
-  
+  joinDiv.style.display = 'none'
+  gameDiv.style.display = 'block'
 }
 
 
