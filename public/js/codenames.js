@@ -1,4 +1,8 @@
-let socket = io({path: window.location.pathname + 'socket.io'}) // Connect to server
+
+let socket = io({
+  path: window.location.pathname + 'socket.io',
+  sessionId: sessionStorage.getItem("sessionId")
+}) // Connect to server
 
 
 // Sign In Page Elements
@@ -231,6 +235,7 @@ buttonServerMessageOkay.onclick = () => {
 // Server Responses to this client
 ////////////////////////////////////////////////////////////////////////////
 socket.on('serverStats', (data) => {        // Client gets server stats
+  sessionStorage.setItem("sessionId", data.sessionId)
   document.getElementById('server-stats').innerHTML = "Players: " + data.players + " | Rooms: " + data.rooms
 })
 

@@ -147,6 +147,7 @@ io.sockets.on('connection', function(socket){
   // Alert server of the socket connection
   SOCKET_LIST[socket.id] = socket
   logStats('CONNECT: ' + socket.id)
+  socket.sessionId = sessionId
 
   // Pass server stats to client
   socket.emit('serverStats', {
