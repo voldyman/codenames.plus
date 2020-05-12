@@ -165,7 +165,9 @@ io.sockets.on('connection', function(socket){
   socket.on('leaveRoom', () =>{leaveRoom(socket)})
 
   // Client Disconnect
-  socket.on('disconnect', () => {socketDisconnect(socket)})
+  socket.on('disconnect', (reason) => {
+    socketDisconnect(socket)
+  })
 
 
   // GAME STUFF
