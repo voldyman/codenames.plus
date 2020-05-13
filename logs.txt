@@ -437,3 +437,27 @@
 2020-05-13T16:56:32.738Z [R:0 P:0 L:1] Player not found for provided session ID
 2020-05-13T16:56:54.217Z [R:0 P:0 L:1] RENEW CONNECT: undefined
 2020-05-13T16:56:54.217Z [R:0 P:0 L:1] Player not found for provided session ID
+2020-05-13T16:57:02.738Z [R:0 P:0 L:1] Disconnect request received for: unregistered player undefined because of ping timeout
+2020-05-13T16:57:02.738Z [R:0 P:0 L:0] DISCONNECT: undefined
+2020-05-13T16:57:24.217Z [R:0 P:0 L:0] Disconnect request received for: unregistered player undefined because of ping timeout
+2020-05-13T16:57:24.217Z [R:0 P:0 L:0] DISCONNECT: undefined
+2020-05-13T16:58:32.302Z [R:0 P:0 L:0] RENEW CONNECT: undefined
+2020-05-13T16:58:32.302Z [R:0 P:0 L:1] Player not found for provided session ID
+2020-05-13T16:58:51.157Z [R:0 P:0 L:1] RENEW CONNECT: undefined
+2020-05-13T16:58:51.157Z [R:0 P:0 L:1] Player not found for provided session ID
+2020-05-13T16:58:58.453Z [R:0 P:0 L:1] Ping Received
+2020-05-13T16:59:02.303Z [R:0 P:0 L:1] Disconnect request received for: unregistered player undefined because of ping timeout
+2020-05-13T16:59:02.303Z [R:0 P:0 L:0] DISCONNECT: undefined
+2020-05-13T16:59:15.550Z [R:0 P:0 L:0] Ping Received
+2020-05-13T16:59:21.159Z [R:0 P:0 L:0] Disconnect request received for: unregistered player undefined because of ping timeout
+2020-05-13T16:59:21.159Z [R:0 P:0 L:0] DISCONNECT: undefined
+2020-05-13T16:59:38.719Z [R:0 P:0 L:0] Ping Received
+2020-05-13T17:01:48.704Z [R:0 P:0 L:0] RENEW CONNECT: undefined
+2020-05-13T17:01:48.704Z [R:0 P:0 L:1] Player not found for provided session ID
+2020-05-13T17:02:18.704Z [R:0 P:0 L:1] Disconnect request received for: unregistered player undefined because of ping timeout
+2020-05-13T17:02:18.704Z [R:0 P:0 L:0] DISCONNECT: undefined
+2020-05-13T17:04:18.561Z [R:0 P:0 L:0] Ping Received
+2020-05-13T17:05:49.275Z [R:0 P:0 L:0] Ping Received
+2020-05-13T17:07:04.063Z [R:0 P:0 L:0] Ping Received
+2020-05-13T17:07:25.780Z [R:0 P:0 L:0] Ping Received
+2020-05-13T17:08:34.024Z [R:0 P:0 L:0] Ping Received
