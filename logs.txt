@@ -225,3 +225,11 @@
 2020-05-13T11:12:05.986Z [R:0 P:0 L:0] Ping Received
 2020-05-13T11:15:58.342Z [R:0 P:0 L:0] Ping Received
 2020-05-13T11:16:45.986Z [R:0 P:0 L:0] Ping Received
+2020-05-13T11:20:58.425Z [R:0 P:0 L:0] Ping Received
+2020-05-13T11:21:26.018Z [R:0 P:0 L:0] Ping Received
+2020-05-13T11:25:58.759Z [R:0 P:0 L:0] Ping Received
+2020-05-13T11:26:05.982Z [R:0 P:0 L:0] Ping Received
+2020-05-13T11:26:15.323Z [R:0 P:0 L:0] RENEW CONNECT: undefined
+2020-05-13T11:26:15.323Z [R:0 P:0 L:1] Player not found for provided session ID
+2020-05-13T11:28:22.667Z [R:0 P:0 L:1] Disconnect request received for: unregistered player undefined because of transport close
+2020-05-13T11:28:22.667Z [R:0 P:0 L:0] DISCONNECT: undefined
