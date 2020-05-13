@@ -150,9 +150,10 @@ io.sockets.on("connection", function(socket) {
     let sessionId = crypto.randomBytes(16).toString("hex");
     // Alert server of the socket connection
     SOCKET_LIST[sessionId] = socket;
-    logStats("CONNECT: " + sessionId);
+    logStats("NEW CONNECT: " + sessionId);
     socket.sessionId = sessionId;
   } else {
+    logStats("RENEW CONNECT: " + socket.sessionId)
     // This means that the client is trying to reconnect, cancel deletion of session update the socket
     clearTimeout(DELETE_SESSION_LIST[socket.sessionId]);
     delete DELETE_SESSION_LIST[socket.sessionId];
@@ -195,9 +196,9 @@ io.sockets.on("connection", function(socket) {
 
   // Client Disconnect
   socket.on("disconnect", reason => {
-    console.log(
+    logStats(
       "Disconnect request received for: " +
-        socket.sessionID +
+        socket.sessionId +
         " because of " +
         reason
     );
