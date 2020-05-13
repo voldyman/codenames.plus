@@ -503,3 +503,11 @@
 2020-05-13T17:48:52.057Z [R:0 P:0 L:0] Ping Received
 2020-05-13T17:53:29.290Z [R:0 P:0 L:0] Ping Received
 2020-05-13T17:53:49.505Z [R:0 P:0 L:0] Ping Received
+2020-05-13T17:56:22.222Z [R:0 P:0 L:0] RENEW CONNECT: undefined
+2020-05-13T17:56:22.222Z [R:0 P:0 L:1] Player not found for provided session ID
+2020-05-13T17:56:52.222Z [R:0 P:0 L:1] Disconnect request received for: unregistered player undefined because of ping timeout
+2020-05-13T17:56:52.223Z [R:0 P:0 L:0] DISCONNECT: undefined
+2020-05-13T17:58:15.858Z [R:0 P:0 L:0] RENEW CONNECT: undefined
+2020-05-13T17:58:15.858Z [R:0 P:0 L:1] Player not found for provided session ID
+2020-05-13T17:58:45.858Z [R:0 P:0 L:1] Disconnect request received for: unregistered player undefined because of ping timeout
+2020-05-13T17:58:45.858Z [R:0 P:0 L:0] DISCONNECT: undefined
