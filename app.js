@@ -153,10 +153,10 @@ io.sockets.on("connection", function(socket) {
     logStats("NEW CONNECT: " + sessionId);
     socket.sessionId = sessionId;
   } else {
-    logStats("RENEW CONNECT: " + socket.sessionId)
+    logStats("RENEW CONNECT: " + existingSessionId);
     // This means that the client is trying to reconnect, cancel deletion of session update the socket
-    clearTimeout(DELETE_SESSION_LIST[socket.sessionId]);
-    delete DELETE_SESSION_LIST[socket.sessionId];
+    clearTimeout(DELETE_SESSION_LIST[existingSessionId]);
+    delete DELETE_SESSION_LIST[existingSessionId];
     SOCKET_LIST[existingSessionId] = socket;
     socket.sessionId = existingSessionId;
     isExistingPlayer = socket.sessionId in PLAYER_LIST;
@@ -196,13 +196,18 @@ io.sockets.on("connection", function(socket) {
 
   // Client Disconnect
   socket.on("disconnect", reason => {
+    let isExistingPlayer = socket.sessionId in PLAYER_LIST;
+    let playerName = isExistingPlayer
+      ? PLAYER_LIST[socket.sessionId].nickname
+      : "unregistered player";
     logStats(
       "Disconnect request received for: " +
+        playerName +
+        " " +
         socket.sessionId +
         " because of " +
         reason
     );
-    let isExistingPlayer = socket.sessionId in PLAYER_LIST;
     if (!isExistingPlayer) {
       // If the player was not in a game disconnect immediately
       socketDisconnect(socket);
