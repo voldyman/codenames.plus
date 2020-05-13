@@ -1,8 +1,0 @@
-[R:0 P:0 L:0] RENEW CONNECT: 541191059f1fc1033d156853dc9e1fda
-[R:0 P:0 L:1] Disconnect request received for: unregistered player 541191059f1fc1033d156853dc9e1fda because of transport close
-[R:0 P:0 L:0] DISCONNECT: 541191059f1fc1033d156853dc9e1fda
-[R:0 P:0 L:0] RENEW CONNECT: 541191059f1fc1033d156853dc9e1fda
-[R:1 P:1 L:0] 541191059f1fc1033d156853dc9e1fda(a) CREATED 'a'(1)
-[R:1 P:0 L:1] 541191059f1fc1033d156853dc9e1fda(a) LEFT 'a'(0)
-[R:0 P:0 L:1] DELETE ROOM: 'a'
-[R:0 P:0 L:1] 1589351458329 Ping Received
