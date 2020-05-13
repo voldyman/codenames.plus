@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 
 //Keep session alive
 app.get("/ping", (request, response) => {
-  console.log(Date.now() + " Ping Received");
+  logStats(Date.now() + " Ping Received");
   response.sendStatus(200);
 });
 const https = require("https");
@@ -160,9 +160,10 @@ io.sockets.on("connection", function(socket) {
     SOCKET_LIST[existingSessionId] = socket;
     socket.sessionId = existingSessionId;
     isExistingPlayer = socket.sessionId in PLAYER_LIST;
-    gameState = isExistingPlayer
-      ? getGameState(PLAYER_LIST[socket.sessionId].room)
-      : null;
+    if(isExistingPlayer) {
+      gameState = getGameState(PLAYER_LIST[socket.sessionId].room)
+      gameState.team = PLAYER_LIST[socket.sessionId].team
+    }
   }
 
   // Pass server stats to client
