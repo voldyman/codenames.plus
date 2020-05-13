@@ -725,7 +725,18 @@ function logStats(addition) {
     " L:" +
     inLobby +
     "] ";
-  stream.write(stats + addition + "\n");
+  
+//fs.writeFileSync('./server/logs.txt', 'Hey there!');
+// fs.readFile('./server/logs.txt', "utf8", function read(err, data) {
+//     if (err) {
+//         throw err;
+//     }
+//     console.log(data);
+// });
+  
+  // fs.writeFileSync('./logs.txt', 'Hey there!');
+   stream.write(stats + addition + "\n");
+  // stream.end();
   console.log(stats + addition);
 }
 
