@@ -155,8 +155,10 @@ io.sockets.on("connection", function(socket) {
   } else {
     logStats("RENEW CONNECT: " + existingSessionId);
     // This means that the client is trying to reconnect, cancel deletion of session update the socket
-    clearTimeout(DELETE_SESSION_LIST[existingSessionId]);
-    delete DELETE_SESSION_LIST[existingSessionId];
+    if(DELETE_SESSION_LIST[existingSessionId]) {
+         clearTimeout(DELETE_SESSION_LIST[existingSessionId]);
+      delete DELETE_SESSION_LIST[existingSessionId]; 
+    }
     SOCKET_LIST[existingSessionId] = socket;
     socket.sessionId = existingSessionId;
     isExistingPlayer = socket.sessionId in PLAYER_LIST;
