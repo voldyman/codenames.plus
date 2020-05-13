@@ -572,8 +572,10 @@ function gameUpdate(room){
   // Create data package to send to the client
   let gameState = getGameState(room)
   for (let player in ROOM_LIST[room].players){ // For everyone in the passed room
-    gameState.team = PLAYER_LIST[player].team  // Add specific clients team info
-    SOCKET_LIST[player].emit('gameState', gameState)  // Pass data to the client
+    if(SOCKET_LIST[player]) {
+      gameState.team = PLAYER_LIST[player].team  // Add specific clients team info
+      SOCKET_LIST[player].emit('gameState', gameState)  // Pass data to the client
+    }
   }
 }
 
