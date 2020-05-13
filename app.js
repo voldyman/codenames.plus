@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 
 //Keep session alive
 app.get("/ping", (request, response) => {
-  logStats(Date.now() + " Ping Received");
+  logStats("Ping Received");
   response.sendStatus(200);
 });
 const https = require("https");
@@ -168,8 +168,11 @@ io.sockets.on("connection", function(socket) {
     socket.sessionId = existingSessionId;
     isExistingPlayer = socket.sessionId in PLAYER_LIST;
     if (isExistingPlayer) {
+      logStats("Player already exists: " + PLAYER_LIST[socket.sessionId].nickname)
       gameState = getGameState(PLAYER_LIST[socket.sessionId].room);
       gameState.team = PLAYER_LIST[socket.sessionId].team;
+    } else {
+      logStats("Player not found for provided session")
     }
   }
 
@@ -725,19 +728,9 @@ function logStats(addition) {
     " L:" +
     inLobby +
     "] ";
-  
-//fs.writeFileSync('./server/logs.txt', 'Hey there!');
-// fs.readFile('./server/logs.txt', "utf8", function read(err, data) {
-//     if (err) {
-//         throw err;
-//     }
-//     console.log(data);
-// });
-  
-  // fs.writeFileSync('./logs.txt', 'Hey there!');
-   stream.write(stats + addition + "\n");
-  // stream.end();
-  console.log(stats + addition);
+
+  stream.write(new Date().toISOString() + " " + stats + addition + "\n");
+  console.log(new Date().toISOString() + " " + stats + addition);
 }
 
 // Restart Heroku Server
