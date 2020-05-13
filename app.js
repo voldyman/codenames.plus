@@ -172,7 +172,7 @@ io.sockets.on("connection", function(socket) {
       gameState = getGameState(PLAYER_LIST[socket.sessionId].room);
       gameState.team = PLAYER_LIST[socket.sessionId].team;
     } else {
-      logStats("Player not found for provided session")
+      logStats("Player not found for provided session ID")
     }
   }
 
