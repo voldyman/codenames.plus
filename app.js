@@ -3,6 +3,10 @@
 // Express
 let express = require("express");
 
+//File System
+let fs = require("fs");
+let stream = fs.createWriteStream("./logs.txt", {flags:'a'});
+
 // Create app
 let app = express();
 app.disable("x-powered-by");
@@ -155,16 +159,17 @@ io.sockets.on("connection", function(socket) {
   } else {
     logStats("RENEW CONNECT: " + existingSessionId);
     // This means that the client is trying to reconnect, cancel deletion of session update the socket
-    if(DELETE_SESSION_LIST[existingSessionId]) {
-         clearTimeout(DELETE_SESSION_LIST[existingSessionId]);
-      delete DELETE_SESSION_LIST[existingSessionId]; 
+    if (DELETE_SESSION_LIST[existingSessionId]) {
+      logStats("Cacelling disconnect timer for: " + existingSessionId);
+      clearTimeout(DELETE_SESSION_LIST[existingSessionId]);
+      delete DELETE_SESSION_LIST[existingSessionId];
     }
     SOCKET_LIST[existingSessionId] = socket;
     socket.sessionId = existingSessionId;
     isExistingPlayer = socket.sessionId in PLAYER_LIST;
-    if(isExistingPlayer) {
-      gameState = getGameState(PLAYER_LIST[socket.sessionId].room)
-      gameState.team = PLAYER_LIST[socket.sessionId].team
+    if (isExistingPlayer) {
+      gameState = getGameState(PLAYER_LIST[socket.sessionId].room);
+      gameState.team = PLAYER_LIST[socket.sessionId].team;
     }
   }
 
@@ -720,6 +725,7 @@ function logStats(addition) {
     " L:" +
     inLobby +
     "] ";
+  stream.write(stats + addition + "\n");
   console.log(stats + addition);
 }
 
