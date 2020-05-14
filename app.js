@@ -5,7 +5,7 @@ let express = require("express");
 
 //File System
 let fs = require("fs");
-const stream = fs.createWriteStream("./logs.txt", {flags:'a'});
+const stream = fs.createWriteStream("./logs.txt", { flags: "a" });
 
 // Create app
 let app = express();
@@ -169,11 +169,13 @@ io.sockets.on("connection", function(socket) {
     socket.sessionId = existingSessionId;
     isExistingPlayer = socket.sessionId in PLAYER_LIST;
     if (isExistingPlayer) {
-      logStats("Player already exists: " + PLAYER_LIST[socket.sessionId].nickname)
+      logStats(
+        "Player already exists: " + PLAYER_LIST[socket.sessionId].nickname
+      );
       gameState = getGameState(PLAYER_LIST[socket.sessionId].room);
       gameState.team = PLAYER_LIST[socket.sessionId].team;
     } else {
-      logStats("Player not found for provided session ID")
+      logStats("Player not found for provided session ID");
     }
   }
 
@@ -426,6 +428,12 @@ function joinRoom(socket, data) {
   let roomName = data.room.trim(); // Trim whitespace from room name
   let pass = data.password.trim(); // Trim whitespace from password
   let userName = data.nickname.trim(); // Trim whitespace from nickname
+
+  if (DELETE_ROOM_LIST[roomName]) {
+    logStats("removing delete timeout for room: " + roomName);
+    clearTimeout(DELETE_ROOM_LIST[roomName]);
+    delete DELETE_ROOM_LIST[roomName];
+  }
 
   if (!ROOM_LIST[roomName]) {
     // Tell client the room doesnt exist
@@ -697,8 +705,8 @@ function logStats(addition) {
     inLobby +
     "] ";
 
-  stream.write(new Date().toISOString() + " " + stats + addition + "\n");
-  console.log(new Date().toISOString() + " " + stats + addition);
+  stream.write(new Date().toLocaleString() + " " + stats + addition + "\n");
+  console.log(new Date().toLocaleString() + " " + stats + addition);
 }
 
 // Restart Heroku Server
@@ -810,10 +818,20 @@ function socketDisconnect(socket) {
         ")"
     );
 
-    // If the number of players in the room is 0 at this point, delete the room entirely
+    // If the number of players in the room is 0 at this point, delete the room entirely after 100 mins
     if (Object.keys(ROOM_LIST[player.room].players).length === 0) {
-      delete ROOM_LIST[player.room];
-      logStats("DELETE ROOM: '" + player.room + "'");
+      if (!DELETE_ROOM_LIST[player.room]) {
+        logStats(
+          "All players left the room: '" +
+            player.room +
+            "'. will delete after 100 mins."
+        );
+        let timeoutObj = setTimeout(() => {
+          deleteRoom(player.room);
+          delete DELETE_ROOM_LIST[player.room];
+        }, 6000000);
+        DELETE_ROOM_LIST[player.room] = timeoutObj;
+      }
     }
   }
   // Server Log

@@ -1429,3 +1429,14 @@
 2020-05-14T17:14:19.406Z [R:0 P:0 L:1] Disconnect request received for: unregistered player e91d28f8d5d49ba00b2013ec12135778 because of ping timeout
 2020-05-14T17:14:19.407Z [R:0 P:0 L:0] DISCONNECT: e91d28f8d5d49ba00b2013ec12135778
 2020-05-14T17:14:42.418Z [R:0 P:0 L:0] Ping Received
+2020-05-14T17:19:42.475Z [R:0 P:0 L:0] Ping Received
+2020-05-14T17:24:42.680Z [R:0 P:0 L:0] Ping Received
+2020-05-14T17:26:43.064Z [R:0 P:0 L:0] RENEW CONNECT: undefined
+2020-05-14T17:26:43.064Z [R:0 P:0 L:1] Player not found for provided session ID
+5/14/2020, 5:26:57 PM [R:0 P:0 L:0] RENEW CONNECT: undefined
+5/14/2020, 5:26:57 PM [R:0 P:0 L:1] Player not found for provided session ID
+5/14/2020, 5:27:00 PM [R:0 P:0 L:0] RENEW CONNECT: undefined
+5/14/2020, 5:27:00 PM [R:0 P:0 L:1] Player not found for provided session ID
+5/14/2020, 5:28:53 PM [R:0 P:0 L:1] Disconnect request received for: unregistered player undefined because of transport close
+5/14/2020, 5:28:53 PM [R:0 P:0 L:0] DISCONNECT: undefined
+5/14/2020, 5:29:42 PM [R:0 P:0 L:0] Ping Received
