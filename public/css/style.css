@@ -664,8 +664,8 @@ button {
 
 .loader {
   position: absolute;
-  left: 47.5%;
-  top: 47.5%;
+  left: 45%;
+  top: 40%;
   z-index: 10;
   border: 16px solid #f3f3f3;
   border-radius: 50%;
