@@ -90,3 +90,7 @@
 5/14/2020, 3:28:53 PM [R:0 P:0 L:1] Disconnect request received for: unregistered player a5da19ab9c9abdb6782d74cfaf06374c because of transport close
 5/14/2020, 3:28:53 PM [R:0 P:0 L:0] DISCONNECT: a5da19ab9c9abdb6782d74cfaf06374c
 5/14/2020, 3:29:42 PM [R:0 P:0 L:0] Ping Received
+5/14/2020, 3:31:15 PM [R:0 P:0 L:0] Ping Received
+5/14/2020, 3:34:42 PM [R:0 P:0 L:0] Ping Received
+5/14/2020, 3:35:55 PM [R:0 P:0 L:0] Ping Received
+5/14/2020, 3:39:42 PM [R:0 P:0 L:0] Ping Received
