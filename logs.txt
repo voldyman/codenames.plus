@@ -113,3 +113,41 @@
 5/14/2020, 11:05:56 AM [R:0 P:0 L:1] Disconnect request received for: unregistered player e6672644b6dd0ff90af341693b3b51ac because of transport close
 5/14/2020, 11:05:56 AM [R:0 P:0 L:0] DISCONNECT: e6672644b6dd0ff90af341693b3b51ac
 5/14/2020, 11:05:59 AM [R:0 P:0 L:1] NEW CONNECT: ff0205ab8dd07c236a7b1e00bf0b5305
+5/14/2020, 11:06:16 AM [R:1 P:1 L:0] ff0205ab8dd07c236a7b1e00bf0b5305(a) CREATED 'a'(1)
+5/14/2020, 11:06:32 AM [R:1 P:0 L:1] ff0205ab8dd07c236a7b1e00bf0b5305(a) LEFT 'a'(0)
+5/14/2020, 11:06:32 AM [R:1 P:0 L:1] All players left the room: 'a'. will delete after 100 mins.
+5/14/2020, 11:08:27 AM [R:1 P:0 L:1] Removing delete timeout for room: (a) as user (a) joined back
+5/14/2020, 11:08:39 AM [R:1 P:1 L:0] ff0205ab8dd07c236a7b1e00bf0b5305(a) JOINED 'a'(1)
+5/14/2020, 11:08:39 AM [R:1 P:1 L:0] Disconnect request received for: a ff0205ab8dd07c236a7b1e00bf0b5305 because of ping timeout
+5/14/2020, 11:08:39 AM [R:1 P:1 L:1] NEW CONNECT: 066e81e5d6f36d4aaabe46257db02997
+5/14/2020, 11:08:39 AM [R:1 P:1 L:2] NEW CONNECT: a80bc8d0f6ec7332809fb15b137d5ed9
+5/14/2020, 11:08:39 AM [R:1 P:1 L:3] NEW CONNECT: 4cc069cae294794df22558397a60c9ae
+5/14/2020, 11:08:39 AM [R:1 P:1 L:4] NEW CONNECT: 7e7f09c94a71769389522f278ccfafd7
+5/14/2020, 11:08:47 AM [R:1 P:2 L:3] 7e7f09c94a71769389522f278ccfafd7(a(1)) JOINED 'a'(2)
+5/14/2020, 11:08:51 AM [R:1 P:1 L:4] 7e7f09c94a71769389522f278ccfafd7(a(1)) LEFT 'a'(1)
+5/14/2020, 11:09:14 AM [R:1 P:1 L:4] Disconnect request received for: unregistered player 066e81e5d6f36d4aaabe46257db02997 because of ping timeout
+5/14/2020, 11:09:14 AM [R:1 P:1 L:3] DISCONNECT: 066e81e5d6f36d4aaabe46257db02997
+5/14/2020, 11:09:14 AM [R:1 P:1 L:3] Disconnect request received for: unregistered player a80bc8d0f6ec7332809fb15b137d5ed9 because of ping timeout
+5/14/2020, 11:09:14 AM [R:1 P:1 L:2] DISCONNECT: a80bc8d0f6ec7332809fb15b137d5ed9
+5/14/2020, 11:09:14 AM [R:1 P:1 L:2] Disconnect request received for: unregistered player 4cc069cae294794df22558397a60c9ae because of ping timeout
+5/14/2020, 11:09:14 AM [R:1 P:1 L:1] DISCONNECT: 4cc069cae294794df22558397a60c9ae
+5/14/2020, 11:09:14 AM [R:1 P:1 L:2] NEW CONNECT: 2b9efa326996aa87650be5d457c9ea05
+5/14/2020, 11:09:14 AM [R:1 P:1 L:2] Disconnect request received for: unregistered player 7e7f09c94a71769389522f278ccfafd7 because of transport close
+5/14/2020, 11:09:14 AM [R:1 P:1 L:1] DISCONNECT: 7e7f09c94a71769389522f278ccfafd7
+5/14/2020, 11:09:34 AM [R:1 P:1 L:1] Disconnect request received for: unregistered player 2b9efa326996aa87650be5d457c9ea05 because of transport close
+5/14/2020, 11:09:34 AM [R:1 P:1 L:0] DISCONNECT: 2b9efa326996aa87650be5d457c9ea05
+5/14/2020, 11:09:42 AM [R:1 P:1 L:0] Ping Received
+5/14/2020, 11:11:19 AM [R:0 P:0 L:1] NEW CONNECT: 89f68bf1c10d3b872fffe0dd9659cb24
+5/14/2020, 11:14:25 AM [R:0 P:0 L:1] Ping Received
+5/14/2020, 11:14:42 AM [R:0 P:0 L:1] Ping Received
+5/14/2020, 11:15:20 AM [R:0 P:0 L:1] Disconnect request received for: unregistered player 89f68bf1c10d3b872fffe0dd9659cb24 because of ping timeout
+5/14/2020, 11:15:20 AM [R:0 P:0 L:0] DISCONNECT: 89f68bf1c10d3b872fffe0dd9659cb24
+5/14/2020, 11:15:22 AM [R:0 P:0 L:1] NEW CONNECT: 2fe3223501bc3697e1c49875168a42af
+5/14/2020, 11:15:52 AM [R:0 P:0 L:1] Disconnect request received for: unregistered player 2fe3223501bc3697e1c49875168a42af because of ping timeout
+5/14/2020, 11:15:52 AM [R:0 P:0 L:0] DISCONNECT: 2fe3223501bc3697e1c49875168a42af
+5/14/2020, 11:15:55 AM [R:0 P:0 L:1] NEW CONNECT: 172c0cfe376fce8c57db470a129023c5
+5/14/2020, 11:17:21 AM [R:0 P:0 L:1] Disconnect request received for: unregistered player 172c0cfe376fce8c57db470a129023c5 because of ping timeout
+5/14/2020, 11:17:21 AM [R:0 P:0 L:0] DISCONNECT: 172c0cfe376fce8c57db470a129023c5
+5/14/2020, 11:17:25 AM [R:0 P:0 L:1] NEW CONNECT: 1c5a6d61c2ef0e508855e269b66997a0
+5/14/2020, 11:18:02 AM [R:0 P:0 L:1] Disconnect request received for: unregistered player 1c5a6d61c2ef0e508855e269b66997a0 because of transport close
+5/14/2020, 11:18:02 AM [R:0 P:0 L:0] DISCONNECT: 1c5a6d61c2ef0e508855e269b66997a0
