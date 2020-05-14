@@ -430,7 +430,13 @@ function joinRoom(socket, data) {
   let userName = data.nickname.trim(); // Trim whitespace from nickname
 
   if (DELETE_ROOM_LIST[roomName]) {
-    logStats("removing delete timeout for room: " + roomName);
+    logStats(
+      "Removing delete timeout for room: (" +
+        roomName +
+        ") as user (" +
+        userName +
+        ") joined back"
+    );
     clearTimeout(DELETE_ROOM_LIST[roomName]);
     delete DELETE_ROOM_LIST[roomName];
   }
@@ -497,8 +503,7 @@ function leaveRoom(socket) {
 
   // If the number of players in the room is 0 at this point, delete the room entirely
   if (Object.keys(ROOM_LIST[player.room].players).length === 0) {
-    delete ROOM_LIST[player.room];
-    logStats("DELETE ROOM: '" + player.room + "'");
+    deleteRoom(player.room);
   }
   socket.emit("leaveResponse", { success: true }); // Tell the client the action was successful
 }
