@@ -21,3 +21,93 @@
 5/14/2020, 12:17:26 PM [R:1 P:1 L:0] DISCONNECT: bfa17b794118e9aab1e94a454cb12056
 5/14/2020, 12:17:26 PM [R:1 P:1 L:1] NEW CONNECT: 688edb3d6b1f631fa42aa44d361eef39
 5/14/2020, 12:17:34 PM [R:1 P:2 L:0] 688edb3d6b1f631fa42aa44d361eef39(a(1)) JOINED 'a'(2)
+5/14/2020, 12:18:31 PM [R:1 P:2 L:0] Disconnect request received for: a(1) 688edb3d6b1f631fa42aa44d361eef39 because of transport close
+5/14/2020, 12:18:32 PM [R:1 P:2 L:1] NEW CONNECT: e87d1e3eb4d32468006805238ed06b71
+5/14/2020, 12:18:44 PM [R:1 P:3 L:0] e87d1e3eb4d32468006805238ed06b71(a(2)) JOINED 'a'(3)
+5/14/2020, 12:18:53 PM [R:1 P:3 L:0] Disconnect request received for: a(2) e87d1e3eb4d32468006805238ed06b71 because of transport close
+5/14/2020, 12:18:53 PM [R:1 P:3 L:1] NEW CONNECT: 8873ed08fef5ac61336b572f71904da4
+5/14/2020, 12:18:56 PM [R:1 P:3 L:1] Disconnect request received for: unregistered player 8873ed08fef5ac61336b572f71904da4 because of transport close
+5/14/2020, 12:18:56 PM [R:1 P:3 L:0] DISCONNECT: 8873ed08fef5ac61336b572f71904da4
+5/14/2020, 12:18:57 PM [R:1 P:3 L:1] NEW CONNECT: 9eab13ba906b9a8fd00356c7cbd27505
+5/14/2020, 12:19:04 PM [R:1 P:4 L:0] 9eab13ba906b9a8fd00356c7cbd27505(qw) JOINED 'a'(4)
+5/14/2020, 12:19:08 PM [R:1 P:4 L:0] Disconnect request received for: qw 9eab13ba906b9a8fd00356c7cbd27505 because of transport close
+5/14/2020, 12:19:08 PM [R:1 P:4 L:1] NEW CONNECT: 44dce8df04ef327e3f7c6399ba7558eb
+5/14/2020, 12:19:31 PM [R:0 P:0 L:0] Codenames Server Started at http://:::1988
+5/14/2020, 12:19:32 PM [R:0 P:0 L:1] NEW CONNECT: 7201c0a66ae8b10f18aa701c18361d53
+5/14/2020, 12:19:42 PM [R:0 P:0 L:1] Ping Received
+5/14/2020, 12:19:52 PM [R:0 P:0 L:1] Disconnect request received for: unregistered player 7201c0a66ae8b10f18aa701c18361d53 because of transport close
+5/14/2020, 12:19:52 PM [R:0 P:0 L:0] DISCONNECT: 7201c0a66ae8b10f18aa701c18361d53
+5/14/2020, 12:20:13 PM [R:0 P:0 L:1] NEW CONNECT: c3222fa23ba8395d80553e20d24adcd0
+5/14/2020, 12:20:29 PM [R:1 P:1 L:0] c3222fa23ba8395d80553e20d24adcd0(sad) CREATED 'a'(1)
+5/14/2020, 12:20:57 PM [R:1 P:1 L:0] Disconnect request received for: sad c3222fa23ba8395d80553e20d24adcd0 because of transport close
+5/14/2020, 12:21:10 PM [R:1 P:1 L:1] NEW CONNECT: b4f3403852afabd0cb4fc6e55ba3aca0
+5/14/2020, 12:21:26 PM [R:1 P:2 L:0] b4f3403852afabd0cb4fc6e55ba3aca0(asd) JOINED 'a'(2)
+5/14/2020, 12:21:32 PM [R:1 P:2 L:0] Disconnect request received for: asd b4f3403852afabd0cb4fc6e55ba3aca0 because of transport close
+5/14/2020, 12:21:40 PM [R:1 P:2 L:1] NEW CONNECT: 0854e308956fb7cdbe23f6223f893348
+5/14/2020, 12:22:34 PM [R:0 P:0 L:0] Codenames Server Started at http://:::3000
+5/14/2020, 12:22:36 PM [R:0 P:0 L:1] NEW CONNECT: dd3828b144577097034f092760692105
+5/14/2020, 12:22:42 PM [R:0 P:0 L:1] Disconnect request received for: unregistered player dd3828b144577097034f092760692105 because of transport close
+5/14/2020, 12:22:42 PM [R:0 P:0 L:0] DISCONNECT: dd3828b144577097034f092760692105
+5/14/2020, 12:23:22 PM [R:0 P:0 L:0] Codenames Server Started at http://:::3000
+5/14/2020, 12:23:30 PM [R:0 P:0 L:1] NEW CONNECT: d58ce97508c08b19cfd83bf46c646ce4
+5/14/2020, 12:23:33 PM [R:1 P:1 L:0] d58ce97508c08b19cfd83bf46c646ce4(asd) CREATED 'a'(1)
+5/14/2020, 12:23:42 PM [R:1 P:1 L:0] Disconnect request received for: asd d58ce97508c08b19cfd83bf46c646ce4 because of transport close
+5/14/2020, 12:23:43 PM [R:1 P:1 L:0] RENEW CONNECT: d58ce97508c08b19cfd83bf46c646ce4
+5/14/2020, 12:23:43 PM [R:1 P:1 L:0] Cacelling disconnect timer for: d58ce97508c08b19cfd83bf46c646ce4
+5/14/2020, 12:23:43 PM [R:1 P:1 L:0] Player already exists: asd
+5/14/2020, 12:23:49 PM [R:1 P:1 L:0] Disconnect request received for: asd d58ce97508c08b19cfd83bf46c646ce4 because of transport close
+5/14/2020, 12:23:49 PM [R:1 P:1 L:0] RENEW CONNECT: d58ce97508c08b19cfd83bf46c646ce4
+5/14/2020, 12:23:49 PM [R:1 P:1 L:0] Cacelling disconnect timer for: d58ce97508c08b19cfd83bf46c646ce4
+5/14/2020, 12:23:49 PM [R:1 P:1 L:0] Player already exists: asd
+5/14/2020, 12:24:01 PM [R:1 P:1 L:0] Disconnect request received for: asd d58ce97508c08b19cfd83bf46c646ce4 because of transport close
+5/14/2020, 12:24:01 PM [R:1 P:1 L:0] RENEW CONNECT: d58ce97508c08b19cfd83bf46c646ce4
+5/14/2020, 12:24:01 PM [R:1 P:1 L:0] Cacelling disconnect timer for: d58ce97508c08b19cfd83bf46c646ce4
+5/14/2020, 12:24:01 PM [R:1 P:1 L:0] Player already exists: asd
+5/14/2020, 12:24:42 PM [R:1 P:1 L:0] Ping Received
+5/14/2020, 12:26:18 PM [R:1 P:1 L:0] Disconnect request received for: asd d58ce97508c08b19cfd83bf46c646ce4 because of ping timeout
+5/14/2020, 12:26:20 PM [R:1 P:1 L:0] RENEW CONNECT: d58ce97508c08b19cfd83bf46c646ce4
+5/14/2020, 12:26:20 PM [R:1 P:1 L:0] Cacelling disconnect timer for: d58ce97508c08b19cfd83bf46c646ce4
+5/14/2020, 12:26:20 PM [R:1 P:1 L:0] Player already exists: asd
+5/14/2020, 12:26:43 PM [R:1 P:1 L:1] NEW CONNECT: cf92305772aaa14ac1d7dc5c85344138
+5/14/2020, 12:26:55 PM [R:1 P:1 L:2] NEW CONNECT: 0f084447f39d33fa85d6700ea83df1b4
+5/14/2020, 12:28:02 PM [R:1 P:1 L:2] Ping Received
+5/14/2020, 12:28:53 PM [R:1 P:1 L:2] Disconnect request received for: unregistered player cf92305772aaa14ac1d7dc5c85344138 because of transport close
+5/14/2020, 12:28:53 PM [R:1 P:1 L:1] DISCONNECT: cf92305772aaa14ac1d7dc5c85344138
+5/14/2020, 12:29:26 PM [R:1 P:1 L:1] Disconnect request received for: asd d58ce97508c08b19cfd83bf46c646ce4 because of ping timeout
+5/14/2020, 12:29:27 PM [R:1 P:1 L:1] RENEW CONNECT: d58ce97508c08b19cfd83bf46c646ce4
+5/14/2020, 12:29:27 PM [R:1 P:1 L:1] Cacelling disconnect timer for: d58ce97508c08b19cfd83bf46c646ce4
+5/14/2020, 12:29:27 PM [R:1 P:1 L:1] Player already exists: asd
+5/14/2020, 12:29:32 PM [R:1 P:1 L:1] Disconnect request received for: unregistered player 0f084447f39d33fa85d6700ea83df1b4 because of ping timeout
+5/14/2020, 12:29:32 PM [R:1 P:1 L:0] DISCONNECT: 0f084447f39d33fa85d6700ea83df1b4
+5/14/2020, 12:29:33 PM [R:1 P:1 L:1] NEW CONNECT: 9023a95b5b368d42bbd21871207bc9d3
+5/14/2020, 12:29:42 PM [R:1 P:1 L:1] Ping Received
+5/14/2020, 12:29:58 PM [R:1 P:1 L:1] Disconnect request received for: asd d58ce97508c08b19cfd83bf46c646ce4 because of ping timeout
+5/14/2020, 12:29:59 PM [R:1 P:1 L:1] RENEW CONNECT: d58ce97508c08b19cfd83bf46c646ce4
+5/14/2020, 12:29:59 PM [R:1 P:1 L:1] Cacelling disconnect timer for: d58ce97508c08b19cfd83bf46c646ce4
+5/14/2020, 12:29:59 PM [R:1 P:1 L:1] Player already exists: asd
+5/14/2020, 12:30:04 PM [R:1 P:1 L:1] Disconnect request received for: unregistered player 9023a95b5b368d42bbd21871207bc9d3 because of ping timeout
+5/14/2020, 12:30:04 PM [R:1 P:1 L:0] DISCONNECT: 9023a95b5b368d42bbd21871207bc9d3
+5/14/2020, 12:30:05 PM [R:1 P:1 L:1] NEW CONNECT: a6e3059c41bec886a3ce8ecba64f8714
+5/14/2020, 12:30:41 PM [R:1 P:1 L:1] Disconnect request received for: unregistered player a6e3059c41bec886a3ce8ecba64f8714 because of transport close
+5/14/2020, 12:30:41 PM [R:1 P:1 L:0] DISCONNECT: a6e3059c41bec886a3ce8ecba64f8714
+5/14/2020, 12:30:43 PM [R:1 P:1 L:1] NEW CONNECT: 3094afc85d31c32822659a2e1505ee89
+5/14/2020, 12:30:49 PM [R:1 P:2 L:0] 3094afc85d31c32822659a2e1505ee89(asd(1)) JOINED 'a'(2)
+5/14/2020, 12:30:52 PM [R:1 P:2 L:0] Disconnect request received for: asd(1) 3094afc85d31c32822659a2e1505ee89 because of transport close
+5/14/2020, 12:30:52 PM [R:1 P:2 L:0] RENEW CONNECT: 3094afc85d31c32822659a2e1505ee89
+5/14/2020, 12:30:52 PM [R:1 P:2 L:0] Cacelling disconnect timer for: 3094afc85d31c32822659a2e1505ee89
+5/14/2020, 12:30:52 PM [R:1 P:2 L:0] Player already exists: asd(1)
+5/14/2020, 12:31:20 PM [R:1 P:2 L:0] RENEW CONNECT: 3094afc85d31c32822659a2e1505ee89
+5/14/2020, 12:31:20 PM [R:1 P:2 L:0] Player already exists: asd(1)
+5/14/2020, 12:31:22 PM [R:1 P:2 L:0] Disconnect request received for: asd(1) 3094afc85d31c32822659a2e1505ee89 because of ping timeout
+5/14/2020, 12:31:22 PM [R:1 P:2 L:0] Disconnect request received for: asd(1) 3094afc85d31c32822659a2e1505ee89 because of transport close
+5/14/2020, 12:31:22 PM [R:1 P:2 L:0] RENEW CONNECT: 3094afc85d31c32822659a2e1505ee89
+5/14/2020, 12:31:22 PM [R:1 P:2 L:0] Cacelling disconnect timer for: 3094afc85d31c32822659a2e1505ee89
+5/14/2020, 12:31:22 PM [R:1 P:2 L:0] Player already exists: asd(1)
+5/14/2020, 12:31:25 PM [R:1 P:2 L:0] Disconnect request received for: asd(1) 3094afc85d31c32822659a2e1505ee89 because of transport close
+5/14/2020, 12:31:27 PM [R:1 P:2 L:0] RENEW CONNECT: 3094afc85d31c32822659a2e1505ee89
+5/14/2020, 12:31:27 PM [R:1 P:2 L:0] Cacelling disconnect timer for: 3094afc85d31c32822659a2e1505ee89
+5/14/2020, 12:31:27 PM [R:1 P:2 L:0] Player already exists: asd(1)
+5/14/2020, 12:31:38 PM [R:1 P:2 L:0] Disconnect request received for: asd(1) 3094afc85d31c32822659a2e1505ee89 because of transport close
+5/14/2020, 12:31:38 PM [R:1 P:2 L:0] RENEW CONNECT: 3094afc85d31c32822659a2e1505ee89
+5/14/2020, 12:31:38 PM [R:1 P:2 L:0] Cacelling disconnect timer for: 3094afc85d31c32822659a2e1505ee89
+5/14/2020, 12:31:38 PM [R:1 P:2 L:0] Player already exists: asd(1)

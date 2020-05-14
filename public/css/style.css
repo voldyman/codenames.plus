@@ -10,9 +10,8 @@ Grey: #D6D2C9
 
 */
 
-
-@media(max-width: 1600px){
-  #board .row .tile{
+@media (max-width: 1600px) {
+  #board .row .tile {
     height: 90px !important;
     font-size: 18px;
   }
@@ -26,8 +25,7 @@ Grey: #D6D2C9
   }
 }
 
-@media(max-width: 1100px){
-
+@media (max-width: 1100px) {
   #app {
     width: 950px !important;
   }
@@ -226,7 +224,7 @@ body {
   margin-top: 32px;
   background: #323032;
   color: #323032;
-  font-family: 'Changa', sans-serif;
+  font-family: "Changa", sans-serif;
 }
 
 * {
@@ -367,7 +365,7 @@ body {
   display: none;
   width: 100vw;
   height: 100vh;
-  background: rgb(60,60,60, 0.9);
+  background: rgb(60, 60, 60, 0.9);
   z-index: 2 !important;
 }
 
@@ -381,7 +379,7 @@ body {
   border-radius: 10px;
 }
 
-#join-game h1{
+#join-game h1 {
   color: #323032;
   font-size: 32px;
   margin: 0;
@@ -397,7 +395,7 @@ body {
   text-align: left;
 }
 
-#join-game .join-input input{
+#join-game .join-input input {
   float: right;
   line-height: 18px;
 }
@@ -424,7 +422,7 @@ body {
 }
 
 #join-game #join-create:hover {
-  background: #11779F
+  background: #11779F;
 }
 
 #join-game #error-message {
@@ -435,7 +433,7 @@ body {
 
 button {
   cursor: pointer;
-  font-family: 'Changa', sans-serif;
+  font-family: "Changa", sans-serif;
   border-radius: 3px !important;
   border-style: solid;
 }
@@ -485,7 +483,7 @@ button {
   position: absolute;
   width: 1500px;
   left: 50%;
-  transform: translateX(-50%)
+  transform: translateX(-50%);
 }
 
 #players {
@@ -494,7 +492,7 @@ button {
   margin-bottom: 50px;
 }
 
-#players #panel{
+#players #panel {
   position: relative;
   width: 100%;
   background: #F8FDFF;
@@ -509,7 +507,7 @@ button {
   margin: 0;
 }
 
-#players #panel #join-red{
+#players #panel #join-red {
   position: relative;
   width: 46%;
   margin: 2%;
@@ -518,7 +516,7 @@ button {
   padding: 4px;
   float: left;
   font-size: 16px;
-  
+
   color: #F8FDFF;
   background: #B32728;
 }
@@ -528,7 +526,7 @@ button {
   color: #B32728;
 }
 
-#players #panel #join-blue{
+#players #panel #join-blue {
   position: relative;
   width: 46%;
   margin: 2%;
@@ -546,7 +544,7 @@ button {
   color: #11779F;
 }
 
-#players #panel #randomize-teams{
+#players #panel #randomize-teams {
   position: relative;
   width: 96%;
   margin: 2%;
@@ -563,7 +561,7 @@ button {
   background: #323032;
 }
 
-#players #panel ul{
+#players #panel ul {
   display: inline-block;
   position: relative;
   list-style: none;
@@ -662,4 +660,37 @@ button {
 #space {
   position: relative;
   width: 250px;
+}
+
+.loader {
+  position: absolute;
+  left: 47.5%;
+  top: 47.5%;
+  z-index: 10;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

@@ -6,6 +6,8 @@ let socket = io({
 // Sign In Page Elements
 ////////////////////////////////////////////////////////////////////////////
 // Divs
+let loader = document.getElementById("loader");
+let container = document.getElementById("container");
 let joinDiv = document.getElementById("join-game");
 let joinErrorMessage = document.getElementById("error-message");
 // Input Fields
@@ -231,7 +233,7 @@ buttonServerMessageOkay.onclick = () => {
 ////////////////////////////////////////////////////////////////////////////
 socket.on("serverStats", data => {
   // Client gets server stats
-  if (!sessionStorage.getItem("sessionId")) {
+  if (data.sessionId) {
     sessionStorage.setItem("sessionId", data.sessionId);
   }
   if (data.isExistingPlayer) {
@@ -239,6 +241,8 @@ socket.on("serverStats", data => {
     gameDiv.style.display = "block";
     updateGameState(data.gameState);
   }
+  loader.style.display = "none";
+  container.style.display = "block";
   document.getElementById("server-stats").innerHTML =
     "Players: " + data.players + " | Rooms: " + data.rooms;
 });
