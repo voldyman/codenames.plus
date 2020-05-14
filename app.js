@@ -146,11 +146,12 @@ class Player {
 // Server logic
 ////////////////////////////////////////////////////////////////////////////
 io.sockets.on("connection", function(socket) {
-  let isExistingPlayer = false;
   let gameState = null;
   let existingSessionId = socket.request._query.sessionId;
+  let isExistingPlayer = existingSessionId in PLAYER_LIST;
 
-  if (existingSessionId == "null") {
+  if (existingSessionId == "null" || !isExistingPlayer) {
+    // Either the player does not exist or was already disconnected
     // Initialize a new session
     let sessionId = crypto.randomBytes(16).toString("hex");
     // Alert server of the socket connection
@@ -167,7 +168,6 @@ io.sockets.on("connection", function(socket) {
     }
     SOCKET_LIST[existingSessionId] = socket;
     socket.sessionId = existingSessionId;
-    isExistingPlayer = socket.sessionId in PLAYER_LIST;
     if (isExistingPlayer) {
       logStats(
         "Player already exists: " + PLAYER_LIST[socket.sessionId].nickname

@@ -1,24 +1,23 @@
-5/14/2020, 11:41:56 AM [R:0 P:0 L:0] Codenames Server Started at http://:::3000
-5/14/2020, 11:44:42 AM [R:0 P:0 L:0] Ping Received
-5/14/2020, 11:46:36 AM [R:0 P:0 L:0] Ping Received
-5/14/2020, 11:49:46 AM [R:0 P:0 L:0] Ping Received
-5/14/2020, 11:51:16 AM [R:0 P:0 L:0] Ping Received
-5/14/2020, 11:54:42 AM [R:0 P:0 L:0] Ping Received
-5/14/2020, 11:55:56 AM [R:0 P:0 L:0] Ping Received
-5/14/2020, 11:56:45 AM [R:0 P:0 L:0] RENEW CONNECT: undefined
-5/14/2020, 11:56:45 AM [R:0 P:0 L:1] Player not found for provided session ID
-5/14/2020, 11:58:02 AM [R:0 P:0 L:2] NEW CONNECT: c8bd1ccef2333e888c156bbf7a51a5b2
-5/14/2020, 11:58:15 AM [R:1 P:1 L:1] c8bd1ccef2333e888c156bbf7a51a5b2(a) CREATED 'a'(1)
-5/14/2020, 11:58:54 AM [R:1 P:1 L:1] Disconnect request received for: unregistered player undefined because of transport close
-5/14/2020, 11:58:54 AM [R:1 P:1 L:0] DISCONNECT: undefined
-5/14/2020, 11:58:57 AM [R:1 P:1 L:0] Disconnect request received for: a c8bd1ccef2333e888c156bbf7a51a5b2 because of ping timeout
-5/14/2020, 11:59:00 AM [R:1 P:1 L:1] NEW CONNECT: 739798d69b481891fe17996052394810
-5/14/2020, 11:59:42 AM [R:1 P:1 L:1] Ping Received
-5/14/2020, 12:00:36 PM [R:1 P:1 L:1] Ping Received
-5/14/2020, 12:03:16 PM [R:1 P:1 L:1] Disconnect request received for: unregistered player 739798d69b481891fe17996052394810 because of transport close
-5/14/2020, 12:03:16 PM [R:1 P:1 L:0] DISCONNECT: 739798d69b481891fe17996052394810
-5/14/2020, 12:03:16 PM [R:1 P:1 L:0] RENEW CONNECT: c8bd1ccef2333e888c156bbf7a51a5b2
-5/14/2020, 12:03:16 PM [R:1 P:1 L:0] Cacelling disconnect timer for: c8bd1ccef2333e888c156bbf7a51a5b2
-5/14/2020, 12:03:16 PM [R:1 P:1 L:0] Player already exists: a
-5/14/2020, 12:04:42 PM [R:1 P:1 L:0] Ping Received
-5/14/2020, 12:05:16 PM [R:1 P:1 L:0] Ping Received
+5/14/2020, 12:15:15 PM [R:0 P:0 L:0] Codenames Server Started at http://:::3000
+5/14/2020, 12:15:48 PM [R:0 P:0 L:1] NEW CONNECT: 8a8ba4872c99b7f8b3d7a9ee20f1b0ac
+5/14/2020, 12:15:54 PM [R:1 P:1 L:0] 8a8ba4872c99b7f8b3d7a9ee20f1b0ac(a) CREATED 'a'(1)
+5/14/2020, 12:16:03 PM [R:1 P:1 L:0] Disconnect request received for: a 8a8ba4872c99b7f8b3d7a9ee20f1b0ac because of transport close
+5/14/2020, 12:16:05 PM [R:1 P:1 L:0] RENEW CONNECT: 8a8ba4872c99b7f8b3d7a9ee20f1b0ac
+5/14/2020, 12:16:05 PM [R:1 P:1 L:0] Cacelling disconnect timer for: 8a8ba4872c99b7f8b3d7a9ee20f1b0ac
+5/14/2020, 12:16:05 PM [R:1 P:1 L:0] Player already exists: a
+5/14/2020, 12:16:09 PM [R:1 P:1 L:0] Disconnect request received for: a 8a8ba4872c99b7f8b3d7a9ee20f1b0ac because of transport close
+5/14/2020, 12:16:10 PM [R:1 P:1 L:0] RENEW CONNECT: 8a8ba4872c99b7f8b3d7a9ee20f1b0ac
+5/14/2020, 12:16:10 PM [R:1 P:1 L:0] Cacelling disconnect timer for: 8a8ba4872c99b7f8b3d7a9ee20f1b0ac
+5/14/2020, 12:16:10 PM [R:1 P:1 L:0] Player already exists: a
+5/14/2020, 12:16:15 PM [R:1 P:1 L:0] Disconnect request received for: a 8a8ba4872c99b7f8b3d7a9ee20f1b0ac because of transport close
+5/14/2020, 12:16:22 PM [R:1 P:1 L:0] RENEW CONNECT: 8a8ba4872c99b7f8b3d7a9ee20f1b0ac
+5/14/2020, 12:16:22 PM [R:1 P:1 L:0] Cacelling disconnect timer for: 8a8ba4872c99b7f8b3d7a9ee20f1b0ac
+5/14/2020, 12:16:22 PM [R:1 P:1 L:0] Player already exists: a
+5/14/2020, 12:16:37 PM [R:1 P:1 L:0] Disconnect request received for: a 8a8ba4872c99b7f8b3d7a9ee20f1b0ac because of transport close
+5/14/2020, 12:17:11 PM [R:1 P:1 L:1] NEW CONNECT: bfa17b794118e9aab1e94a454cb12056
+5/14/2020, 12:17:14 PM [R:1 P:2 L:0] bfa17b794118e9aab1e94a454cb12056(b) JOINED 'a'(2)
+5/14/2020, 12:17:24 PM [R:1 P:1 L:1] bfa17b794118e9aab1e94a454cb12056(b) LEFT 'a'(1)
+5/14/2020, 12:17:26 PM [R:1 P:1 L:1] Disconnect request received for: unregistered player bfa17b794118e9aab1e94a454cb12056 because of transport close
+5/14/2020, 12:17:26 PM [R:1 P:1 L:0] DISCONNECT: bfa17b794118e9aab1e94a454cb12056
+5/14/2020, 12:17:26 PM [R:1 P:1 L:1] NEW CONNECT: 688edb3d6b1f631fa42aa44d361eef39
+5/14/2020, 12:17:34 PM [R:1 P:2 L:0] 688edb3d6b1f631fa42aa44d361eef39(a(1)) JOINED 'a'(2)
