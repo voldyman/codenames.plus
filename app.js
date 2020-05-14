@@ -22,7 +22,7 @@ let crypto = require("crypto");
 function listen() {
   let host = server.address().address;
   let port = server.address().port;
-  console.log("Codenames Server Started at http://" + host + ":" + port);
+  logStats("Codenames Server Started at http://" + host + ":" + port);
 
   if (requireHttps) {
     console.log("Https Required");
@@ -846,13 +846,13 @@ function socketDisconnect(socket) {
 function deleteRoom(room) {
   if (!DELETE_ROOM_LIST[room]) {
     logStats(
-      "All players left the room: '" + room + "'. will delete after 100 mins."
+      "All players left the room: '" + room + "'. will delete after 10 hours."
     );
     let timeoutObj = setTimeout(() => {
       delete ROOM_LIST[room];
       logStats("DELETE ROOM: '" + room + "'");
       delete DELETE_ROOM_LIST[room];
-    }, 6000000);
+    }, 36000000);
     DELETE_ROOM_LIST[room] = timeoutObj;
   }
 }
