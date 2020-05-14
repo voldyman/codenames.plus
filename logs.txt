@@ -1024,3 +1024,8 @@
 2020-05-14T05:58:37.993Z [R:0 P:0 L:1] Disconnect request received for: unregistered player undefined because of transport close
 2020-05-14T05:58:37.993Z [R:0 P:0 L:0] DISCONNECT: undefined
 2020-05-14T05:59:25.829Z [R:0 P:0 L:0] Ping Received
+2020-05-14T06:00:07.344Z [R:0 P:0 L:0] Ping Received
+2020-05-14T06:04:05.821Z [R:0 P:0 L:0] Ping Received
+2020-05-14T06:05:07.335Z [R:0 P:0 L:0] Ping Received
+2020-05-14T06:08:45.959Z [R:0 P:0 L:0] Ping Received
+2020-05-14T06:10:07.756Z [R:0 P:0 L:0] Ping Received
