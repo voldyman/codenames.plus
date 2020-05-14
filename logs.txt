@@ -912,3 +912,18 @@
 2020-05-14T03:01:32.173Z [R:1 P:1 L:4] DISCONNECT: 2165bc2e2cdec01dbc0db7bf8b3b470a
 2020-05-14T03:01:53.308Z [R:1 P:1 L:4] Disconnect request received for: unregistered player 89e1337822f50f18b7f319de546177a0 because of transport close
 2020-05-14T03:01:53.308Z [R:1 P:1 L:3] DISCONNECT: 89e1337822f50f18b7f319de546177a0
+2020-05-14T03:01:58.264Z [R:1 P:1 L:3] Disconnect request received for: unregistered player 6b23c076d1dbe3bf8dce627f402a2210 because of transport close
+2020-05-14T03:01:58.264Z [R:1 P:1 L:2] DISCONNECT: 6b23c076d1dbe3bf8dce627f402a2210
+2020-05-14T03:03:57.865Z [R:1 P:1 L:2] Ping Received
+2020-05-14T03:04:49.557Z [R:1 P:1 L:2] Disconnect request received for: unregistered player a7666f3be8fca73db229473d0b5a115b because of transport close
+2020-05-14T03:04:49.558Z [R:1 P:1 L:1] DISCONNECT: a7666f3be8fca73db229473d0b5a115b
+2020-05-14T03:05:07.316Z [R:1 P:1 L:1] Ping Received
+2020-05-14T03:08:37.632Z [R:1 P:1 L:1] Ping Received
+2020-05-14T03:10:08.839Z [R:1 P:1 L:1] Ping Received
+2020-05-14T03:11:17.357Z [R:1 P:0 L:1] 3a7a6e6b1fdc5ec58b25b1518074a71d(daddy) LEFT 'v4f'(0)
+2020-05-14T03:11:17.357Z [R:0 P:0 L:1] DELETE ROOM: 'v4f'
+2020-05-14T03:11:17.357Z [R:0 P:0 L:1] DISCONNECT: 3a7a6e6b1fdc5ec58b25b1518074a71d
+2020-05-14T03:12:32.334Z [R:0 P:0 L:2] NEW CONNECT: f8a4f0b270a9cf95ebc0ea7110e7e0d7
+2020-05-14T03:13:17.099Z [R:0 P:0 L:2] Disconnect request received for: unregistered player f8a4f0b270a9cf95ebc0ea7110e7e0d7 because of transport close
+2020-05-14T03:13:17.099Z [R:0 P:0 L:1] DISCONNECT: f8a4f0b270a9cf95ebc0ea7110e7e0d7
+2020-05-14T03:13:17.673Z [R:0 P:0 L:1] Ping Received
