@@ -318,6 +318,11 @@ socket.on('gameState', (data) =>{           // Response to gamestate update
   updateGameState(data)
 })
 
+socket.on('disconnect', (data) => {
+  console.log(data)
+  alert(true)
+})
+
 
 // Utility Functions
 ////////////////////////////////////////////////////////////////////////////

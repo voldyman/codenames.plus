@@ -1376,3 +1376,31 @@
 2020-05-14T16:29:42.565Z [R:0 P:0 L:0] Ping Received
 2020-05-14T16:32:43.978Z [R:0 P:0 L:0] Ping Received
 2020-05-14T16:34:42.583Z [R:0 P:0 L:0] Ping Received
+2020-05-14T16:37:23.950Z [R:0 P:0 L:0] Ping Received
+2020-05-14T16:39:42.375Z [R:0 P:0 L:0] Ping Received
+2020-05-14T16:39:46.926Z [R:0 P:0 L:1] NEW CONNECT: e91d28f8d5d49ba00b2013ec12135778
+2020-05-14T16:40:59.794Z [R:0 P:0 L:1] NEW CONNECT: 0ee02466f621c74b31d57e7ae3e99800
+2020-05-14T16:41:33.795Z [R:0 P:0 L:1] Disconnect request received for: unregistered player 0ee02466f621c74b31d57e7ae3e99800 because of transport close
+2020-05-14T16:41:33.796Z [R:0 P:0 L:0] DISCONNECT: 0ee02466f621c74b31d57e7ae3e99800
+2020-05-14T16:41:34.067Z [R:0 P:0 L:0] RENEW CONNECT: e91d28f8d5d49ba00b2013ec12135778
+2020-05-14T16:41:34.080Z [R:0 P:0 L:1] Player not found for provided session ID
+2020-05-14T16:42:25.370Z [R:1 P:1 L:0] e91d28f8d5d49ba00b2013ec12135778(a) CREATED 'a'(1)
+2020-05-14T16:44:07.982Z [R:1 P:1 L:0] Disconnect request received for: a e91d28f8d5d49ba00b2013ec12135778 because of ping timeout
+2020-05-14T16:44:07.991Z [R:1 P:1 L:0] RENEW CONNECT: e91d28f8d5d49ba00b2013ec12135778
+2020-05-14T16:44:07.993Z [R:1 P:1 L:0] Cacelling disconnect timer for: e91d28f8d5d49ba00b2013ec12135778
+2020-05-14T16:44:07.995Z [R:1 P:1 L:0] Player already exists: a
+2020-05-14T16:44:08.003Z [R:1 P:1 L:0] RENEW CONNECT: e91d28f8d5d49ba00b2013ec12135778
+2020-05-14T16:44:08.006Z [R:1 P:1 L:0] Player already exists: a
+2020-05-14T16:44:08.013Z [R:1 P:1 L:0] RENEW CONNECT: e91d28f8d5d49ba00b2013ec12135778
+2020-05-14T16:44:08.014Z [R:1 P:1 L:0] Player already exists: a
+2020-05-14T16:44:37.989Z [R:1 P:1 L:0] Disconnect request received for: a e91d28f8d5d49ba00b2013ec12135778 because of ping timeout
+2020-05-14T16:44:38.003Z [R:1 P:1 L:0] Disconnect request received for: a e91d28f8d5d49ba00b2013ec12135778 because of ping timeout
+2020-05-14T16:44:42.436Z [R:1 P:1 L:0] Ping Received
+2020-05-14T16:45:06.490Z [R:1 P:1 L:0] Ping Received
+2020-05-14T16:45:29.401Z [R:1 P:1 L:0] Disconnect request received for: a e91d28f8d5d49ba00b2013ec12135778 because of ping timeout
+2020-05-14T16:46:06.423Z [R:1 P:1 L:0] RENEW CONNECT: e91d28f8d5d49ba00b2013ec12135778
+2020-05-14T16:46:17.312Z [R:1 P:1 L:0] Cacelling disconnect timer for: e91d28f8d5d49ba00b2013ec12135778
+2020-05-14T16:46:28.702Z [R:1 P:1 L:0] Player already exists: a
+2020-05-14T16:49:42.450Z [R:1 P:1 L:0] Ping Received
+2020-05-14T16:49:47.701Z [R:1 P:1 L:0] Ping Received
+2020-05-14T16:50:08.531Z [R:1 P:1 L:0] Disconnect request received for: a e91d28f8d5d49ba00b2013ec12135778 because of ping timeout
