@@ -98,3 +98,12 @@
 5/14/2020, 3:45:15 PM [R:0 P:0 L:0] Ping Received
 5/14/2020, 3:49:42 PM [R:0 P:0 L:0] Ping Received
 5/14/2020, 3:49:55 PM [R:0 P:0 L:0] Ping Received
+5/14/2020, 3:54:35 PM [R:0 P:0 L:0] Ping Received
+5/14/2020, 3:54:42 PM [R:0 P:0 L:0] Ping Received
+5/14/2020, 3:56:41 PM [R:0 P:0 L:1] NEW CONNECT: 6c3eb3736b04a70e3c5c8c620906b501
+5/14/2020, 3:58:53 PM [R:0 P:0 L:1] Disconnect request received for: unregistered player 6c3eb3736b04a70e3c5c8c620906b501 because of transport close
+5/14/2020, 3:58:53 PM [R:0 P:0 L:0] DISCONNECT: 6c3eb3736b04a70e3c5c8c620906b501
+5/14/2020, 3:59:15 PM [R:0 P:0 L:0] Ping Received
+5/14/2020, 3:59:42 PM [R:0 P:0 L:0] Ping Received
+5/14/2020, 4:03:55 PM [R:0 P:0 L:0] Ping Received
+5/14/2020, 4:04:42 PM [R:0 P:0 L:0] Ping Received
