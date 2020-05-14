@@ -1,9 +1,1 @@
-5/14/2020, 11:20:37 AM [R:0 P:0 L:0] Codenames Server Started at http://:::3000
-5/14/2020, 11:24:42 AM [R:0 P:0 L:0] Ping Received
-5/14/2020, 11:25:17 AM [R:0 P:0 L:0] Ping Received
-5/14/2020, 11:26:43 AM [R:0 P:0 L:0] RENEW CONNECT: undefined
-5/14/2020, 11:26:43 AM [R:0 P:0 L:1] Player not found for provided session ID
-5/14/2020, 11:28:53 AM [R:0 P:0 L:1] Disconnect request received for: unregistered player undefined because of transport close
-5/14/2020, 11:28:53 AM [R:0 P:0 L:0] DISCONNECT: undefined
-5/14/2020, 11:29:42 AM [R:0 P:0 L:0] Ping Received
-5/14/2020, 11:29:57 AM [R:0 P:0 L:0] Ping Received
+5/14/2020, 11:41:56 AM [R:0 P:0 L:0] Codenames Server Started at http://:::3000

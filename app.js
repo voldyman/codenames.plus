@@ -429,18 +429,6 @@ function joinRoom(socket, data) {
   let pass = data.password.trim(); // Trim whitespace from password
   let userName = data.nickname.trim(); // Trim whitespace from nickname
 
-  if (DELETE_ROOM_LIST[roomName]) {
-    logStats(
-      "Removing delete timeout for room: (" +
-        roomName +
-        ") as user (" +
-        userName +
-        ") joined back"
-    );
-    clearTimeout(DELETE_ROOM_LIST[roomName]);
-    delete DELETE_ROOM_LIST[roomName];
-  }
-
   if (!ROOM_LIST[roomName]) {
     // Tell client the room doesnt exist
     socket.emit("joinResponse", { success: false, msg: "Room Not Found" });
@@ -460,6 +448,18 @@ function joinRoom(socket, data) {
         });
       } else {
         // If the room exists and the password / nickname are valid, proceed
+        // If we were to previously delete the room cancel
+        if (DELETE_ROOM_LIST[roomName]) {
+          logStats(
+            "Removing delete timeout for room: (" +
+              roomName +
+              ") as user (" +
+              userName +
+              ") joined back"
+          );
+          clearTimeout(DELETE_ROOM_LIST[roomName]);
+          delete DELETE_ROOM_LIST[roomName];
+        }
         let player = new Player(userName, roomName, socket); // Create a new player
         ROOM_LIST[roomName].players[socket.sessionId] = player; // Add player to room
         player.joinTeam(); // Distribute player to team
