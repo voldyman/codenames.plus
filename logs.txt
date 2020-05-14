@@ -941,3 +941,9 @@
 2020-05-14T03:31:57.633Z [R:0 P:0 L:1] Ping Received
 2020-05-14T03:35:07.350Z [R:0 P:0 L:1] Ping Received
 2020-05-14T03:36:37.740Z [R:0 P:0 L:1] Ping Received
+2020-05-14T03:39:47.952Z [R:0 P:0 L:1] Disconnect request received for: unregistered player 5a1513100f21c7044d2c1690f31282d1 because of transport close
+2020-05-14T03:39:47.952Z [R:0 P:0 L:0] DISCONNECT: 5a1513100f21c7044d2c1690f31282d1
+2020-05-14T03:40:07.512Z [R:0 P:0 L:0] Ping Received
+2020-05-14T03:41:17.686Z [R:0 P:0 L:0] Ping Received
+2020-05-14T03:45:07.429Z [R:0 P:0 L:0] Ping Received
+2020-05-14T03:45:57.633Z [R:0 P:0 L:0] Ping Received
