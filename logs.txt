@@ -1246,3 +1246,11 @@
 2020-05-14T12:36:05.973Z [R:0 P:0 L:0] Ping Received
 2020-05-14T12:40:21.008Z [R:0 P:0 L:0] Ping Received
 2020-05-14T12:40:45.967Z [R:0 P:0 L:0] Ping Received
+2020-05-14T12:45:20.423Z [R:0 P:0 L:0] Ping Received
+2020-05-14T12:45:25.956Z [R:0 P:0 L:0] Ping Received
+2020-05-14T12:50:07.516Z [R:0 P:0 L:0] Ping Received
+2020-05-14T12:50:20.423Z [R:0 P:0 L:0] Ping Received
+2020-05-14T12:52:20.153Z [R:0 P:0 L:1] NEW CONNECT: 9c2bb3d1cd6f893ac78823395a77f7b1
+2020-05-14T12:52:51.013Z [R:0 P:0 L:1] Disconnect request received for: unregistered player 9c2bb3d1cd6f893ac78823395a77f7b1 because of ping timeout
+2020-05-14T12:52:51.013Z [R:0 P:0 L:0] DISCONNECT: 9c2bb3d1cd6f893ac78823395a77f7b1
+2020-05-14T12:54:46.011Z [R:0 P:0 L:0] Ping Received
