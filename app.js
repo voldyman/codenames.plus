@@ -705,8 +705,19 @@ function logStats(addition) {
     inLobby +
     "] ";
 
-  stream.write(new Date().toLocaleString() + " " + stats + addition + "\n");
-  console.log(new Date().toLocaleString() + " " + stats + addition);
+  stream.write(
+    new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" }) +
+      " " +
+      stats +
+      addition +
+      "\n"
+  );
+  console.log(
+    new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" }) +
+      " " +
+      stats +
+      addition
+  );
 }
 
 // Restart Heroku Server
@@ -820,18 +831,7 @@ function socketDisconnect(socket) {
 
     // If the number of players in the room is 0 at this point, delete the room entirely after 100 mins
     if (Object.keys(ROOM_LIST[player.room].players).length === 0) {
-      if (!DELETE_ROOM_LIST[player.room]) {
-        logStats(
-          "All players left the room: '" +
-            player.room +
-            "'. will delete after 100 mins."
-        );
-        let timeoutObj = setTimeout(() => {
-          deleteRoom(player.room);
-          delete DELETE_ROOM_LIST[player.room];
-        }, 6000000);
-        DELETE_ROOM_LIST[player.room] = timeoutObj;
-      }
+      deleteRoom(player.room);
     }
   }
   // Server Log
@@ -839,6 +839,15 @@ function socketDisconnect(socket) {
 }
 
 function deleteRoom(room) {
-  delete ROOM_LIST[room];
-  logStats("DELETE ROOM: '" + room + "'");
+  if (!DELETE_ROOM_LIST[room]) {
+    logStats(
+      "All players left the room: '" + room + "'. will delete after 100 mins."
+    );
+    let timeoutObj = setTimeout(() => {
+      delete ROOM_LIST[room];
+      logStats("DELETE ROOM: '" + room + "'");
+      delete DELETE_ROOM_LIST[room];
+    }, 6000000);
+    DELETE_ROOM_LIST[room] = timeoutObj;
+  }
 }
