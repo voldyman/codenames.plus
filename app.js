@@ -5,7 +5,7 @@ let express = require("express");
 
 //File System
 let fs = require("fs");
-let stream = fs.createWriteStream("./logs.txt", {flags:'a'});
+const stream = fs.createWriteStream("./logs.txt", {flags:'a'});
 
 // Create app
 let app = express();
@@ -82,6 +82,7 @@ let SOCKET_LIST = {};
 let ROOM_LIST = {};
 let PLAYER_LIST = {};
 let DELETE_SESSION_LIST = {};
+let DELETE_ROOM_LIST = {};
 
 // Room class
 // Live rooms will have a name and password and keep track of game options / players in room
@@ -227,7 +228,7 @@ io.sockets.on("connection", function(socket) {
       if (!DELETE_SESSION_LIST[socket.sessionId]) {
         // Disconnect can be received for multiple reasons. Do not disconnect an existing player right away
         // We give the client 10 mins to reconnect
-        const timeoutObj = setTimeout(() => {
+        let timeoutObj = setTimeout(() => {
           socketDisconnect(socket);
           delete DELETE_SESSION_LIST[socket.sessionId];
         }, 600000);
@@ -492,39 +493,6 @@ function leaveRoom(socket) {
     logStats("DELETE ROOM: '" + player.room + "'");
   }
   socket.emit("leaveResponse", { success: true }); // Tell the client the action was successful
-}
-
-// Disconnect function
-// Called when a client closes the browser tab
-function socketDisconnect(socket) {
-  let player = PLAYER_LIST[socket.sessionId]; // Get the player that made the request
-  delete SOCKET_LIST[socket.sessionId]; // Delete the client from the socket list
-  delete PLAYER_LIST[socket.sessionId]; // Delete the player from the player list
-
-  if (player) {
-    // If the player was in a room
-    delete ROOM_LIST[player.room].players[socket.sessionId]; // Remove the player from their room
-    gameUpdate(player.room); // Update everyone in the room
-    // Server Log
-    logStats(
-      socket.sessionId +
-        "(" +
-        player.nickname +
-        ") LEFT '" +
-        ROOM_LIST[player.room].room +
-        "'(" +
-        Object.keys(ROOM_LIST[player.room].players).length +
-        ")"
-    );
-
-    // If the number of players in the room is 0 at this point, delete the room entirely
-    if (Object.keys(ROOM_LIST[player.room].players).length === 0) {
-      delete ROOM_LIST[player.room];
-      logStats("DELETE ROOM: '" + player.room + "'");
-    }
-  }
-  // Server Log
-  logStats("DISCONNECT: " + socket.sessionId);
 }
 
 // Randomize Teams function
@@ -818,3 +786,41 @@ setInterval(() => {
     }
   }
 }, 1000);
+
+// Disconnect function
+// Called when a client closes the browser tab
+function socketDisconnect(socket) {
+  let player = PLAYER_LIST[socket.sessionId]; // Get the player that made the request
+  delete SOCKET_LIST[socket.sessionId]; // Delete the client from the socket list
+  delete PLAYER_LIST[socket.sessionId]; // Delete the player from the player list
+
+  if (player) {
+    // If the player was in a room
+    delete ROOM_LIST[player.room].players[socket.sessionId]; // Remove the player from their room
+    gameUpdate(player.room); // Update everyone in the room
+    // Server Log
+    logStats(
+      socket.sessionId +
+        "(" +
+        player.nickname +
+        ") LEFT '" +
+        ROOM_LIST[player.room].room +
+        "'(" +
+        Object.keys(ROOM_LIST[player.room].players).length +
+        ")"
+    );
+
+    // If the number of players in the room is 0 at this point, delete the room entirely
+    if (Object.keys(ROOM_LIST[player.room].players).length === 0) {
+      delete ROOM_LIST[player.room];
+      logStats("DELETE ROOM: '" + player.room + "'");
+    }
+  }
+  // Server Log
+  logStats("DISCONNECT: " + socket.sessionId);
+}
+
+function deleteRoom(room) {
+  delete ROOM_LIST[room];
+  logStats("DELETE ROOM: '" + room + "'");
+}
