@@ -373,3 +373,13 @@
 5/14/2020, 8:37:10 PM [R:0 P:0 L:3] DISCONNECT: 1b4eb7a5cd905fe83738378645d29373
 5/14/2020, 8:39:08 PM [R:0 P:0 L:3] Ping Received
 5/14/2020, 8:41:34 PM [R:0 P:0 L:3] Ping Received
+5/14/2020, 8:42:09 PM [R:0 P:0 L:3] Disconnect request received for: unregistered player 535c63d2233fa320586dbce5d9085cc3 because of ping timeout
+5/14/2020, 8:42:09 PM [R:0 P:0 L:2] DISCONNECT: 535c63d2233fa320586dbce5d9085cc3
+5/14/2020, 8:44:08 PM [R:0 P:0 L:2] Ping Received
+5/14/2020, 8:44:49 PM [R:0 P:0 L:2] Disconnect request received for: unregistered player 493291b0dbbf6a2b5d471aff3b5f742f because of transport close
+5/14/2020, 8:44:49 PM [R:0 P:0 L:1] DISCONNECT: 493291b0dbbf6a2b5d471aff3b5f742f
+5/14/2020, 8:46:14 PM [R:0 P:0 L:1] Ping Received
+5/14/2020, 8:49:08 PM [R:0 P:0 L:1] Ping Received
+5/14/2020, 8:50:26 PM [R:0 P:0 L:1] Disconnect request received for: unregistered player 7ff98d79d77b95264ea0a2a2f6df9897 because of transport close
+5/14/2020, 8:50:26 PM [R:0 P:0 L:0] DISCONNECT: 7ff98d79d77b95264ea0a2a2f6df9897
+5/14/2020, 8:50:54 PM [R:0 P:0 L:0] Ping Received
