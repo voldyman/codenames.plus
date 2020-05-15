@@ -222,3 +222,11 @@
 5/14/2020, 7:13:27 PM [R:1 P:6 L:0] 9620181a306a9af27fa9fb0178d9100f(Navvv) LEFT 'v4f'(6)
 5/14/2020, 7:13:28 PM [R:1 P:6 L:0] DISCONNECT: 9620181a306a9af27fa9fb0178d9100f
 5/14/2020, 7:15:15 PM [R:1 P:6 L:0] Ping Received
+5/14/2020, 7:19:55 PM [R:1 P:6 L:0] Ping Received
+5/14/2020, 7:21:44 PM [R:1 P:6 L:0] Ping Received
+5/14/2020, 7:24:35 PM [R:1 P:6 L:0] Ping Received
+5/14/2020, 7:26:04 PM [R:1 P:6 L:0] Ping Received
+5/14/2020, 7:26:50 PM [R:1 P:6 L:1] NEW CONNECT: cf2f8ac61936d6489a61325d77e3baad
+5/14/2020, 7:28:53 PM [R:1 P:6 L:1] Disconnect request received for: unregistered player cf2f8ac61936d6489a61325d77e3baad because of transport close
+5/14/2020, 7:28:53 PM [R:1 P:6 L:0] DISCONNECT: cf2f8ac61936d6489a61325d77e3baad
+5/14/2020, 7:29:15 PM [R:1 P:6 L:0] Ping Received
