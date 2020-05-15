@@ -236,3 +236,31 @@
 5/14/2020, 7:43:16 PM [R:1 P:6 L:0] Ping Received
 5/14/2020, 7:47:55 PM [R:1 P:6 L:0] Ping Received
 5/14/2020, 7:52:35 PM [R:1 P:6 L:0] Ping Received
+5/14/2020, 7:54:54 PM [R:0 P:0 L:0] Codenames Server Started at http://:::3000
+5/14/2020, 7:54:54 PM [R:0 P:0 L:1] NEW CONNECT: 58bb3bd75ef919421d6b18fd7165d269
+5/14/2020, 7:54:54 PM [R:0 P:0 L:2] NEW CONNECT: 9ac8f5f7f746eb0cc97ab6f968409f7a
+5/14/2020, 7:54:54 PM [R:0 P:0 L:3] NEW CONNECT: 0ec4828e5d8bab1ecc6ceb9394f7311f
+5/14/2020, 7:54:54 PM [R:0 P:0 L:4] NEW CONNECT: dce3e2ad562787a02901d2a92ac55943
+5/14/2020, 7:54:54 PM [R:0 P:0 L:5] NEW CONNECT: b8fde24a4c5643b1302a5e5a23e232e1
+5/14/2020, 7:54:54 PM [R:0 P:0 L:6] NEW CONNECT: 8f7ed14d4ceae5be4056d8ea841e1fb4
+5/14/2020, 7:56:46 PM [R:0 P:0 L:7] NEW CONNECT: e9e4228fb1bf898d25681bcb2c4f6982
+5/14/2020, 7:57:06 PM [R:0 P:0 L:7] Disconnect request received for: unregistered player b8fde24a4c5643b1302a5e5a23e232e1 because of transport close
+5/14/2020, 7:57:06 PM [R:0 P:0 L:6] DISCONNECT: b8fde24a4c5643b1302a5e5a23e232e1
+5/14/2020, 7:57:06 PM [R:0 P:0 L:7] NEW CONNECT: 7ff98d79d77b95264ea0a2a2f6df9897
+5/14/2020, 7:57:09 PM [R:0 P:0 L:7] Disconnect request received for: unregistered player 8f7ed14d4ceae5be4056d8ea841e1fb4 because of transport close
+5/14/2020, 7:57:09 PM [R:0 P:0 L:6] DISCONNECT: 8f7ed14d4ceae5be4056d8ea841e1fb4
+5/14/2020, 7:57:10 PM [R:0 P:0 L:7] NEW CONNECT: 493291b0dbbf6a2b5d471aff3b5f742f
+5/14/2020, 7:57:19 PM [R:0 P:0 L:7] Disconnect request received for: unregistered player 9ac8f5f7f746eb0cc97ab6f968409f7a because of transport close
+5/14/2020, 7:57:19 PM [R:0 P:0 L:6] DISCONNECT: 9ac8f5f7f746eb0cc97ab6f968409f7a
+5/14/2020, 7:57:19 PM [R:0 P:0 L:7] NEW CONNECT: 535c63d2233fa320586dbce5d9085cc3
+5/14/2020, 7:59:08 PM [R:0 P:0 L:7] Disconnect request received for: unregistered player e9e4228fb1bf898d25681bcb2c4f6982 because of transport close
+5/14/2020, 7:59:08 PM [R:0 P:0 L:6] DISCONNECT: e9e4228fb1bf898d25681bcb2c4f6982
+5/14/2020, 7:59:09 PM [R:0 P:0 L:6] Ping Received
+5/14/2020, 7:59:34 PM [R:0 P:0 L:6] Ping Received
+5/14/2020, 8:00:29 PM [R:0 P:0 L:6] Disconnect request received for: unregistered player dce3e2ad562787a02901d2a92ac55943 because of transport close
+5/14/2020, 8:00:29 PM [R:0 P:0 L:5] DISCONNECT: dce3e2ad562787a02901d2a92ac55943
+5/14/2020, 8:00:48 PM [R:0 P:0 L:6] NEW CONNECT: 99e5cbbea01c7f3f9638edb5665b5acb
+5/14/2020, 8:01:40 PM [R:0 P:0 L:6] Disconnect request received for: unregistered player 99e5cbbea01c7f3f9638edb5665b5acb because of transport close
+5/14/2020, 8:01:40 PM [R:0 P:0 L:5] DISCONNECT: 99e5cbbea01c7f3f9638edb5665b5acb
+5/14/2020, 8:04:08 PM [R:0 P:0 L:5] Ping Received
+5/14/2020, 8:04:14 PM [R:0 P:0 L:5] Ping Received
