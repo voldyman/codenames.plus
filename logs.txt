@@ -286,3 +286,56 @@
 5/14/2020, 8:17:48 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player 9dea83c537553427648639fcebaab457 because of ping timeout
 5/14/2020, 8:17:48 PM [R:0 P:0 L:4] DISCONNECT: 9dea83c537553427648639fcebaab457
 5/14/2020, 8:17:50 PM [R:0 P:0 L:5] NEW CONNECT: a5c4fe073da3666f55d554dc4e380dee
+5/14/2020, 8:18:14 PM [R:0 P:0 L:5] Ping Received
+5/14/2020, 8:18:47 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player a5c4fe073da3666f55d554dc4e380dee because of ping timeout
+5/14/2020, 8:18:47 PM [R:0 P:0 L:4] DISCONNECT: a5c4fe073da3666f55d554dc4e380dee
+5/14/2020, 8:18:50 PM [R:0 P:0 L:5] NEW CONNECT: d61db3adfa57bf10369646062caa0e5a
+5/14/2020, 8:19:08 PM [R:0 P:0 L:5] Ping Received
+5/14/2020, 8:20:42 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player d61db3adfa57bf10369646062caa0e5a because of ping timeout
+5/14/2020, 8:20:42 PM [R:0 P:0 L:4] DISCONNECT: d61db3adfa57bf10369646062caa0e5a
+5/14/2020, 8:20:44 PM [R:0 P:0 L:5] NEW CONNECT: 009559321341d5eee5dbf99edb621f07
+5/14/2020, 8:21:15 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player 009559321341d5eee5dbf99edb621f07 because of ping timeout
+5/14/2020, 8:21:15 PM [R:0 P:0 L:4] DISCONNECT: 009559321341d5eee5dbf99edb621f07
+5/14/2020, 8:21:17 PM [R:0 P:0 L:5] NEW CONNECT: 278b12b462c974e5e3ecc132a34e4468
+5/14/2020, 8:21:47 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player 278b12b462c974e5e3ecc132a34e4468 because of ping timeout
+5/14/2020, 8:21:47 PM [R:0 P:0 L:4] DISCONNECT: 278b12b462c974e5e3ecc132a34e4468
+5/14/2020, 8:21:49 PM [R:0 P:0 L:5] NEW CONNECT: 8da4ded9cea9673e63d38f3baf4063f4
+5/14/2020, 8:22:44 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player 8da4ded9cea9673e63d38f3baf4063f4 because of ping timeout
+5/14/2020, 8:22:44 PM [R:0 P:0 L:4] DISCONNECT: 8da4ded9cea9673e63d38f3baf4063f4
+5/14/2020, 8:22:46 PM [R:0 P:0 L:5] NEW CONNECT: fffc321459671ed959f1600401f21392
+5/14/2020, 8:22:54 PM [R:0 P:0 L:5] Ping Received
+5/14/2020, 8:22:57 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player 0ec4828e5d8bab1ecc6ceb9394f7311f because of transport close
+5/14/2020, 8:22:57 PM [R:0 P:0 L:4] DISCONNECT: 0ec4828e5d8bab1ecc6ceb9394f7311f
+5/14/2020, 8:24:08 PM [R:0 P:0 L:4] Ping Received
+5/14/2020, 8:24:11 PM [R:0 P:0 L:4] Disconnect request received for: unregistered player fffc321459671ed959f1600401f21392 because of ping timeout
+5/14/2020, 8:24:11 PM [R:0 P:0 L:3] DISCONNECT: fffc321459671ed959f1600401f21392
+5/14/2020, 8:24:13 PM [R:0 P:0 L:4] NEW CONNECT: fbbc4e7ed3fee6b867d8bbab5218f762
+5/14/2020, 8:24:43 PM [R:0 P:0 L:4] Disconnect request received for: unregistered player fbbc4e7ed3fee6b867d8bbab5218f762 because of ping timeout
+5/14/2020, 8:24:43 PM [R:0 P:0 L:3] DISCONNECT: fbbc4e7ed3fee6b867d8bbab5218f762
+5/14/2020, 8:24:46 PM [R:0 P:0 L:4] NEW CONNECT: 3280e1a3f83e627b770a7406a93545c3
+5/14/2020, 8:25:16 PM [R:0 P:0 L:4] Disconnect request received for: unregistered player 3280e1a3f83e627b770a7406a93545c3 because of ping timeout
+5/14/2020, 8:25:16 PM [R:0 P:0 L:3] DISCONNECT: 3280e1a3f83e627b770a7406a93545c3
+5/14/2020, 8:25:19 PM [R:0 P:0 L:4] NEW CONNECT: a6afea942c34ef853effb3de217c4701
+5/14/2020, 8:25:50 PM [R:0 P:0 L:4] Disconnect request received for: unregistered player a6afea942c34ef853effb3de217c4701 because of ping timeout
+5/14/2020, 8:25:50 PM [R:0 P:0 L:3] DISCONNECT: a6afea942c34ef853effb3de217c4701
+5/14/2020, 8:25:52 PM [R:0 P:0 L:4] NEW CONNECT: 78b433df999385945dbd30a096e595d2
+5/14/2020, 8:26:49 PM [R:0 P:0 L:4] Disconnect request received for: unregistered player 78b433df999385945dbd30a096e595d2 because of ping timeout
+5/14/2020, 8:26:49 PM [R:0 P:0 L:3] DISCONNECT: 78b433df999385945dbd30a096e595d2
+5/14/2020, 8:26:51 PM [R:0 P:0 L:4] NEW CONNECT: 15d5628bc1d9537ab63483e5653f8f15
+5/14/2020, 8:26:55 PM [R:0 P:0 L:5] NEW CONNECT: b8e0eb51d536312af7f020a38ba1e75a
+5/14/2020, 8:27:22 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player 15d5628bc1d9537ab63483e5653f8f15 because of ping timeout
+5/14/2020, 8:27:22 PM [R:0 P:0 L:4] DISCONNECT: 15d5628bc1d9537ab63483e5653f8f15
+5/14/2020, 8:27:25 PM [R:0 P:0 L:5] NEW CONNECT: 770cbad53a977a74a7df09d058092d3b
+5/14/2020, 8:27:34 PM [R:0 P:0 L:5] Ping Received
+5/14/2020, 8:27:55 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player 770cbad53a977a74a7df09d058092d3b because of ping timeout
+5/14/2020, 8:27:55 PM [R:0 P:0 L:4] DISCONNECT: 770cbad53a977a74a7df09d058092d3b
+5/14/2020, 8:27:57 PM [R:0 P:0 L:5] NEW CONNECT: f686040ede00946deaa563f08557f52a
+5/14/2020, 8:28:28 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player f686040ede00946deaa563f08557f52a because of ping timeout
+5/14/2020, 8:28:28 PM [R:0 P:0 L:4] DISCONNECT: f686040ede00946deaa563f08557f52a
+5/14/2020, 8:28:30 PM [R:0 P:0 L:5] NEW CONNECT: 90099845bbc2eb715da1e7e4e7332d8d
+5/14/2020, 8:29:08 PM [R:0 P:0 L:5] Ping Received
+5/14/2020, 8:29:08 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player b8e0eb51d536312af7f020a38ba1e75a because of transport close
+5/14/2020, 8:29:08 PM [R:0 P:0 L:4] DISCONNECT: b8e0eb51d536312af7f020a38ba1e75a
+5/14/2020, 8:29:56 PM [R:0 P:0 L:4] Disconnect request received for: unregistered player 90099845bbc2eb715da1e7e4e7332d8d because of ping timeout
+5/14/2020, 8:29:56 PM [R:0 P:0 L:3] DISCONNECT: 90099845bbc2eb715da1e7e4e7332d8d
+5/14/2020, 8:29:58 PM [R:0 P:0 L:4] NEW CONNECT: 9c1111a586125341a70a5570a80d0ea3
