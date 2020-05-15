@@ -394,3 +394,9 @@
 5/14/2020, 9:04:08 PM [R:0 P:0 L:1] Ping Received
 5/14/2020, 9:04:54 PM [R:0 P:0 L:1] Ping Received
 5/14/2020, 9:05:48 PM [R:0 P:0 L:2] NEW CONNECT: e1953d6ec557c74e45e6bb473ee52c61
+5/14/2020, 9:09:08 PM [R:0 P:0 L:2] Ping Received
+5/14/2020, 9:09:34 PM [R:0 P:0 L:2] Ping Received
+5/14/2020, 9:10:11 PM [R:0 P:0 L:2] Disconnect request received for: unregistered player e1953d6ec557c74e45e6bb473ee52c61 because of transport close
+5/14/2020, 9:10:11 PM [R:0 P:0 L:1] DISCONNECT: e1953d6ec557c74e45e6bb473ee52c61
+5/14/2020, 9:14:08 PM [R:0 P:0 L:1] Ping Received
+5/14/2020, 9:14:14 PM [R:0 P:0 L:1] Ping Received
