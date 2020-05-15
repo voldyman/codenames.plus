@@ -264,3 +264,25 @@
 5/14/2020, 8:01:40 PM [R:0 P:0 L:5] DISCONNECT: 99e5cbbea01c7f3f9638edb5665b5acb
 5/14/2020, 8:04:08 PM [R:0 P:0 L:5] Ping Received
 5/14/2020, 8:04:14 PM [R:0 P:0 L:5] Ping Received
+5/14/2020, 8:08:54 PM [R:0 P:0 L:5] Ping Received
+5/14/2020, 8:09:08 PM [R:0 P:0 L:5] Ping Received
+5/14/2020, 8:13:34 PM [R:0 P:0 L:5] Ping Received
+5/14/2020, 8:14:08 PM [R:0 P:0 L:5] Ping Received
+5/14/2020, 8:14:39 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player 58bb3bd75ef919421d6b18fd7165d269 because of ping timeout
+5/14/2020, 8:14:39 PM [R:0 P:0 L:4] DISCONNECT: 58bb3bd75ef919421d6b18fd7165d269
+5/14/2020, 8:14:42 PM [R:0 P:0 L:5] NEW CONNECT: 9fdbea8f17bc1fb0f54c3852251cfab2
+5/14/2020, 8:15:13 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player 9fdbea8f17bc1fb0f54c3852251cfab2 because of ping timeout
+5/14/2020, 8:15:13 PM [R:0 P:0 L:4] DISCONNECT: 9fdbea8f17bc1fb0f54c3852251cfab2
+5/14/2020, 8:15:14 PM [R:0 P:0 L:5] NEW CONNECT: 77c86d169f1c6ad270f9af59f5c4ae67
+5/14/2020, 8:15:45 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player 77c86d169f1c6ad270f9af59f5c4ae67 because of ping timeout
+5/14/2020, 8:15:45 PM [R:0 P:0 L:4] DISCONNECT: 77c86d169f1c6ad270f9af59f5c4ae67
+5/14/2020, 8:15:46 PM [R:0 P:0 L:5] NEW CONNECT: e3cf250e0cc10a5b7f2b742941a4d176
+5/14/2020, 8:16:16 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player e3cf250e0cc10a5b7f2b742941a4d176 because of ping timeout
+5/14/2020, 8:16:16 PM [R:0 P:0 L:4] DISCONNECT: e3cf250e0cc10a5b7f2b742941a4d176
+5/14/2020, 8:16:19 PM [R:0 P:0 L:5] NEW CONNECT: b61f09dfeb2330bc6915a0419ed79e52
+5/14/2020, 8:16:49 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player b61f09dfeb2330bc6915a0419ed79e52 because of ping timeout
+5/14/2020, 8:16:49 PM [R:0 P:0 L:4] DISCONNECT: b61f09dfeb2330bc6915a0419ed79e52
+5/14/2020, 8:16:52 PM [R:0 P:0 L:5] NEW CONNECT: 9dea83c537553427648639fcebaab457
+5/14/2020, 8:17:48 PM [R:0 P:0 L:5] Disconnect request received for: unregistered player 9dea83c537553427648639fcebaab457 because of ping timeout
+5/14/2020, 8:17:48 PM [R:0 P:0 L:4] DISCONNECT: 9dea83c537553427648639fcebaab457
+5/14/2020, 8:17:50 PM [R:0 P:0 L:5] NEW CONNECT: a5c4fe073da3666f55d554dc4e380dee
