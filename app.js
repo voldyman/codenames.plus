@@ -43,10 +43,6 @@ app.get("/ping", (request, response) => {
   logStats("Ping Received");
   response.sendStatus(200);
 });
-const https = require("https");
-setInterval(() => {
-  https.get(`https://${process.env.PROJECT_DOMAIN}.glitch.me/ping`);
-}, 280000);
 
 // Files for client
 app.use(express.static("public"));
@@ -57,10 +53,6 @@ let io = require("socket.io")(server);
 // Catch wildcard socket events
 var middleware = require("socketio-wildcard")();
 io.use(middleware);
-
-// Make API requests
-const Heroku = require("heroku-client");
-const heroku = new Heroku({ token: process.env.API_TOKEN }); // DELETE requests
 
 // Daily Server Restart time
 // UTC 13:00:00 = 9AM EST
@@ -145,7 +137,7 @@ class Player {
 
 // Server logic
 ////////////////////////////////////////////////////////////////////////////
-io.sockets.on("connection", function(socket) {
+io.sockets.on("connection", function (socket) {
   let gameState = null;
   let existingSessionId = socket.request._query.sessionId;
   let isExistingPlayer = existingSessionId in PLAYER_LIST;
@@ -216,11 +208,11 @@ io.sockets.on("connection", function(socket) {
       : "unregistered player";
     logStats(
       "Disconnect request received for: " +
-        playerName +
-        " " +
-        socket.sessionId +
-        " because of " +
-        reason
+      playerName +
+      " " +
+      socket.sessionId +
+      " because of " +
+      reason
     );
     if (!isExistingPlayer) {
       // If the player was not in a game disconnect immediately
@@ -408,13 +400,13 @@ function createRoom(socket, data) {
         gameUpdate(roomName); // Update the game for everyone in this room
         logStats(
           socket.sessionId +
-            "(" +
-            player.nickname +
-            ") CREATED '" +
-            ROOM_LIST[player.room].room +
-            "'(" +
-            Object.keys(ROOM_LIST[player.room].players).length +
-            ")"
+          "(" +
+          player.nickname +
+          ") CREATED '" +
+          ROOM_LIST[player.room].room +
+          "'(" +
+          Object.keys(ROOM_LIST[player.room].players).length +
+          ")"
         );
       }
     }
@@ -452,10 +444,10 @@ function joinRoom(socket, data) {
         if (DELETE_ROOM_LIST[roomName]) {
           logStats(
             "Removing delete timeout for room: (" +
-              roomName +
-              ") as user (" +
-              userName +
-              ") joined back"
+            roomName +
+            ") as user (" +
+            userName +
+            ") joined back"
           );
           clearTimeout(DELETE_ROOM_LIST[roomName]);
           delete DELETE_ROOM_LIST[roomName];
@@ -468,13 +460,13 @@ function joinRoom(socket, data) {
         // Server Log
         logStats(
           socket.sessionId +
-            "(" +
-            player.nickname +
-            ") JOINED '" +
-            ROOM_LIST[player.room].room +
-            "'(" +
-            Object.keys(ROOM_LIST[player.room].players).length +
-            ")"
+          "(" +
+          player.nickname +
+          ") JOINED '" +
+          ROOM_LIST[player.room].room +
+          "'(" +
+          Object.keys(ROOM_LIST[player.room].players).length +
+          ")"
         );
       }
     }
@@ -492,13 +484,13 @@ function leaveRoom(socket) {
   // Server Log
   logStats(
     socket.sessionId +
-      "(" +
-      player.nickname +
-      ") LEFT '" +
-      ROOM_LIST[player.room].room +
-      "'(" +
-      Object.keys(ROOM_LIST[player.room].players).length +
-      ")"
+    "(" +
+    player.nickname +
+    ") LEFT '" +
+    ROOM_LIST[player.room].room +
+    "'(" +
+    Object.keys(ROOM_LIST[player.room].players).length +
+    ")"
   );
 
   // If the number of players in the room is 0 at this point, delete the room entirely
@@ -712,38 +704,17 @@ function logStats(addition) {
 
   stream.write(
     new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" }) +
-      " " +
-      stats +
-      addition +
-      "\n"
+    " " +
+    stats +
+    addition +
+    "\n"
   );
   console.log(
     new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" }) +
-      " " +
-      stats +
-      addition
+    " " +
+    stats +
+    addition
   );
-}
-
-// Restart Heroku Server
-function herokuRestart() {
-  // Let each socket know the server restarted and boot them to lobby
-  for (let socket in SOCKET_LIST) {
-    SOCKET_LIST[socket].emit("serverMessage", {
-      msg: "Server Successfully Restarted for Maintnence"
-    });
-    SOCKET_LIST[socket].emit("leaveResponse", { success: true });
-  }
-  heroku.delete("/apps/codenames-plus/dynos/").then(app => {});
-}
-
-// Warn users of restart
-function herokuRestartWarning() {
-  for (let player in PLAYER_LIST) {
-    SOCKET_LIST[player].emit("serverMessage", {
-      msg: "Scheduled Server Restart in 10 Minutes"
-    });
-  }
 }
 
 // Every second, update the timer in the rooms that are on timed mode
@@ -756,37 +727,36 @@ setInterval(() => {
     time.getMinutes() === restartWarningMinute &&
     time.getSeconds() < restartWarningSecond
   )
-    herokuRestartWarning();
-  // Restart server at specified time
-  if (
-    time.getHours() === restartHour &&
-    time.getMinutes() === restartMinute &&
-    time.getSeconds() < restartSecond
-  )
-    herokuRestart();
 
-  // AFK Logic
-  for (let player in PLAYER_LIST) {
-    PLAYER_LIST[player].afktimer--; // Count down every players afk timer
-    // Give them a warning 5min before they get kicked
-    if (PLAYER_LIST[player].afktimer < 300)
-      SOCKET_LIST[player].emit("afkWarning");
-    if (PLAYER_LIST[player].afktimer < 0) {
-      // Kick player if their timer runs out
-      SOCKET_LIST[player].emit("afkKicked");
-      logStats(
-        player +
-          "(" +
-          PLAYER_LIST[player].nickname +
-          ") AFK KICKED FROM '" +
-          ROOM_LIST[PLAYER_LIST[player].room].room +
-          "'(" +
-          Object.keys(ROOM_LIST[PLAYER_LIST[player].room].players).length +
-          ")"
-      );
-      leaveRoom(SOCKET_LIST[player]);
-    }
-  }
+    // Restart server at specified time
+    if (
+      time.getHours() === restartHour &&
+      time.getMinutes() === restartMinute &&
+      time.getSeconds() < restartSecond
+    )
+
+      // AFK Logic
+      for (let player in PLAYER_LIST) {
+        PLAYER_LIST[player].afktimer--; // Count down every players afk timer
+        // Give them a warning 5min before they get kicked
+        if (PLAYER_LIST[player].afktimer < 300)
+          SOCKET_LIST[player].emit("afkWarning");
+        if (PLAYER_LIST[player].afktimer < 0) {
+          // Kick player if their timer runs out
+          SOCKET_LIST[player].emit("afkKicked");
+          logStats(
+            player +
+            "(" +
+            PLAYER_LIST[player].nickname +
+            ") AFK KICKED FROM '" +
+            ROOM_LIST[PLAYER_LIST[player].room].room +
+            "'(" +
+            Object.keys(ROOM_LIST[PLAYER_LIST[player].room].players).length +
+            ")"
+          );
+          leaveRoom(SOCKET_LIST[player]);
+        }
+      }
   // Game Timer Logic
   for (let room in ROOM_LIST) {
     if (
@@ -825,13 +795,13 @@ function socketDisconnect(socket) {
     // Server Log
     logStats(
       socket.sessionId +
-        "(" +
-        player.nickname +
-        ") LEFT '" +
-        ROOM_LIST[player.room].room +
-        "'(" +
-        Object.keys(ROOM_LIST[player.room].players).length +
-        ")"
+      "(" +
+      player.nickname +
+      ") LEFT '" +
+      ROOM_LIST[player.room].room +
+      "'(" +
+      Object.keys(ROOM_LIST[player.room].players).length +
+      ")"
     );
 
     // If the number of players in the room is 0 at this point, delete the room entirely after 100 mins
