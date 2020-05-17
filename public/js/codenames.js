@@ -232,6 +232,7 @@ buttonServerMessageOkay.onclick = () => {
 // Server Responses to this client
 ////////////////////////////////////////////////////////////////////////////
 socket.on("serverStats", data => {
+  log(data);
   // Client gets server stats
   if (data.sessionId) {
     sessionStorage.setItem("sessionId", data.sessionId);
@@ -248,6 +249,7 @@ socket.on("serverStats", data => {
 });
 
 socket.on("joinResponse", data => {
+  log(data);
   // Response to joining room
   if (data.success) {
     joinDiv.style.display = "none";
@@ -258,6 +260,7 @@ socket.on("joinResponse", data => {
 });
 
 socket.on("createResponse", data => {
+  log(data);
   // Response to creating room
   if (data.success) {
     joinDiv.style.display = "none";
@@ -268,6 +271,7 @@ socket.on("createResponse", data => {
 });
 
 socket.on("leaveResponse", data => {
+  log(data);
   // Response to leaving room
   if (data.success) {
     joinDiv.style.display = "block";
@@ -277,6 +281,7 @@ socket.on("leaveResponse", data => {
 });
 
 socket.on("timerUpdate", data => {
+  log(data);
   // Server update client timer
   timer.innerHTML = "[" + data.timer + "]";
 });
@@ -326,6 +331,10 @@ socket.on("switchRoleResponse", data => {
   }
 });
 
+socket.on("reset", () => {
+  backToJoin();
+})
+
 socket.on("gameState", data => {
   // Response to gamestate update
   updateGameState(data);
@@ -338,6 +347,11 @@ socket.on("disconnect", data => {
 // Utility Functions
 ////////////////////////////////////////////////////////////////////////////
 
+function log(msg) {
+  if (localStorage.debug === '*') {
+    console.log(msg);
+  }
+}
 // Wipe all of the descriptor tile classes from each tile
 function wipeBoard() {
   for (let x = 0; x < 5; x++) {
@@ -350,6 +364,7 @@ function wipeBoard() {
 }
 
 function updateGameState(data) {
+  log(data)
   if (data.difficulty !== difficulty) {
     // Update the clients difficulty
     difficulty = data.difficulty;
@@ -436,7 +451,7 @@ function updatePacks(game) {
   if (game.nsfw) buttonNsfwcards.className = "enabled";
   else buttonNsfwcards.className = "";
   document.getElementById("word-pool").innerHTML =
-    "Word Pool: " + game.words.length;
+    "Word Pool: " + game.wordPool;
 }
 
 // Update the board
@@ -530,8 +545,8 @@ function updateLog(log) {
         (logEntry.type === "death"
           ? " ending the game"
           : logEntry.endedTurn
-          ? " ending their turn"
-          : "");
+            ? " ending their turn"
+            : "");
     } else if (logEntry.event === "switchTurn") {
       logSpan.innerText = "Switched to " + logEntry.team + " team's turn";
     } else if (logEntry.event === "declareClue") {
@@ -547,6 +562,13 @@ function updateLog(log) {
     }
     logDiv.prepend(logSpan);
   });
+}
+
+function backToJoin() {
+  joinDiv.style.display = "block";
+  gameDiv.style.display = "none";
+  joinErrorMessage.innerText = "";
+  wipeBoard();
 }
 
 function extractFromFragment(fragment, toExtract) {
