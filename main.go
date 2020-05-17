@@ -3,16 +3,22 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"net/http"
+	"os"
+
+	"github.com/sirupsen/logrus"
 )
 
 var (
 	portFlag = flag.Int("port", 8080, "server port")
 )
 
+var log = logrus.New()
+
 func main() {
 	flag.Parse()
+	log.Out = os.Stdout
+
 	server := socketServer(NewCodeNames())
 	go server.Serve()
 	defer server.Close()

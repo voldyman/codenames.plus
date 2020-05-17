@@ -3,11 +3,12 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"math/rand"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -129,7 +130,10 @@ func (r *Room) hasPlayer(name string) bool {
 func (r *Room) Leave(playerID string) bool {
 	p, ok := r.Player(playerID)
 	if !ok {
-		log.Println("player not a member tried to leave")
+		log.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+			"RoomName": r.Name,
+		}).Warn("player tried to leave but they are not in the room")
 		return false
 	}
 	if p.Team == TeamBlue {
@@ -144,7 +148,12 @@ func (r *Room) Leave(playerID string) bool {
 func (r *Room) ChangeTeam(playerID, team string) {
 	player, ok := r.Player(playerID)
 	if !ok {
-		log.Println("unknown player tried to change team", playerID)
+		log.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+			"RoomName": r.Name,
+			"Team":     team,
+		}).Warn("player tried to change teams but they are not in the room")
+
 		return
 	}
 	player.Team = team
@@ -173,6 +182,11 @@ func (r *Room) NewGame() {
 func (r *Room) SwitchRole(playerID, role string) (string, bool) {
 	p, ok := r.Player(playerID)
 	if !ok {
+		log.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+			"RoomName": r.Name,
+			"Role":     role,
+		}).Warn("player tried to switch roles but they are not in the room")
 		return "player not a member of the room", false
 	}
 	p.Role = role
@@ -210,37 +224,72 @@ func (r *Room) EndTurn(playerID string) {
 func (r *Room) SelectTile(playerID string, i, j int) {
 	p, ok := r.Player(playerID)
 	if !ok {
+		log.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+			"RoomName": r.Name,
+		}).Warn("player tried to click tile but they are not in the room")
 		return
 	}
 	if p.Team != r.Game.Turn {
-		log.Println("not the players team's tuurn")
+		log.WithFields(logrus.Fields{
+			"PlayerID":   playerID,
+			"PlayerName": p.NickName,
+			"RoomName":   r.Name,
+			"PlayerTeam": p.Team,
+			"TurnTeam":   r.Game.Turn,
+		}).Info("player tried to click tile but it's not their turn")
 		return
 	}
 
 	if p.Role == PlayerRoleSpyMaster {
-		log.Println("player '%s' is a spymaster and can't select tiles", p.NickName)
+		log.WithFields(logrus.Fields{
+			"PlayerID":   playerID,
+			"PlayerName": p.NickName,
+			"RoomName":   r.Name,
+			"Role":       p.Role,
+		}).Info("player tried to click tile but they are the spymaster")
 		return
 	}
 
 	if r.Game.Clue == nil {
 		// no clue, can't play
-		log.Printf("player '%s' tried to select a tile but clue is nil", p.NickName)
+		log.WithFields(logrus.Fields{
+			"PlayerID":   playerID,
+			"PlayerName": p.NickName,
+			"RoomName":   r.Name,
+		}).Info("player tried to click tile but they are is no clue")
 		return
 	} else if r.Game.turnsTaken >= r.Game.Clue.Count+1 {
 		// can only make clue+1 turns max
-		log.Printf("player '%s' tried to select a tile but they don't have turns left", p.NickName)
+		log.WithFields(logrus.Fields{
+			"PlayerID":   playerID,
+			"PlayerName": p.NickName,
+			"RoomName":   r.Name,
+			"TurnsTake":  r.Game.turnsTaken,
+			"ClueCount":  r.Game.Clue.Count,
+		}).Info("player tried to click time but they don't have clues left")
 		return
 	}
 
 	tile := &r.Game.Board[i][j]
 
 	if tile.Flipped {
-		log.Println("player '%s' clicked a flipped tile '%s'", p.NickName, tile.Word)
+		log.WithFields(logrus.Fields{
+			"PlayerID":   playerID,
+			"PlayerName": p.NickName,
+			"RoomName":   r.Name,
+			"Tile":       tile.Word,
+		}).Info("player flipp an already flipped tile")
 		return
 	}
 
 	if r.Consesus == ConsensusAll && !r.playerHasConsensus(p, i, j) {
-		log.Printf("player '%s' proposed '%s' but don't have consensus", p.NickName, tile.Word)
+		log.WithFields(logrus.Fields{
+			"PlayerID":   playerID,
+			"PlayerName": p.NickName,
+			"RoomName":   r.Name,
+			"Tile":       tile.Word,
+		}).Info("player tried to flip tile but they don't have consensus")
 		return
 	}
 

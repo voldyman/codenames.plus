@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"log"
+
+	"github.com/sirupsen/logrus"
 )
 
 type CodeNames struct {
@@ -31,6 +32,12 @@ func (cn *CodeNames) CreateRoom(playerID, nick, room, password string) (string, 
 	}
 
 	if _, ok := cn.NameRooms[room]; ok {
+		log.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+			"Nick":     nick,
+			"Password": password,
+			"RoomName": room,
+		}).Info("player tried to create room but already exists")
 		return fmt.Sprintf("room %s already exists.", room), false
 	}
 
@@ -47,6 +54,13 @@ func (cn *CodeNames) JoinRoom(playerID, roomname, nick, password string) (string
 	}
 	room, ok := cn.NameRooms[roomname]
 	if !ok {
+		log.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+			"Nick":     nick,
+			"Password": password,
+			"RoomName": room,
+		}).Info("player tried to join a room but the room does not exist")
+
 		return fmt.Sprintf("could not find room: %s", room.Name), false
 	}
 
@@ -66,13 +80,19 @@ func (cn *CodeNames) JoinRoom(playerID, roomname, nick, password string) (string
 func (cn *CodeNames) LeaveRoom(playerID string) bool {
 	room, ok := cn.PlayerRooms[playerID]
 	if !ok {
-		log.Printf("player: %s tried to leave when they are not in a room", playerID)
+		log.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+		}).Warn("player tried to leave the roo but they are not in any room")
 		return false
 	}
 
 	ok = room.Leave(playerID)
 	if !ok {
-		log.Printf("player %s was unable to leave room %s", playerID, room.Name)
+		log.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+			"RoomName": room.Name,
+		}).Warn("player was unable to leave the room")
+
 		return false
 	}
 	delete(cn.PlayerRooms, playerID)
@@ -88,7 +108,11 @@ func (cn *CodeNames) LeaveRoom(playerID string) bool {
 func (cn *CodeNames) JoinTeam(playerID, team string) bool {
 	room, ok := cn.PlayerRooms[playerID]
 	if !ok {
-		log.Printf("player %s tried to join a team but they are not in a room", playerID)
+		log.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+			"RoomName": room.Name,
+			"Team":     team,
+		}).Info("player tried to join team but they are not in any room")
 		return false
 	}
 	room.ChangeTeam(playerID, team)
@@ -98,7 +122,9 @@ func (cn *CodeNames) JoinTeam(playerID, team string) bool {
 func (cn *CodeNames) RandomizeTeams(playerID string) bool {
 	room, ok := cn.PlayerRooms[playerID]
 	if !ok {
-		log.Printf("player %s tried to randomize but they are not in a room", playerID)
+		log.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+		}).Warn("player tried to randomize teams but they are not in any room")
 		return false
 	}
 	room.RandomizeTeams(playerID)
@@ -108,7 +134,9 @@ func (cn *CodeNames) RandomizeTeams(playerID string) bool {
 func (cn *CodeNames) NewGame(playerID string) bool {
 	room, ok := cn.PlayerRooms[playerID]
 	if !ok {
-		log.Printf("player %s tried to start a new game but they are not in a room", playerID)
+		log.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+		}).Warn("player tried to start a new game but they are not in any room")
 		return false
 	}
 
@@ -120,7 +148,10 @@ func (cn *CodeNames) NewGame(playerID string) bool {
 func (cn *CodeNames) SwitchRole(playerID, role string) (string, bool) {
 	room, ok := cn.PlayerRooms[playerID]
 	if !ok {
-		log.Printf("player %s tried switch role to %s but they are not in a room", playerID, role)
+		log.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+			"Role":     role,
+		}).Warn("player tried to switch role but they are not in any room")
 		return "you can't switch roles when you are not part of a room", false
 	}
 
