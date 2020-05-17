@@ -321,7 +321,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		}
 		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
 
-		fmt.Printf("meet error: %+v\n", e)
+		fmt.Printf("met error: %+v\n", e)
 	})
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
 		ctx := s.Context().(connContext)

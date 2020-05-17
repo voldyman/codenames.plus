@@ -129,7 +129,7 @@ func (r *Room) hasPlayer(name string) bool {
 func (r *Room) Leave(playerID string) bool {
 	p, ok := r.Player(playerID)
 	if !ok {
-		fmt.Println("player not a member tried to leave")
+		log.Println("player not a member tried to leave")
 		return false
 	}
 	if p.Team == TeamBlue {
@@ -282,18 +282,23 @@ func (r *Room) DeclareClue(playerID, clue string, count int) {
 
 func (r *Room) ChangeCards(playerID, pack string) {
 	if pack == "base" {
+		r.Game.Base = !r.Game.Base
 		r.boardType = r.boardType ^ BoardTypeDefault
 	}
 	if pack == "duet" {
+		r.Game.Duet = !r.Game.Duet
 		r.boardType = r.boardType ^ BoardTypeDuet
 	}
 	if pack == "undercover" {
+		r.Game.Undercover = !r.Game.Undercover
 		r.boardType = r.boardType ^ BoardTypeUndercover
 	}
 	if pack == "custom" {
+		r.Game.Custom = !r.Game.Custom
 		r.boardType = r.boardType ^ BoardTypeCustom
 	}
 	if pack == "nsfw" {
+		r.Game.Nsfw = !r.Game.Nsfw
 		r.boardType = r.boardType ^ BoardTypeNsfw
 	}
 }
@@ -354,7 +359,8 @@ type Game struct {
 	TimerAmount int64 `json:"timerAmount"`
 	WordPool    int   `json:"wordPool"`
 
-	// Game types
+	// Game types, these are kept here for the UI
+	// actual board types are stored in the room
 	Base       bool `json:"base"`
 	Duet       bool `json:"duet"`
 	Undercover bool `json:"undercover"`
@@ -393,11 +399,11 @@ func NewGame(bt BoardType) *Game {
 		TimerAmount: timerAmount,
 		WordPool:    len(DefaultWords),
 
-		Base:       true,
-		Duet:       false,
-		Undercover: false,
-		Custom:     true,
-		Nsfw:       false,
+		Base:       isSet(bt, BoardTypeDefault),
+		Duet:       isSet(bt, BoardTypeDuet),
+		Undercover: isSet(bt, BoardTypeUndercover),
+		Custom:     isSet(bt, BoardTypeCustom),
+		Nsfw:       isSet(bt, BoardTypeNsfw),
 
 		Red:  redTiles,
 		Blue: blueTiles,
@@ -421,9 +427,8 @@ func generateBoard(bt BoardType, turn string) [][]Tile {
 		bt = BoardTypeDefault
 	}
 
-	wordsPerSet := totalWords / setsEnabled
+	wordsPerSet := (totalWords / setsEnabled) + 1
 	words := getWords(bt, wordsPerSet)
-
 	linearTiles := generateLinearTiles(words, turn)
 
 	rand.Shuffle(len(linearTiles), func(i, j int) { linearTiles[i], linearTiles[j] = linearTiles[j], linearTiles[i] })
@@ -465,16 +470,20 @@ func getWords(bt BoardType, wordsPerSet int) []string {
 	if isSet(bt, BoardTypeDefault) {
 		selectWords(DefaultWords, wordsPerSet, words)
 
-	} else if isSet(bt, BoardTypeCustom) {
+	}
+	if isSet(bt, BoardTypeCustom) {
 		selectWords(CustomWords, wordsPerSet, words)
 
-	} else if isSet(bt, BoardTypeDuet) {
+	}
+	if isSet(bt, BoardTypeDuet) {
 		selectWords(DuetWords, wordsPerSet, words)
 
-	} else if isSet(bt, BoardTypeNsfw) {
+	}
+	if isSet(bt, BoardTypeNsfw) {
 		selectWords(NsfwWords, wordsPerSet, words)
 
-	} else if isSet(bt, BoardTypeUndercover) {
+	}
+	if isSet(bt, BoardTypeUndercover) {
 		selectWords(UndercoverWords, wordsPerSet, words)
 	}
 	result := []string{}
