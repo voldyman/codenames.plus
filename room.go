@@ -63,6 +63,11 @@ const (
 	BoardTypeNsfw
 )
 
+var (
+	PlayerRoleGuesser   = "guesser"
+	PlayerRoleSpyMaster = "spymaster"
+)
+
 type Room struct {
 	Name       string             `json:"room"`
 	Password   string             `json:"password"`
@@ -89,24 +94,36 @@ func NewRoom(name, password string) *Room {
 }
 
 func (r *Room) Join(playerID, name string) bool {
+	if _, ok := r.Players[playerID]; ok {
+		return true
+	}
+
+	if r.hasPlayer(name) {
+		name = name + "_"
+	}
 	randTeam := TeamBlue
 	if rand.Intn(20)%2 == 0 {
 		randTeam = TeamRed
 	}
 
-	if randTeam == TeamBlue {
-		r.Game.Blue++
-	} else {
-		r.Game.Red++
-	}
 	r.Players[playerID] = &Player{
 		ID:            playerID,
 		NickName:      name,
 		Room:          r.Name,
 		Team:          randTeam,
 		GuessProposal: nil,
+		Role:          PlayerRoleGuesser,
 	}
 	return true
+}
+
+func (r *Room) hasPlayer(name string) bool {
+	for _, p := range r.Players {
+		if p.NickName == name {
+			return true
+		}
+	}
+	return false
 }
 
 func (r *Room) Leave(playerID string) bool {
@@ -159,7 +176,7 @@ func (r *Room) SwitchRole(playerID, role string) (string, bool) {
 		return "player not a member of the room", false
 	}
 	p.Role = role
-	return "switched roles", true
+	return role, true
 }
 
 func (r *Room) ChangeDifficulty(playerID, difficulty string) {
@@ -196,19 +213,64 @@ func (r *Room) SelectTile(playerID string, i, j int) {
 		return
 	}
 	if p.Team != r.Game.Turn {
+		log.Println("not the players team's tuurn")
 		return
 	}
 
-	if r.Game.Turn == TeamBlue {
-		r.Game.Turn = TeamRed
-	} else {
-		r.Game.Turn = TeamBlue
+	if r.Game.Clue == nil {
+		// no clue, can't play
+		log.Println("clue is nil")
+		return
+	} else if r.Game.turnsTaken >= r.Game.Clue.Count+1 {
+		// can only make clue+1 turns max
+		log.Println("too many turns")
+		return
 	}
 
-	if r.Game.Board[i][j].Type == TileTypeBlue && p.Team == TeamBlue {
-
-	}
 	r.Game.Board[i][j].Flipped = true
+
+	switch r.Game.Board[i][j].Type {
+	case TileTypeBlack:
+		r.Game.Over = true
+		ot := otherTeam(p.Team)
+		r.Game.Winner = &ot
+
+	case TileTypeNeutral:
+		r.switchTurns()
+
+	case TileTypeBlue:
+		r.Game.Blue--
+		if p.Team == TeamBlue {
+			r.Game.turnsTaken++
+		} else {
+			r.switchTurns()
+		}
+
+	case TileTypeRed:
+		r.Game.Red--
+		if p.Team == TeamRed {
+			r.Game.turnsTaken++
+		} else {
+			r.switchTurns()
+		}
+	}
+
+	if r.Game.turnsTaken >= r.Game.Clue.Count+1 {
+		r.switchTurns()
+	}
+}
+
+func otherTeam(team string) string {
+	if team == TeamBlue {
+		return TeamRed
+	}
+	return TeamBlue
+}
+
+func (r *Room) switchTurns() {
+	r.Game.Turn = otherTeam(r.Game.Turn)
+	r.Game.turnsTaken = 0
+	r.Game.Clue = nil
 }
 
 func (r *Room) DeclareClue(playerID, clue string, count int) {
@@ -269,7 +331,7 @@ type Player struct {
 var (
 	TileTypeBlue    = "blue"
 	TileTypeRed     = "red"
-	TileTypeBlack   = "black"
+	TileTypeBlack   = "death"
 	TileTypeNeutral = "neutral"
 )
 
@@ -311,13 +373,21 @@ type Game struct {
 	Board  [][]Tile `json:"board"`
 	Log    []string `json:"log"`
 	Clue   *Clue    `json:"clue"`
+
+	turnsTaken int
 }
 
 func NewGame(bt BoardType) *Game {
+	blueTiles := 9
+	redTiles := 8
+
 	turn := TeamBlue
 	if rand.Intn(100)%2 == 0 {
 		turn = TeamRed
+		blueTiles = 8
+		redTiles = 9
 	}
+
 	timerAmount := int64(5 * time.Minute)
 	return &Game{
 		TimerAmount: timerAmount,
@@ -329,8 +399,8 @@ func NewGame(bt BoardType) *Game {
 		Custom:     true,
 		Nsfw:       false,
 
-		Red:  0,
-		Blue: 0,
+		Red:  redTiles,
+		Blue: blueTiles,
 
 		Turn:   turn,
 		Over:   false,

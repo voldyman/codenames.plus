@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -22,8 +23,18 @@ func socketServer(cn *CodeNames) *socketio.Server {
 	}
 
 	server.OnConnect("/", func(s socketio.Conn) error {
+		playerID := randID("player")
+		vals, err := url.ParseQuery(s.URL().RawQuery)
+		if err == nil {
+			id := vals.Get("sessionId")
+			if len(id) > 0 || id != "null" {
+				log.Println("Reusing id for new player", id)
+				playerID = id
+			}
+		}
+
 		ctx := connContext{
-			PlayerID: randID("player"),
+			PlayerID: playerID,
 		}
 
 		s.SetContext(ctx)
@@ -64,11 +75,13 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			Message: msg,
 			Success: success,
 		})
+		gs := cn.GameState(ctx.PlayerID)
 
 		if success {
 			s.Join(req.Room)
-			s.Emit("gameState", cn.GameState(ctx.PlayerID))
+			s.Emit("gameState", gs)
 		}
+		server.BroadcastToRoom("/", cn.PlayerRoomName(ctx.PlayerID), "gameState", gs)
 	})
 
 	type joinRoomRequest struct {
@@ -89,11 +102,12 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			Message: msg,
 			Success: success,
 		})
-
+		gs := cn.GameState(ctx.PlayerID)
 		if success {
 			s.Join(req.Room)
-			server.BroadcastToRoom("/", cn.PlayerRoomName(ctx.PlayerID), "gameState", cn.GameState(ctx.PlayerID))
+			s.Emit("gameState", gs)
 		}
+		server.BroadcastToRoom("/", cn.PlayerRoomName(ctx.PlayerID), "gameState", gs)
 	})
 
 	type leaveRoomResponse struct {
@@ -298,9 +312,13 @@ func socketServer(cn *CodeNames) *socketio.Server {
 
 	server.OnError("/", func(s socketio.Conn, e error) {
 		ctx := s.Context().(connContext)
+
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
 
-		s.Leave(roomName)
+		if len(roomName) > 0 {
+			s.Leave(roomName)
+			cn.LeaveRoom(ctx.PlayerID)
+		}
 		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
 
 		fmt.Printf("meet error: %+v\n", e)
@@ -309,8 +327,10 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		ctx := s.Context().(connContext)
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
-
-		s.Leave(roomName)
+		if len(roomName) > 0 {
+			s.Leave(roomName)
+			cn.LeaveRoom(ctx.PlayerID)
+		}
 		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
 
 		fmt.Println("closed", reason)
