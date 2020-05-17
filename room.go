@@ -25,6 +25,14 @@ func init() {
 	DuetWords = readWords("server/duet-words.txt")
 	UndercoverWords = readWords("server/duet-words.txt")
 	CustomWords = readWords("server/custom-words.txt")
+
+	BoardTypeToWordSet = map[BoardType]*[]string{
+		BoardTypeDefault:    &DefaultWords,
+		BoardTypeDuet:       &DuetWords,
+		BoardTypeCustom:     &CustomWords,
+		BoardTypeNsfw:       &NsfwWords,
+		BoardTypeUndercover: &UndercoverWords,
+	}
 }
 
 func readWords(file string) []string {
@@ -64,6 +72,9 @@ const (
 	BoardTypeNsfw
 )
 
+var (
+	BoardTypeToWordSet = map[BoardType]*[]string{}
+)
 var (
 	PlayerRoleGuesser   = "guesser"
 	PlayerRoleSpyMaster = "spymaster"
@@ -394,6 +405,7 @@ func (r *Room) ChangeCards(playerID, pack string) {
 		r.Game.Nsfw = !r.Game.Nsfw
 		r.boardType = r.boardType ^ BoardTypeNsfw
 	}
+	r.Game.WordPool = wordpoolSize(r.boardType)
 }
 
 func (r *Room) ChangeTimer(playerID string, value int) {
@@ -490,7 +502,7 @@ func NewGame(bt BoardType) *Game {
 	timerAmount := int64(5 * time.Minute)
 	return &Game{
 		TimerAmount: timerAmount,
-		WordPool:    len(DefaultWords),
+		WordPool:    wordpoolSize(bt),
 
 		Base:       isSet(bt, BoardTypeDefault),
 		Duet:       isSet(bt, BoardTypeDuet),
@@ -509,6 +521,14 @@ func NewGame(bt BoardType) *Game {
 		Log:    []string{},
 		Clue:   nil,
 	}
+}
+
+func wordpoolSize(bt BoardType) int {
+	count := 0
+	visitBoardType(bt, func(bt BoardType) {
+		count += len(*BoardTypeToWordSet[bt])
+	})
+	return count
 }
 
 func generateBoard(bt BoardType, turn string) [][]Tile {
@@ -539,46 +559,37 @@ func generateBoard(bt BoardType, turn string) [][]Tile {
 
 func getTotalSetsEnabled(bt BoardType) int {
 	setsEnabled := 0
-	if isSet(bt, BoardTypeDefault) {
+	visitBoardType(bt, func(bt BoardType) {
 		setsEnabled++
+	})
+	return setsEnabled
+}
+
+func visitBoardType(bt BoardType, visitor func(bt BoardType)) {
+	if isSet(bt, BoardTypeDefault) {
+		visitor(BoardTypeDefault)
 	}
 	if isSet(bt, BoardTypeCustom) {
-		setsEnabled++
+		visitor(BoardTypeCustom)
 	}
 	if isSet(bt, BoardTypeDuet) {
-		setsEnabled++
+		visitor(BoardTypeDuet)
 	}
 	if isSet(bt, BoardTypeNsfw) {
-		setsEnabled++
+		visitor(BoardTypeNsfw)
 	}
 	if isSet(bt, BoardTypeUndercover) {
-		setsEnabled++
+		visitor(BoardTypeUndercover)
 	}
-	return setsEnabled
 }
 
 func getWords(bt BoardType, wordsPerSet int) []string {
 	words := map[string]struct{}{}
 
-	if isSet(bt, BoardTypeDefault) {
-		selectWords(DefaultWords, wordsPerSet, words)
+	visitBoardType(bt, func(bt BoardType) {
+		selectWords(*BoardTypeToWordSet[bt], wordsPerSet, words)
+	})
 
-	}
-	if isSet(bt, BoardTypeCustom) {
-		selectWords(CustomWords, wordsPerSet, words)
-
-	}
-	if isSet(bt, BoardTypeDuet) {
-		selectWords(DuetWords, wordsPerSet, words)
-
-	}
-	if isSet(bt, BoardTypeNsfw) {
-		selectWords(NsfwWords, wordsPerSet, words)
-
-	}
-	if isSet(bt, BoardTypeUndercover) {
-		selectWords(UndercoverWords, wordsPerSet, words)
-	}
 	result := []string{}
 	for k := range words {
 		result = append(result, k)
