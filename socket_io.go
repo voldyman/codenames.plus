@@ -90,7 +90,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		Password string `json:"password"`
 	}
 	type joinRoomResponse struct {
-		Message string `json:"message"`
+		Message string `json:"msg"`
 		Success bool   `json:"success"`
 	}
 	server.OnEvent("/", "joinRoom", func(s socketio.Conn, req joinRoomRequest) {
@@ -324,7 +324,10 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		fmt.Printf("met error: %+v\n", e)
 	})
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
-		ctx := s.Context().(connContext)
+		ctx, ok := s.Context().(connContext)
+		if !ok {
+			return
+		}
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
 		if len(roomName) > 0 {

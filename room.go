@@ -217,19 +217,36 @@ func (r *Room) SelectTile(playerID string, i, j int) {
 		return
 	}
 
-	if r.Game.Clue == nil {
-		// no clue, can't play
-		log.Println("clue is nil")
-		return
-	} else if r.Game.turnsTaken >= r.Game.Clue.Count+1 {
-		// can only make clue+1 turns max
-		log.Println("too many turns")
+	if p.Role == PlayerRoleSpyMaster {
+		log.Println("player '%s' is a spymaster and can't select tiles", p.NickName)
 		return
 	}
 
-	r.Game.Board[i][j].Flipped = true
+	if r.Game.Clue == nil {
+		// no clue, can't play
+		log.Printf("player '%s' tried to select a tile but clue is nil", p.NickName)
+		return
+	} else if r.Game.turnsTaken >= r.Game.Clue.Count+1 {
+		// can only make clue+1 turns max
+		log.Printf("player '%s' tried to select a tile but they don't have turns left", p.NickName)
+		return
+	}
 
-	switch r.Game.Board[i][j].Type {
+	tile := &r.Game.Board[i][j]
+
+	if tile.Flipped {
+		log.Println("player '%s' clicked a flipped tile '%s'", p.NickName, tile.Word)
+		return
+	}
+
+	if r.Consesus == ConsensusAll && !r.playerHasConsensus(p, i, j) {
+		log.Printf("player '%s' proposed '%s' but don't have consensus", p.NickName, tile.Word)
+		return
+	}
+
+	tile.Flipped = true
+
+	switch tile.Type {
 	case TileTypeBlack:
 		r.Game.Over = true
 		ot := otherTeam(p.Team)
@@ -260,6 +277,20 @@ func (r *Room) SelectTile(playerID string, i, j int) {
 	}
 }
 
+func (r *Room) playerHasConsensus(p *Player, i, j int) bool {
+	word := r.Game.Board[i][j].Word
+	p.GuessProposal = &word
+	for _, tp := range r.teamPlayers(p.Team) {
+		if tp.Role == PlayerRoleSpyMaster {
+			continue
+		}
+		if tp.GuessProposal == nil || *tp.GuessProposal != word {
+			return false
+		}
+	}
+	return true
+}
+
 func otherTeam(team string) string {
 	if team == TeamBlue {
 		return TeamRed
@@ -268,9 +299,22 @@ func otherTeam(team string) string {
 }
 
 func (r *Room) switchTurns() {
+	for _, tp := range r.teamPlayers(r.Game.Turn) {
+		tp.GuessProposal = nil
+	}
 	r.Game.Turn = otherTeam(r.Game.Turn)
 	r.Game.turnsTaken = 0
 	r.Game.Clue = nil
+}
+
+func (r *Room) teamPlayers(team string) []*Player {
+	players := []*Player{}
+	for _, p := range r.Players {
+		if p.Team == team {
+			players = append(players, p)
+		}
+	}
+	return players
 }
 
 func (r *Room) DeclareClue(playerID, clue string, count int) {

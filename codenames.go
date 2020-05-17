@@ -39,9 +39,19 @@ func (cn *CodeNames) CreateRoom(playerID, nick, room, password string) (string, 
 }
 
 func (cn *CodeNames) JoinRoom(playerID, roomname, nick, password string) (string, bool) {
+	if len(nick) == 0 {
+		return "invalid nickname", false
+	}
+	if len(password) == 0 {
+		return "invalid password", false
+	}
 	room, ok := cn.NameRooms[roomname]
 	if !ok {
 		return fmt.Sprintf("could not find room: %s", room.Name), false
+	}
+
+	if room.Password != password {
+		return "invalid password", false
 	}
 	ok = room.Join(playerID, nick)
 	if !ok {
