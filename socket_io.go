@@ -465,8 +465,11 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			s.Leave(roomName)
 			cn.LeaveRoom(ctx.PlayerID)
 		}
-		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
-		log.Warnf("error while handling socket.io request: %+v", e)
+		server.BroadcastToRoom("/", roomName, "gameState", cn.RoomNameGameState(roomName))
+		log.WithFields(logrus.Fields{
+			"PlayerID": ctx.PlayerID,
+			"RoomName": roomName,
+		}).Warnf("error while handling socket.io request: %+v", e)
 	})
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
 		ctx, ok := s.Context().(connContext)
@@ -480,9 +483,13 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			s.Leave(roomName)
 			cn.LeaveRoom(ctx.PlayerID)
 		}
-		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.RoomNameGameState(roomName))
 
-		log.WithField("reason", reason).Info("closed connection")
+		log.WithFields(logrus.Fields{
+			"PlayerID": ctx.PlayerID,
+			"RoomName": roomName,
+			"Reason":   reason,
+		}).Info("closed connection")
 	})
 	return server
 }
