@@ -2,8 +2,6 @@ package main
 
 import (
 	"math/rand"
-	"strconv"
-	"time"
 
 	"github.com/sirupsen/logrus"
 )
@@ -16,7 +14,7 @@ var (
 
 var (
 	ModeCasual = "casual"
-	ModeTimed  = "time"
+	ModeTimed  = "timed"
 	ModeTypes  = buildSet(ModeCasual, ModeTimed)
 )
 
@@ -169,16 +167,11 @@ func (r *Room) ChangeDifficulty(playerID, difficulty string) {
 	r.Difficulty = difficulty
 }
 
-func (r *Room) SwitchMode(playerID, mode, timerAmount string) {
+func (r *Room) SwitchMode(playerID, mode string) {
 	if _, ok := ModeTypes[mode]; !ok {
 		return
 	}
 	r.Mode = mode
-	val, err := strconv.Atoi(timerAmount)
-	if err != nil {
-		val = int(5 * time.Minute)
-	}
-	r.Game.TimerAmount = int64(val)
 }
 
 func (r *Room) SwitchConsensus(playerID, consensus string) {
@@ -410,8 +403,8 @@ func (r *Room) ChangeCards(playerID, pack string) {
 	r.Game.WordPool = wordpoolSize(r.boardType)
 }
 
-func (r *Room) ChangeTimer(playerID string, value int) {
-
+func (r *Room) ChangeTimer(playerID string, value float64) {
+	r.Game.TimerAmount = value * 60
 }
 
 func (r *Room) Player(playerID string) (*Player, bool) {

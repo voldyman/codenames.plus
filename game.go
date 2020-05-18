@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math/rand"
-	"strconv"
 	"strings"
-	"time"
 )
 
 var (
@@ -90,8 +88,8 @@ type GameLog struct {
 }
 
 type Game struct {
-	TimerAmount int64 `json:"timerAmount"`
-	WordPool    int   `json:"wordPool"`
+	TimerAmount float64 `json:"timerAmount"`
+	WordPool    int     `json:"wordPool"`
 
 	// Game types, these are kept here for the UI
 	// actual board types are stored in the room
@@ -109,7 +107,7 @@ type Game struct {
 	Turn   string    `json:"turn"`
 	Over   bool      `json:"over"`
 	Winner *string   `json:"winner"`
-	Timer  string    `json:"timer"`
+	Timer  float64   `json:"timer"`
 	Board  [][]Tile  `json:"board"`
 	Log    []GameLog `json:"log"`
 	Clue   *Clue     `json:"clue"`
@@ -128,9 +126,8 @@ func NewGame(bt BoardType) *Game {
 		redTiles = 9
 	}
 
-	timerAmount := int64(5 * time.Minute)
 	return &Game{
-		TimerAmount: timerAmount,
+		TimerAmount: 5 * 60,
 		WordPool:    wordpoolSize(bt),
 
 		Base:       isSet(bt, BoardTypeDefault),
@@ -145,7 +142,7 @@ func NewGame(bt BoardType) *Game {
 		Turn:   turn,
 		Over:   false,
 		Winner: nil,
-		Timer:  strconv.FormatInt(timerAmount, 10),
+		Timer:  5,
 		Board:  generateBoard(bt, turn),
 		Log:    []GameLog{},
 		Clue:   nil,

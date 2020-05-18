@@ -287,9 +287,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 	})
 
 	type switchModeRequest struct {
-		Room        string `json:"room"`
-		Mode        string `json:"mode"`
-		TimerAmount string `json:"timer_amount"`
+		Mode string `json:"mode"`
 	}
 	server.OnEvent("/", "switchMode", func(s socketio.Conn, req switchModeRequest) {
 		ctx, ok := s.Context().(connContext)
@@ -299,14 +297,12 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		}
 
 		log.WithFields(logrus.Fields{
-			"Operation":   "switchMode",
-			"PlayerID":    ctx.PlayerID,
-			"Room":        req.Room,
-			"Mode":        req.Mode,
-			"TimerAmount": req.TimerAmount,
+			"Operation": "switchMode",
+			"PlayerID":  ctx.PlayerID,
+			"Mode":      req.Mode,
 		}).Info("received request to switch mode")
 
-		cn.SwitchMode(ctx.PlayerID, req.Room, req.Mode, req.TimerAmount)
+		cn.SwitchMode(ctx.PlayerID, req.Mode)
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
 		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
@@ -429,9 +425,9 @@ func socketServer(cn *CodeNames) *socketio.Server {
 	})
 
 	type timeSliderRequest struct {
-		Value int `json:"value"`
+		Value string `json:"value"`
 	}
-	server.OnEvent("/", "timeSlider", func(s socketio.Conn, req timeSliderRequest) {
+	server.OnEvent("/", "timerSlider", func(s socketio.Conn, req timeSliderRequest) {
 		ctx, ok := s.Context().(connContext)
 		if !ok {
 			log.Warn("connection context not set in joinTeam request")
@@ -444,7 +440,12 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"Value":     req.Value,
 		}).Info("received update slider request")
 
-		cn.UpdateTimeSlider(ctx.PlayerID, req.Value)
+		val, err := strconv.ParseFloat(req.Value, 64)
+		if err != nil {
+			log.Warn("unable to parse time, using default")
+			val = 5
+		}
+		cn.UpdateTimeSlider(ctx.PlayerID, val)
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
 		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))

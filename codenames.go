@@ -221,14 +221,17 @@ func (cn *CodeNames) SwitchDifficulty(playerID, difficulty string) bool {
 	return true
 }
 
-func (cn *CodeNames) SwitchMode(playerID, roomName, mode, timerAmount string) bool {
+func (cn *CodeNames) SwitchMode(playerID, mode string) bool {
 	room := cn.PlayerRoom(playerID)
 	if room == nil {
-		log.Printf("player %s tried to switch mode to %s but they are not in a room", playerID, mode)
+		log.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+			"Mode":     mode,
+		}).Info("switch mode failed, player was not found in a room")
 		return false
 	}
 
-	room.SwitchMode(playerID, mode, timerAmount)
+	room.SwitchMode(playerID, mode)
 	return true
 }
 
@@ -287,7 +290,7 @@ func (cn *CodeNames) ChangeCards(playerID, pack string) bool {
 	return true
 }
 
-func (cn *CodeNames) UpdateTimeSlider(playerID string, value int) bool {
+func (cn *CodeNames) UpdateTimeSlider(playerID string, value float64) bool {
 	room := cn.PlayerRoom(playerID)
 	if room == nil {
 		log.Printf("player %s tried to update timer to value %d but they are not in a room", playerID, value)
