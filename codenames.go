@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/sirupsen/logrus"
 )
 
 type CodeNames struct {
+	sync.RWMutex
 	PlayerRooms map[string]*Room
 	NameRooms   map[string]*Room
 }
@@ -18,20 +20,59 @@ func NewCodeNames() *CodeNames {
 	}
 }
 
+func (cn *CodeNames) PlayerRoom(playerID string) *Room {
+	cn.RLock()
+	defer cn.RUnlock()
+	room := cn.PlayerRooms[playerID]
+	if room == nil {
+		return nil
+	}
+	return room
+}
+
 func (cn *CodeNames) PlayerRoomName(playerID string) string {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
 		return ""
 	}
 	return room.Name
 }
+
+func (cn *CodeNames) NameRoom(roomName string) *Room {
+	cn.RLock()
+	defer cn.RUnlock()
+	room, ok := cn.NameRooms[roomName]
+	if !ok {
+		return nil
+	}
+	return room
+}
+
+func (cn *CodeNames) SetNameRoom(roomName string, room *Room) {
+	cn.Lock()
+	cn.NameRooms[roomName] = room
+	cn.Unlock()
+
+}
+
+func (cn *CodeNames) DeleteRoomName(roomName string) {
+	cn.Lock()
+	delete(cn.NameRooms, roomName)
+	cn.Unlock()
+}
+
+func (cn *CodeNames) DeletePlayer(playerID string) {
+	cn.Lock()
+	delete(cn.PlayerRooms, playerID)
+	cn.Unlock()
+}
+
 func (cn *CodeNames) CreateRoom(playerID, nick, room, password string) (string, bool) {
-	if room, ok := cn.PlayerRooms[playerID]; ok {
-		_ = room
-		// leave maybe?
+	if oldRoom := cn.PlayerRoom(playerID); oldRoom != nil {
+		oldRoom.Leave(playerID)
 	}
 
-	if _, ok := cn.NameRooms[room]; ok {
+	if r := cn.NameRoom(room); r != nil {
 		log.WithFields(logrus.Fields{
 			"PlayerID": playerID,
 			"Nick":     nick,
@@ -40,8 +81,7 @@ func (cn *CodeNames) CreateRoom(playerID, nick, room, password string) (string, 
 		}).Info("player tried to create room but already exists")
 		return fmt.Sprintf("room %s already exists.", room), false
 	}
-
-	cn.NameRooms[room] = NewRoom(room, password)
+	cn.SetNameRoom(room, NewRoom(room, password))
 	return cn.JoinRoom(playerID, room, nick, password)
 }
 
@@ -52,8 +92,9 @@ func (cn *CodeNames) JoinRoom(playerID, roomname, nick, password string) (string
 	if len(password) == 0 {
 		return "invalid password", false
 	}
-	room, ok := cn.NameRooms[roomname]
-	if !ok {
+
+	room := cn.NameRoom(roomname)
+	if room == nil {
 		log.WithFields(logrus.Fields{
 			"PlayerID": playerID,
 			"Nick":     nick,
@@ -67,26 +108,35 @@ func (cn *CodeNames) JoinRoom(playerID, roomname, nick, password string) (string
 	if room.Password != password {
 		return "invalid password", false
 	}
-	ok = room.Join(playerID, nick)
+	ok := room.Join(playerID, nick)
 	if !ok {
 		return "unable to join room", false
 	}
+
+	cn.Lock()
 	cn.PlayerRooms[playerID] = room
-	log.Printf("player %s joined room %s", nick, roomname)
+	cn.Unlock()
+
+	log.WithFields(logrus.Fields{
+		"PlayerID":   playerID,
+		"PlayerNick": nick,
+		"RoomName":   room.Name,
+	}).Info("player joined room")
+
 	return "joined the room", true
 
 }
 
 func (cn *CodeNames) LeaveRoom(playerID string) bool {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
 		log.WithFields(logrus.Fields{
 			"PlayerID": playerID,
 		}).Warn("player tried to leave the roo but they are not in any room")
 		return false
 	}
 
-	ok = room.Leave(playerID)
+	ok := room.Leave(playerID)
 	if !ok {
 		log.WithFields(logrus.Fields{
 			"PlayerID": playerID,
@@ -95,19 +145,20 @@ func (cn *CodeNames) LeaveRoom(playerID string) bool {
 
 		return false
 	}
-	delete(cn.PlayerRooms, playerID)
+
+	cn.DeletePlayer(playerID)
 
 	// room gets deleted when all players leave
 	// todo(voldy): fix this, maybe?
 	if len(room.Players) == 0 {
-		delete(cn.NameRooms, room.Name)
+		cn.DeleteRoomName(room.Name)
 	}
 	return true
 }
 
 func (cn *CodeNames) JoinTeam(playerID, team string) bool {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
 		log.WithFields(logrus.Fields{
 			"PlayerID": playerID,
 			"RoomName": room.Name,
@@ -120,8 +171,8 @@ func (cn *CodeNames) JoinTeam(playerID, team string) bool {
 }
 
 func (cn *CodeNames) RandomizeTeams(playerID string) bool {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
 		log.WithFields(logrus.Fields{
 			"PlayerID": playerID,
 		}).Warn("player tried to randomize teams but they are not in any room")
@@ -132,8 +183,8 @@ func (cn *CodeNames) RandomizeTeams(playerID string) bool {
 }
 
 func (cn *CodeNames) NewGame(playerID string) bool {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
 		log.WithFields(logrus.Fields{
 			"PlayerID": playerID,
 		}).Warn("player tried to start a new game but they are not in any room")
@@ -146,8 +197,8 @@ func (cn *CodeNames) NewGame(playerID string) bool {
 }
 
 func (cn *CodeNames) SwitchRole(playerID, role string) (string, bool) {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
 		log.WithFields(logrus.Fields{
 			"PlayerID": playerID,
 			"Role":     role,
@@ -159,8 +210,8 @@ func (cn *CodeNames) SwitchRole(playerID, role string) (string, bool) {
 }
 
 func (cn *CodeNames) SwitchDifficulty(playerID, difficulty string) bool {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
 		log.Printf("player %s tried to switch difficulty to %s but they are not in a room", playerID, difficulty)
 		return false
 	}
@@ -171,8 +222,8 @@ func (cn *CodeNames) SwitchDifficulty(playerID, difficulty string) bool {
 }
 
 func (cn *CodeNames) SwitchMode(playerID, roomName, mode, timerAmount string) bool {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
 		log.Printf("player %s tried to switch mode to %s but they are not in a room", playerID, mode)
 		return false
 	}
@@ -182,8 +233,8 @@ func (cn *CodeNames) SwitchMode(playerID, roomName, mode, timerAmount string) bo
 }
 
 func (cn *CodeNames) SwitchConsensus(playerID, roomname, consensus string) bool {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
 		log.Printf("player %s tried to switch consensus to %s but they are not in a room", playerID, consensus)
 		return false
 	}
@@ -193,8 +244,8 @@ func (cn *CodeNames) SwitchConsensus(playerID, roomname, consensus string) bool 
 }
 
 func (cn *CodeNames) EndTurn(playerID string) bool {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
 		log.Printf("player %s tried end turn but they are not in a room", playerID)
 		return false
 	}
@@ -204,8 +255,8 @@ func (cn *CodeNames) EndTurn(playerID string) bool {
 }
 
 func (cn *CodeNames) ClickTile(playerID string, i, j int) bool {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
 		log.Printf("player %s tried click a tile but they are not in a room", playerID)
 		return false
 	}
@@ -215,8 +266,8 @@ func (cn *CodeNames) ClickTile(playerID string, i, j int) bool {
 }
 
 func (cn *CodeNames) DeclareClue(playerID, word string, count int) bool {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
 		log.Printf("player %s tried to declare a clue %s for %d but they are not in a room", playerID, word, count)
 		return false
 	}
@@ -226,8 +277,8 @@ func (cn *CodeNames) DeclareClue(playerID, word string, count int) bool {
 }
 
 func (cn *CodeNames) ChangeCards(playerID, pack string) bool {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
 		log.Printf("player %s tried to change pack to %s but they are not in a room", playerID, pack)
 		return false
 	}
@@ -237,8 +288,8 @@ func (cn *CodeNames) ChangeCards(playerID, pack string) bool {
 }
 
 func (cn *CodeNames) UpdateTimeSlider(playerID string, value int) bool {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
 		log.Printf("player %s tried to update timer to value %d but they are not in a room", playerID, value)
 		return false
 	}
@@ -248,15 +299,19 @@ func (cn *CodeNames) UpdateTimeSlider(playerID string, value int) bool {
 }
 
 func (cn *CodeNames) GameState(playerID string) *gameState {
-	room, ok := cn.PlayerRooms[playerID]
-	if !ok {
-		log.Printf("player %s tried to get game state but they are not in a room but they are not in a room", playerID)
+	room := cn.PlayerRoom(playerID)
+	if room == nil {
+		log.WithField("PlayerID", playerID).Info("room not found for player to retrieve game state")
 		return nil
 	}
 
 	p, ok := room.Player(playerID)
 	if !ok {
-		log.Printf("player %s not found in the room", playerID)
+		logrus.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+			"RoomName": room.Name,
+		}).Warn("player was mapped to a room but they were not in the room")
+
 		return nil
 	}
 	return &gameState{
