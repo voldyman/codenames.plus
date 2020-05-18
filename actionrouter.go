@@ -165,7 +165,7 @@ func (a *ActionRouter) CheckIfPlayerExists(playerID string, res func(players, ro
 	}
 }
 
-func (a *ActionRouter) TimedPlayerRoomAction(playerID string, action RoomAction) {
+func (a *ActionRouter) TimedPlayerRoomAction(playerID string, action func(*Room) bool) {
 	go func() {
 		ticker := time.NewTicker(1 * time.Second)
 		for {
@@ -177,7 +177,12 @@ func (a *ActionRouter) TimedPlayerRoomAction(playerID string, action RoomAction)
 				return
 			}
 
-			rr <- action
+			rr <- func(r *Room) {
+				if !action(r) {
+					ticker.Stop()
+					return
+				}
+			}
 		}
 	}()
 }
