@@ -456,10 +456,21 @@ func (r *Room) ChangeTimer(playerID string, value float64) {
 	r.Game.Timer = r.Game.TimerAmount
 }
 
-func (r *Room) TimerTick() bool {
+type TickerState int
+
+const (
+	TickerStateContinue TickerState = iota
+	TickerStateStop
+)
+
+func (r *Room) TimerTick() (TickerState, bool) {
 	if r.Mode != "timed" {
-		return false
+		return TickerStateStop, false
 	}
+	if r.Game.Over {
+		return TickerStateContinue, true
+	}
+
 	if r.Game.Timer > 0 {
 		r.Game.Timer--
 	}
@@ -470,13 +481,9 @@ func (r *Room) TimerTick() bool {
 			EndedTurn: true,
 		})
 		r.switchTurns()
-		return true
+		return TickerStateContinue, true
 	}
-
-	if r.Game.Over {
-		return true
-	}
-	return false
+	return TickerStateContinue, false
 }
 
 // PlayerLogged ... Get a player and automatically log if not ok

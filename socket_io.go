@@ -354,9 +354,11 @@ func socketServer(a *ActionRouter) *socketio.Server {
 		})
 
 		a.TimedPlayerRoomAction(ctx.PlayerID, func(r *Room) bool {
-			if turnOver := r.TimerTick(); turnOver {
+			if state, turnOver := r.TimerTick(); turnOver {
 				server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
-				return false
+				if state == TickerStateStop {
+					return false
+				}
 			}
 			server.BroadcastToRoom("/", r.Name, "timerUpdate", timerUpdateMessage{
 				Timer: r.Game.Timer,
