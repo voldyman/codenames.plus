@@ -136,7 +136,7 @@ newGame.onclick = () => {
   socket.emit("newGame", {});
 };
 clueDeclareButton.onclick = () => {
-  if(clueWord.value.length > 0) {
+  if (clueWord.value.length > 0) {
     socket.emit("declareClue", { word: clueWord.value, count: clueCount.value });
     clueWord.value = "";
     clueCount.value = 1;
@@ -380,6 +380,14 @@ function wipeBoard() {
   }
 }
 
+function sessionId() {
+  return sessionStorage.getItem("sessionId")
+}
+
+function findTeam(players) {
+  return players[sessionId()]
+}
+
 function updateGameState(data) {
   log(data)
   if (data.difficulty !== difficulty) {
@@ -389,7 +397,8 @@ function updateGameState(data) {
   }
   mode = data.mode; // Update the clients game mode
   consensus = data.consensus; // Update the clients consensus mode
-  updateInfo(data.game, data.team); // Update the games turn information
+  let team = findTeam(data.players)
+  updateInfo(data.game, team); // Update the games turn information
   updateTimerSlider(data.game, data.mode); // Update the games timer slider
   updatePacks(data.game); // Update the games pack information
   updatePlayerlist(data.players); // Update the player list for the room
