@@ -122,7 +122,7 @@ type Game struct {
 	turnsTaken int
 }
 
-func NewGame(bt BoardType) *Game {
+func NewGame(bt BoardType, timerAmount float64) *Game {
 	blueTiles := 9
 	redTiles := 8
 
@@ -134,7 +134,7 @@ func NewGame(bt BoardType) *Game {
 	}
 
 	return &Game{
-		TimerAmount: 5 * 60,
+		TimerAmount: timerAmount,
 		WordPool:    wordpoolSize(bt),
 
 		Base:       isSet(bt, BoardTypeDefault),
@@ -149,7 +149,7 @@ func NewGame(bt BoardType) *Game {
 		Turn:   turn,
 		Over:   false,
 		Winner: nil,
-		Timer:  5 * 60,
+		Timer:  timerAmount,
 		Board:  generateBoard(bt, turn),
 		Log:    []GameLog{},
 		Clue:   nil,

@@ -49,19 +49,21 @@ type Room struct {
 	Consesus   string             `json:"consensus"`
 	Game       *Game              `json:"game"`
 
-	boardType BoardType
+	boardType   BoardType
+	timerAmount float64
 }
 
 func NewRoom(name, password string) *Room {
 	return &Room{
-		Name:       name,
-		Password:   password,
-		Players:    map[string]*Player{},
-		Difficulty: DifficultyNormal,
-		Mode:       ModeCasual,
-		Consesus:   ConsensusSingle,
-		Game:       NewGame(BoardTypeDefault),
-		boardType:  BoardTypeDefault,
+		Name:        name,
+		Password:    password,
+		Players:     map[string]*Player{},
+		Difficulty:  DifficultyNormal,
+		Mode:        ModeCasual,
+		Consesus:    ConsensusSingle,
+		Game:        NewGame(BoardTypeDefault, 5*60),
+		boardType:   BoardTypeDefault,
+		timerAmount: 5 * 60,
 	}
 }
 
@@ -134,7 +136,7 @@ func (r *Room) RandomizeTeams(playerID string) {
 }
 
 func (r *Room) NewGame() {
-	r.Game = NewGame(r.boardType)
+	r.Game = NewGame(r.boardType, r.timerAmount)
 }
 
 func (r *Room) SwitchRole(playerID, role string) (string, bool) {
@@ -452,8 +454,9 @@ func (r *Room) ChangeTimer(playerID string, value float64) {
 		return
 	}
 
-	r.Game.TimerAmount = value * 60
-	r.Game.Timer = r.Game.TimerAmount
+	r.timerAmount = value * 60
+	r.Game.TimerAmount = r.timerAmount
+	r.Game.Timer = r.timerAmount
 }
 
 type TickerState int
