@@ -359,6 +359,7 @@ func (r *Room) switchTurns() {
 		"ToTeam":   otherTeam(r.Game.Turn),
 	}).Info("Switching teams")
 
+	r.Game.Timer = r.Game.TimerAmount
 	r.Game.Turn = otherTeam(r.Game.Turn)
 	r.Game.turnsTaken = 0
 	r.Game.Clue = nil
@@ -425,14 +426,23 @@ func (r *Room) ChangeCards(playerID, pack string) {
 	r.Game.WordPool = wordpoolSize(r.boardType)
 }
 
-func (r *Room) GameState() *gameState {
-	return &gameState{
+func (r *Room) GameState() gameState {
+	game := Game{}
+	if r.Game != nil {
+		game = *r.Game
+	}
+	players := map[string]Player{}
+	for p := range r.Players {
+		players[p] = *r.Players[p]
+	}
+
+	return gameState{
 		Room:       r.Name,
-		Game:       r.Game,
+		Game:       game,
 		Difficulty: r.Difficulty,
 		Consensus:  r.Consesus,
 		Mode:       r.Mode,
-		Players:    r.Players,
+		Players:    players,
 	}
 }
 
@@ -443,6 +453,30 @@ func (r *Room) ChangeTimer(playerID string, value float64) {
 	}
 
 	r.Game.TimerAmount = value * 60
+	r.Game.Timer = r.Game.TimerAmount
+}
+
+func (r *Room) TimerTick() bool {
+	if r.Mode != "timed" {
+		return false
+	}
+	if r.Game.Timer > 0 {
+		r.Game.Timer--
+	}
+	if r.Game.Timer == 0 {
+		r.Game.Log = append(r.Game.Log, GameLog{
+			Event:     "timeout",
+			Team:      r.Game.Turn,
+			EndedTurn: true,
+		})
+		r.switchTurns()
+		return true
+	}
+
+	if r.Game.Over {
+		return true
+	}
+	return false
 }
 
 // PlayerLogged ... Get a player and automatically log if not ok
@@ -473,10 +507,10 @@ func buildSet(elem ...string) map[string]struct{} {
 }
 
 type gameState struct {
-	Room       string             `json:"room"`
-	Players    map[string]*Player `json:"players"`
-	Game       *Game              `json:"game"`
-	Difficulty string             `json:"difficulty"`
-	Mode       string             `json:"mode"`
-	Consensus  string             `json:"consensus"`
+	Room       string            `json:"room"`
+	Players    map[string]Player `json:"players"`
+	Game       Game              `json:"game,omitempty"`
+	Difficulty string            `json:"difficulty"`
+	Mode       string            `json:"mode"`
+	Consensus  string            `json:"consensus"`
 }

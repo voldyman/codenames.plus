@@ -149,7 +149,7 @@ func NewGame(bt BoardType) *Game {
 		Turn:   turn,
 		Over:   false,
 		Winner: nil,
-		Timer:  5,
+		Timer:  5 * 60,
 		Board:  generateBoard(bt, turn),
 		Log:    []GameLog{},
 		Clue:   nil,

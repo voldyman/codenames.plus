@@ -44,13 +44,13 @@ func socketServer(a *ActionRouter) *socketio.Server {
 
 		s.Emit("reset")
 
-		a.CheckIfPlayerExists(playerID, func(players, rooms int, playerID string, isInRoom bool, gs *gameState) {
+		a.CheckIfPlayerExists(playerID, func(players, rooms int, playerID string, isInRoom bool, gs gameState) {
 			s.Emit("serverStats", struct {
-				Players          int        `json:"players"`
-				Rooms            int        `json:"rooms"`
-				SessionID        string     `json:"sessionId"`
-				IsExistingPlayer bool       `json:"isExistingPlayer"`
-				GameState        *gameState `json:"gameState"`
+				Players          int       `json:"players"`
+				Rooms            int       `json:"rooms"`
+				SessionID        string    `json:"sessionId"`
+				IsExistingPlayer bool      `json:"isExistingPlayer"`
+				GameState        gameState `json:"gameState,omitempty"`
 			}{
 				Players:          players,
 				Rooms:            rooms,
@@ -182,13 +182,12 @@ func socketServer(a *ActionRouter) *socketio.Server {
 			"PlayerID":  ctx.PlayerID,
 		}).Info("received leaveRoomRequest")
 
-		a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
-			r.Leave(ctx.PlayerID)
-
+		a.LeaveRoom(ctx.PlayerID, func(r *Room) {
 			s.Leave(r.Name)
 
 			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
 		})
+
 		s.Emit("reset")
 		s.Emit("leaveResponse", leaveRoomResponse{
 			Success: true,
@@ -333,6 +332,9 @@ func socketServer(a *ActionRouter) *socketio.Server {
 	type switchModeRequest struct {
 		Mode string `json:"mode"`
 	}
+	type timerUpdateMessage struct {
+		Timer float64 `json:"timer"`
+	}
 	server.OnEvent("/", "switchMode", func(s socketio.Conn, req switchModeRequest) {
 		ctx, ok := s.Context().(connContext)
 		if !ok {
@@ -348,8 +350,16 @@ func socketServer(a *ActionRouter) *socketio.Server {
 
 		ok = a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
 			r.SwitchMode(ctx.PlayerID, req.Mode)
-
 			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+		})
+
+		a.TimedPlayerRoomAction(ctx.PlayerID, func(r *Room) {
+			if turnOver := r.TimerTick(); turnOver {
+				server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+			}
+			server.BroadcastToRoom("/", r.Name, "timerUpdate", timerUpdateMessage{
+				Timer: r.Game.Timer,
+			})
 		})
 		if !ok {
 			s.Emit("reset")

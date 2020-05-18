@@ -587,6 +587,8 @@ function updateLog(log) {
         ")";
     } else if (logEntry.event === "endTurn") {
       logSpan.innerText = logEntry.team + " team ended their turn";
+    } else if (logEntry.event === "timeout") {
+      logSpan.innerText = logEntry.team + " did not answer on time and ended their turn";
     }
     logDiv.prepend(logSpan);
   });

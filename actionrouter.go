@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/sirupsen/logrus"
 )
@@ -145,26 +146,40 @@ func (a *ActionRouter) RoomByName(roomName string, action RoomAction) bool {
 func startRoomRouter(r *Room) RoomActionReceiver {
 	actionChan := make(chan RoomAction)
 	go func() {
-		for {
-			select {
-			case action := <-actionChan:
-				action(r)
-			}
+		for action := range actionChan {
+			action(r)
 		}
 	}()
 	return actionChan
 }
 
-func (a *ActionRouter) CheckIfPlayerExists(playerID string, res func(players, rooms int, playerID string, isInRoom bool, gs *gameState)) {
+func (a *ActionRouter) CheckIfPlayerExists(playerID string, res func(players, rooms int, playerID string, isInRoom bool, gs gameState)) {
 	rr := a.PlayerRoomReceiver(playerID)
 	if rr == nil {
-		res(a.Players(), a.Rooms(), playerID, false, nil)
+		res(a.Players(), a.Rooms(), playerID, false, gameState{})
 		return
 	}
 
 	rr <- func(r *Room) {
 		res(a.Players(), a.Rooms(), playerID, true, r.GameState())
 	}
+}
+
+func (a *ActionRouter) TimedPlayerRoomAction(playerID string, action RoomAction) {
+	go func() {
+		ticker := time.NewTicker(1 * time.Second)
+		for {
+			<-ticker.C
+			rr := a.PlayerRoomReceiver(playerID)
+			if rr == nil {
+				ticker.Stop()
+				log.WithField("PlayerID", playerID).Warn("could not setup timed action, player not in any room")
+				return
+			}
+
+			rr <- action
+		}
+	}()
 }
 
 func (a *ActionRouter) LeaveRoom(playerID string, action RoomAction) bool {
@@ -179,6 +194,7 @@ func (a *ActionRouter) LeaveRoom(playerID string, action RoomAction) bool {
 
 			// todo(voldy): delay this for later?
 			if len(r.Players) == 0 {
+				close(a.nameRooms[r.Name])
 				delete(a.nameRooms, r.Name)
 			}
 		}
