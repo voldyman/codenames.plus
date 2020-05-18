@@ -385,7 +385,7 @@ function sessionId() {
 }
 
 function findTeam(players) {
-  return players[sessionId()]
+  return players[sessionId()].team;
 }
 
 function updateGameState(data) {
