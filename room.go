@@ -78,7 +78,6 @@ func (r *Room) Join(playerID, name string) bool {
 	if rand.Intn(20)%2 == 0 {
 		randTeam = TeamRed
 	}
-
 	r.Players[playerID] = &Player{
 		ID:            playerID,
 		NickName:      name,
@@ -136,7 +135,6 @@ func (r *Room) RandomizeTeams(playerID string) {
 	for _, p := range r.Players {
 		players = append(players, p)
 	}
-	rand.Shuffle(len(players), func(i, j int) { players[i], players[j] = players[j], players[i] })
 
 	for i := 0; i < len(players)/2; i++ {
 		players[i].Team = TeamBlue
@@ -145,6 +143,8 @@ func (r *Room) RandomizeTeams(playerID string) {
 	for i := len(players) / 2; i < len(players); i++ {
 		players[i].Team = TeamRed
 	}
+
+	rand.Shuffle(len(players), func(i, j int) { players[i], players[j] = players[j], players[i] })
 }
 
 func (r *Room) NewGame() {
@@ -186,11 +186,17 @@ func (r *Room) SwitchConsensus(playerID, consensus string) {
 }
 
 func (r *Room) EndTurn(playerID string) {
+	logEntry := GameLog{
+		Event: "endTurn",
+	}
 	if r.Game.Turn == TeamBlue {
 		r.Game.Turn = TeamRed
+		logEntry.Team = TeamRed
 	} else {
 		r.Game.Turn = TeamBlue
+		logEntry.Team = TeamBlue
 	}
+	r.Game.Log = append(r.Game.Log, logEntry)
 }
 
 func (r *Room) SelectTile(playerID string, i, j int) {
@@ -245,13 +251,16 @@ func (r *Room) SelectTile(playerID string, i, j int) {
 
 	tile := &r.Game.Board[i][j]
 
+	log.WithFields(logrus.Fields{
+		"PlayerID":   playerID,
+		"PlayerName": p.NickName,
+		"RoomName":   r.Name,
+		"Tile":       tile.Word,
+		"Flipped":    tile.Flipped,
+		"Type":       tile.Type,
+	}).Info("player flipping tile")
+
 	if tile.Flipped {
-		log.WithFields(logrus.Fields{
-			"PlayerID":   playerID,
-			"PlayerName": p.NickName,
-			"RoomName":   r.Name,
-			"Tile":       tile.Word,
-		}).Info("player flipp an already flipped tile")
 		return
 	}
 
@@ -267,14 +276,23 @@ func (r *Room) SelectTile(playerID string, i, j int) {
 
 	tile.Flipped = true
 
+	logEntry := GameLog{
+		Event: "flipTile",
+		Word:  tile.Word,
+		Type:  tile.Type,
+		Team:  p.Team,
+	}
+
 	switch tile.Type {
 	case TileTypeBlack:
 		r.Game.Over = true
 		ot := otherTeam(p.Team)
 		r.Game.Winner = &ot
+		logEntry.EndedTurn = true
 
 	case TileTypeNeutral:
 		r.switchTurns()
+		logEntry.EndedTurn = true
 
 	case TileTypeBlue:
 		r.Game.Blue--
@@ -282,6 +300,7 @@ func (r *Room) SelectTile(playerID string, i, j int) {
 			r.Game.turnsTaken++
 		} else {
 			r.switchTurns()
+			logEntry.EndedTurn = true
 		}
 
 	case TileTypeRed:
@@ -290,12 +309,15 @@ func (r *Room) SelectTile(playerID string, i, j int) {
 			r.Game.turnsTaken++
 		} else {
 			r.switchTurns()
+			logEntry.EndedTurn = true
 		}
 	}
 
-	if r.Game.turnsTaken >= r.Game.Clue.Count+1 {
+	if r.Game.Clue != nil && r.Game.turnsTaken >= r.Game.Clue.Count+1 {
 		r.switchTurns()
+		logEntry.EndedTurn = true
 	}
+	r.Game.Log = append(r.Game.Log, logEntry)
 }
 
 func (r *Room) playerHasConsensus(p *Player, i, j int) bool {
@@ -320,6 +342,11 @@ func otherTeam(team string) string {
 }
 
 func (r *Room) switchTurns() {
+	log.WithFields(logrus.Fields{
+		"FromTeam": r.Game.Turn,
+		"ToTeam":   otherTeam(r.Game.Turn),
+	}).Info("Switching teams")
+
 	for _, tp := range r.teamPlayers(r.Game.Turn) {
 		tp.GuessProposal = nil
 	}
@@ -330,7 +357,12 @@ func (r *Room) switchTurns() {
 
 func (r *Room) teamPlayers(team string) []*Player {
 	players := []*Player{}
-	for _, p := range r.Players {
+	for id, p := range r.Players {
+		if p == nil {
+			log.WithField("NullPlayerID", id).Warn("found null player in map")
+			delete(r.Players, id)
+			continue
+		}
 		if p.Team == team {
 			players = append(players, p)
 		}
@@ -343,6 +375,11 @@ func (r *Room) DeclareClue(playerID, clue string, count int) {
 		Word:  clue,
 		Count: count,
 	}
+	r.Game.Log = append(r.Game.Log, GameLog{
+		Event: "declareClue",
+		Clue:  r.Game.Clue,
+		Team:  r.Game.Turn,
+	})
 }
 
 func (r *Room) ChangeCards(playerID, pack string) {

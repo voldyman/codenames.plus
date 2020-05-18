@@ -79,6 +79,16 @@ type Clue struct {
 	Word  string `json:"word"`
 	Count int    `json:"count"`
 }
+
+type GameLog struct {
+	Event     string `json:"event,omitempty"`
+	Team      string `json:"team,omitempty"`
+	Word      string `json:"word,omitempty"`
+	Type      string `json:"type,omitempty"`
+	Clue      *Clue  `json:"clue,omitempty"`
+	EndedTurn bool   `json:"endedTurn"`
+}
+
 type Game struct {
 	TimerAmount int64 `json:"timerAmount"`
 	WordPool    int   `json:"wordPool"`
@@ -96,13 +106,13 @@ type Game struct {
 	Blue int `json:"blue"`
 
 	// game state
-	Turn   string   `json:"turn"`
-	Over   bool     `json:"over"`
-	Winner *string  `json:"winner"`
-	Timer  string   `json:"timer"`
-	Board  [][]Tile `json:"board"`
-	Log    []string `json:"log"`
-	Clue   *Clue    `json:"clue"`
+	Turn   string    `json:"turn"`
+	Over   bool      `json:"over"`
+	Winner *string   `json:"winner"`
+	Timer  string    `json:"timer"`
+	Board  [][]Tile  `json:"board"`
+	Log    []GameLog `json:"log"`
+	Clue   *Clue     `json:"clue"`
 
 	turnsTaken int
 }
@@ -137,7 +147,7 @@ func NewGame(bt BoardType) *Game {
 		Winner: nil,
 		Timer:  strconv.FormatInt(timerAmount, 10),
 		Board:  generateBoard(bt, turn),
-		Log:    []string{},
+		Log:    []GameLog{},
 		Clue:   nil,
 	}
 }

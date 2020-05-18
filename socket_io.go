@@ -42,6 +42,8 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"PlayerID":    playerID,
 		}).Info("connected client")
 
+		s.Emit("reset")
+
 		s.Emit("serverStats", struct {
 			Players          int        `json:"players"`
 			Rooms            int        `json:"rooms"`
@@ -462,7 +464,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			cn.LeaveRoom(ctx.PlayerID)
 		}
 		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
-		log.Warnf("error while handling socket.io request: %+v", err)
+		log.Warnf("error while handling socket.io request: %+v", e)
 	})
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
 		ctx, ok := s.Context().(connContext)
