@@ -482,3 +482,13 @@ func buildSet(elem ...string) map[string]struct{} {
 	}
 	return result
 }
+
+type gameState struct {
+	Room       string             `json:"room"`
+	Players    map[string]*Player `json:"players"`
+	Game       *Game              `json:"game"`
+	Difficulty string             `json:"difficulty"`
+	Mode       string             `json:"mode"`
+	Consensus  string             `json:"consensus"`
+	Team       string             `json:"team"`
+}
