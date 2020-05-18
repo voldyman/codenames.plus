@@ -313,6 +313,8 @@ func (r *Room) SelectTile(playerID string, i, j int) {
 		}
 	}
 
+	r.clearGuessProposals()
+
 	if r.Game.Clue != nil && r.Game.turnsTaken >= r.Game.Clue.Count+1 {
 		r.switchTurns()
 		logEntry.EndedTurn = true
@@ -347,12 +349,14 @@ func (r *Room) switchTurns() {
 		"ToTeam":   otherTeam(r.Game.Turn),
 	}).Info("Switching teams")
 
-	for _, tp := range r.teamPlayers(r.Game.Turn) {
-		tp.GuessProposal = nil
-	}
 	r.Game.Turn = otherTeam(r.Game.Turn)
 	r.Game.turnsTaken = 0
 	r.Game.Clue = nil
+}
+func (r *Room) clearGuessProposals() {
+	for _, tp := range r.teamPlayers(r.Game.Turn) {
+		tp.GuessProposal = nil
+	}
 }
 
 func (r *Room) teamPlayers(team string) []*Player {
