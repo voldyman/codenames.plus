@@ -38,7 +38,7 @@ func (cn *CodeNames) PlayerRoomName(playerID string) string {
 	return room.Name
 }
 
-func (cn *CodeNames) NameRoom(roomName string) *Room {
+func (cn *CodeNames) RoomName(roomName string) *Room {
 	cn.RLock()
 	defer cn.RUnlock()
 	room, ok := cn.NameRooms[roomName]
@@ -55,9 +55,11 @@ func (cn *CodeNames) SetNameRoom(roomName string, room *Room) {
 
 }
 
-func (cn *CodeNames) DeleteRoomName(roomName string) {
+func (cn *CodeNames) CleanRoom(room *Room) {
 	cn.Lock()
-	delete(cn.NameRooms, roomName)
+	if len(room.Players) == 0 {
+		delete(cn.NameRooms, room.Name)
+	}
 	cn.Unlock()
 }
 
@@ -72,7 +74,7 @@ func (cn *CodeNames) CreateRoom(playerID, nick, room, password string) (string, 
 		oldRoom.Leave(playerID)
 	}
 
-	if r := cn.NameRoom(room); r != nil {
+	if r := cn.RoomName(room); r != nil {
 		log.WithFields(logrus.Fields{
 			"PlayerID": playerID,
 			"Nick":     nick,
@@ -93,7 +95,7 @@ func (cn *CodeNames) JoinRoom(playerID, roomname, nick, password string) (string
 		return "invalid password", false
 	}
 
-	room := cn.NameRoom(roomname)
+	room := cn.RoomName(roomname)
 	if room == nil {
 		log.WithFields(logrus.Fields{
 			"PlayerID": playerID,
@@ -150,9 +152,8 @@ func (cn *CodeNames) LeaveRoom(playerID string) bool {
 
 	// room gets deleted when all players leave
 	// todo(voldy): fix this, maybe?
-	if len(room.Players) == 0 {
-		cn.DeleteRoomName(room.Name)
-	}
+	cn.CleanRoom(room)
+
 	return true
 }
 
@@ -301,7 +302,7 @@ func (cn *CodeNames) UpdateTimeSlider(playerID string, value float64) bool {
 	return true
 }
 
-func (cn *CodeNames) GameState(playerID string) *gameState {
+func (cn *CodeNames) PlayerGameState(playerID string) *gameState {
 	room := cn.PlayerRoom(playerID)
 	if room == nil {
 		log.WithField("PlayerID", playerID).Info("room not found for player to retrieve game state")
@@ -325,6 +326,28 @@ func (cn *CodeNames) GameState(playerID string) *gameState {
 		Mode:       room.Mode,
 		Players:    room.Players,
 		Team:       p.Team,
+	}
+}
+
+func (cn *CodeNames) RoomNameGameState(roomName string) *gameState {
+	r := cn.RoomName(roomName)
+	if r == nil {
+		log.WithFields(logrus.Fields{
+			"RoomName": roomName,
+		}).Warn("room not found for looking up state")
+		return nil
+	}
+	return cn.roomGameState(r)
+}
+
+func (cn *CodeNames) roomGameState(room *Room) *gameState {
+	return &gameState{
+		Room:       room.Name,
+		Game:       room.Game,
+		Difficulty: room.Difficulty,
+		Consensus:  room.Consesus,
+		Mode:       room.Mode,
+		Players:    room.Players,
 	}
 }
 

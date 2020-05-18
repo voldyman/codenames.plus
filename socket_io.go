@@ -90,7 +90,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			Message: msg,
 			Success: success,
 		})
-		gs := cn.GameState(ctx.PlayerID)
+		gs := cn.PlayerGameState(ctx.PlayerID)
 
 		if success {
 			s.Join(req.Room)
@@ -127,7 +127,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			Message: msg,
 			Success: success,
 		})
-		gs := cn.GameState(ctx.PlayerID)
+		gs := cn.PlayerGameState(ctx.PlayerID)
 		if success {
 			s.Join(req.Room)
 			s.Emit("gameState", gs)
@@ -149,6 +149,8 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"PlayerID":  ctx.PlayerID,
 		}).Info("received leaveRoomRequest")
 
+		roomName := cn.PlayerRoomName(ctx.PlayerID)
+
 		ok = cn.LeaveRoom(ctx.PlayerID)
 		if !ok {
 			s.Emit("reset")
@@ -159,9 +161,8 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			Success: true,
 		})
 
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
 		s.Leave(roomName)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.RoomNameGameState(roomName))
 	})
 
 	type joinTeamRequest struct {
@@ -186,7 +187,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		}
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
 
 	server.OnEvent("/", "randomizeTeams", func(s socketio.Conn, req map[string]interface{}) {
@@ -208,7 +209,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		}
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
 	server.OnEvent("/", "newGame", func(s socketio.Conn, vals map[string]interface{}) {
 		ctx, ok := s.Context().(connContext)
@@ -229,7 +230,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		}
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
 
 	type switchRoleRequest struct {
@@ -260,7 +261,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		})
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
 
 	type switchDifficultyRequest struct {
@@ -283,7 +284,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		cn.SwitchDifficulty(ctx.PlayerID, req.Difficulty)
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
 
 	type switchModeRequest struct {
@@ -305,7 +306,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		cn.SwitchMode(ctx.PlayerID, req.Mode)
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
 
 	type switchConsensusRequest struct {
@@ -329,7 +330,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		cn.SwitchConsensus(ctx.PlayerID, req.Room, req.Consensus)
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
 	server.OnEvent("/", "endTurn", func(s socketio.Conn) {
 		ctx, ok := s.Context().(connContext)
@@ -346,7 +347,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		cn.EndTurn(ctx.PlayerID)
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
 
 	type clickTileRequest struct {
@@ -370,7 +371,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		cn.ClickTile(ctx.PlayerID, req.I, req.J)
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
 
 	type declareClueRequest struct {
@@ -399,7 +400,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		cn.DeclareClue(ctx.PlayerID, req.Word, count)
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
 
 	type changeCardsRequest struct {
@@ -421,7 +422,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		cn.ChangeCards(ctx.PlayerID, req.Pack)
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
 
 	type timeSliderRequest struct {
@@ -448,7 +449,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		cn.UpdateTimeSlider(ctx.PlayerID, val)
 
 		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
 
 	server.OnError("/", func(s socketio.Conn, e error) {
@@ -464,7 +465,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			s.Leave(roomName)
 			cn.LeaveRoom(ctx.PlayerID)
 		}
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 		log.Warnf("error while handling socket.io request: %+v", e)
 	})
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
@@ -479,7 +480,7 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			s.Leave(roomName)
 			cn.LeaveRoom(ctx.PlayerID)
 		}
-		server.BroadcastToRoom("/", roomName, "gameState", cn.GameState(ctx.PlayerID))
+		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 
 		log.WithField("reason", reason).Info("closed connection")
 	})

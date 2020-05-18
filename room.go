@@ -97,19 +97,6 @@ func (r *Room) hasPlayer(name string) bool {
 }
 
 func (r *Room) Leave(playerID string) bool {
-	p, ok := r.Player(playerID)
-	if !ok {
-		log.WithFields(logrus.Fields{
-			"PlayerID": playerID,
-			"RoomName": r.Name,
-		}).Warn("player tried to leave but they are not in the room")
-		return false
-	}
-	if p.Team == TeamBlue {
-		r.Game.Blue--
-	} else {
-		r.Game.Red--
-	}
 	delete(r.Players, playerID)
 	return true
 }
