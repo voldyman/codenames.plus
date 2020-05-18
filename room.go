@@ -37,6 +37,7 @@ const (
 var (
 	PlayerRoleGuesser   = "guesser"
 	PlayerRoleSpyMaster = "spymaster"
+	PlayerRoleSpectator = "spectator"
 )
 
 type Room struct {
@@ -147,10 +148,18 @@ func (r *Room) SwitchRole(playerID, role string) (string, bool) {
 		return "player not a member of the room", false
 	}
 	p.Role = role
+	if role == PlayerRoleSpectator {
+		p.Team = "undecided"
+	}
 	return role, true
 }
 
 func (r *Room) ChangeDifficulty(playerID, difficulty string) {
+	player := r.PlayerLogged(playerID, "player tried to change difficulty but failed successfully")
+	if player.Role == PlayerRoleSpectator {
+		return
+	}
+
 	r.Difficulty = difficulty
 }
 
@@ -158,10 +167,21 @@ func (r *Room) SwitchMode(playerID, mode string) {
 	if _, ok := ModeTypes[mode]; !ok {
 		return
 	}
+
+	player := r.PlayerLogged(playerID, "player tried to change modes but failed successfully")
+	if player.Role == PlayerRoleSpectator {
+		return
+	}
+
 	r.Mode = mode
 }
 
 func (r *Room) SwitchConsensus(playerID, consensus string) {
+	player := r.PlayerLogged(playerID, "player tried to ask for consent but failed successfully")
+	if player.Role == PlayerRoleSpectator {
+		return
+	}
+
 	r.Consesus = consensus
 }
 
@@ -196,6 +216,16 @@ func (r *Room) SelectTile(playerID string, i, j int) {
 			"PlayerTeam": p.Team,
 			"TurnTeam":   r.Game.Turn,
 		}).Info("player tried to click tile but it's not their turn")
+		return
+	}
+
+	if p.Role == PlayerRoleSpectator {
+		log.WithFields(logrus.Fields{
+			"PlayerID":   playerID,
+			"PlayerName": p.NickName,
+			"RoomName":   r.Name,
+			"Role":       p.Role,
+		}).Info("specator being naughty and clicking words.")
 		return
 	}
 
@@ -306,7 +336,7 @@ func (r *Room) playerHasConsensus(p *Player, i, j int) bool {
 	word := r.Game.Board[i][j].Word
 	p.GuessProposal = &word
 	for _, tp := range r.teamPlayers(p.Team) {
-		if tp.Role == PlayerRoleSpyMaster {
+		if tp.Role == PlayerRoleSpyMaster || tp.Role == PlayerRoleSpectator {
 			continue
 		}
 		if tp.GuessProposal == nil || *tp.GuessProposal != word {
@@ -391,7 +421,26 @@ func (r *Room) ChangeCards(playerID, pack string) {
 }
 
 func (r *Room) ChangeTimer(playerID string, value float64) {
+	player := r.PlayerLogged(playerID, "player tried to change time zones but failed successfully")
+	if player.Role == PlayerRoleSpectator {
+		return
+	}
+
 	r.Game.TimerAmount = value * 60
+}
+
+// PlayerLogged ... Get a player and automatically log if not ok
+func (r *Room) PlayerLogged(playerID string, errorMsg string) *Player {
+	player, ok := r.Players[playerID]
+
+	if !ok {
+		log.WithFields(logrus.Fields{
+			"PlayerID": playerID,
+			"RoomName": r.Name,
+		}).Warn(errorMsg)
+	}
+
+	return player
 }
 
 func (r *Room) Player(playerID string) (*Player, bool) {

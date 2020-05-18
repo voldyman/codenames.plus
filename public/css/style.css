@@ -27,15 +27,20 @@ Grey: #D6D2C9
 
 @media (max-width: 1100px) {
   #app {
-    width: 950px !important;
+    width: 1000px !important;
   }
   #content {
-    width: 950px !important;
+    width: 1000px !important;
   }
 
   #left {
     position: relative;
     width: 950px !important;
+  }
+
+  #right {
+    width: 50px !important;
+    float: right;
   }
 
   #players {
@@ -221,7 +226,6 @@ Grey: #D6D2C9
 
 body {
   margin: 0;
-  margin-top: 32px;
   background: #323032;
   color: #323032;
   font-family: "Changa", sans-serif;
@@ -479,9 +483,13 @@ button {
   float: left;
 }
 
+#right {
+  float: right;
+}
+
 #content {
   position: absolute;
-  width: 1500px;
+  width: 1550px;
   left: 50%;
   transform: translateX(-50%);
 }

@@ -40,6 +40,7 @@ let newGame = document.getElementById("new-game");
 let clueDeclareButton = document.getElementById("declare-clue");
 let buttonRoleGuesser = document.getElementById("role-guesser");
 let buttonRoleSpymaster = document.getElementById("role-spymaster");
+let buttonRoleSpectator = document.getElementById("role-spectator");
 let toggleDifficulty = document.getElementById("player-difficulty");
 let buttonDifficultyNormal = document.getElementById("difficulty-normal");
 let buttonDifficultyHard = document.getElementById("difficulty-hard");
@@ -84,6 +85,7 @@ buttonModeCasual.disabled = true;
 buttonModeTimed.disabled = false;
 buttonRoleGuesser.disabled = true;
 buttonRoleSpymaster.disabled = false;
+buttonRoleSpectator.disabled = false;
 buttonConsensusSingle.disabled = true;
 buttonConsensusConsensus.disabled = false;
 
@@ -146,6 +148,10 @@ buttonRoleSpymaster.onclick = () => {
 // User Picks guesser Role
 buttonRoleGuesser.onclick = () => {
   socket.emit("switchRole", { role: "guesser" });
+};
+// User Picks spectator Role
+buttonRoleSpectator.onclick = () => {
+  socket.emit("switchRole", { role: "spectator" });
 };
 // User Picks Hard Difficulty
 buttonDifficultyHard.onclick = () => {
@@ -216,7 +222,7 @@ timerSlider.addEventListener("input", () => {
   socket.emit("timerSlider", { value: timerSlider.value });
 });
 
-// User confirms theyre not afk
+// User confirms they're not afk
 buttonAfk.onclick = () => {
   socket.emit("active");
   afkWindow.style.display = "none";
@@ -320,10 +326,17 @@ socket.on("switchRoleResponse", data => {
     playerRole = data.role;
     if (playerRole === "guesser") {
       buttonRoleGuesser.disabled = true;
+      buttonRoleSpectator.disabled = false;
+      buttonRoleSpymaster.disabled = false;
+      toggleDifficulty.style.display = "none";
+    } else if (playerRole === "spectator") {
+      buttonRoleGuesser.disabled = false;
+      buttonRoleSpectator.disabled = true;
       buttonRoleSpymaster.disabled = false;
       toggleDifficulty.style.display = "none";
     } else {
       buttonRoleGuesser.disabled = false;
+      buttonRoleSpectator.disabled = false;
       buttonRoleSpymaster.disabled = true;
       toggleDifficulty.style.display = "block";
     }
@@ -512,6 +525,8 @@ function updatePlayerlist(players) {
     // If the player is a spymaster, put brackets around their name
     if (players[i].role === "spymaster")
       li.innerText = "[" + players[i].nickname + "]";
+    else if (players[i].role === "spectator")
+      li.innerText = "\"" + players[i].nickname + "\"";
     else if (players[i].guessProposal !== null) {
       let guessProposal = document.createElement("span");
       guessProposal.classList.add("guess-proposal");
