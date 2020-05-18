@@ -11,7 +11,8 @@ import (
 )
 
 var (
-	portFlag = flag.Int("port", 8080, "server port")
+	listenAll = flag.Bool("all", false, "listen to any address or just localhost. localhost by default")
+	portFlag  = flag.Int("port", 8080, "server port")
 )
 
 var log = logrus.New()
@@ -19,8 +20,8 @@ var log = logrus.New()
 func main() {
 	flag.Parse()
 	log.Out = os.Stdout
-	pkger.Include("/server/")
-	pkger.Include("/public/")
+	pkger.Include("/server")
+	pkger.Include("/public")
 
 	server := socketServer(NewActionRouter())
 	go server.Serve()
@@ -33,6 +34,10 @@ func main() {
 	})
 	http.Handle("/", http.FileServer(pkger.Dir("/public")))
 
-	fmt.Printf("Listening on http://localhost:%d\n", *portFlag)
+	addr := fmt.Sprintf("localhost:%d", *portFlag)
+	if *listenAll {
+		addr = fmt.Sprintf(":%d", *portFlag)
+	}
+	fmt.Printf("Listening on http://%s\n", addr)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *portFlag), nil))
 }
