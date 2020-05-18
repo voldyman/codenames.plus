@@ -385,15 +385,17 @@ func (r *Room) teamPlayers(team string) []*Player {
 }
 
 func (r *Room) DeclareClue(playerID, clue string, count int) {
-	r.Game.Clue = &Clue{
-		Word:  clue,
-		Count: count,
+	if len(clue) > 0 {
+		r.Game.Clue = &Clue{
+			Word:  clue,
+			Count: count,
+		}
+		r.Game.Log = append(r.Game.Log, GameLog{
+			Event: "declareClue",
+			Clue:  r.Game.Clue,
+			Team:  r.Game.Turn,
+		})
 	}
-	r.Game.Log = append(r.Game.Log, GameLog{
-		Event: "declareClue",
-		Clue:  r.Game.Clue,
-		Team:  r.Game.Turn,
-	})
 }
 
 func (r *Room) ChangeCards(playerID, pack string) {

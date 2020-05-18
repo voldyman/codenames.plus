@@ -29,6 +29,7 @@ Grey: #D6D2C9
   #app {
     width: 1000px !important;
   }
+
   #content {
     width: 1000px !important;
   }
@@ -214,7 +215,7 @@ Grey: #D6D2C9
   position: relative;
   display: block;
   float: left;
-  width: 1000px;
+  width: 66%;
 }
 
 #info {
@@ -477,19 +478,20 @@ button {
 
 #left {
   position: relative;
-  width: 200px;
-  margin-right: 50px;
+  width: 14%;
+  margin-right: 60px;
   margin-top: 95px;
   float: left;
 }
 
 #right {
   float: right;
+  width: 15%;
 }
 
 #content {
   position: absolute;
-  width: 1550px;
+  width: 90%;
   left: 50%;
   transform: translateX(-50%);
 }
