@@ -136,9 +136,13 @@ newGame.onclick = () => {
   socket.emit("newGame", {});
 };
 clueDeclareButton.onclick = () => {
-  socket.emit("declareClue", { word: clueWord.value, count: clueCount.value });
-  clueWord.value = "";
-  clueCount.value = 1;
+  if(clueWord.value.length > 0) {
+    socket.emit("declareClue", { word: clueWord.value, count: clueCount.value });
+    clueWord.value = "";
+    clueCount.value = 1;
+  } else {
+    alert("You cannot submit an empty clue");
+  }
   return false;
 };
 // User Picks spymaster Role
