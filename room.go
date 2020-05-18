@@ -436,22 +436,6 @@ func (r *Room) GameState() *gameState {
 	}
 }
 
-func (r *Room) PlayerGameState(playerID string) *gameState {
-	p, ok := r.Players[playerID]
-	if !ok {
-		return r.GameState()
-	}
-	return &gameState{
-		Room:       r.Name,
-		Game:       r.Game,
-		Difficulty: r.Difficulty,
-		Consensus:  r.Consesus,
-		Mode:       r.Mode,
-		Players:    r.Players,
-		Team:       p.Team,
-	}
-}
-
 func (r *Room) ChangeTimer(playerID string, value float64) {
 	player := r.PlayerLogged(playerID, "player tried to change time zones but failed successfully")
 	if player.Role == PlayerRoleSpectator {
@@ -495,5 +479,4 @@ type gameState struct {
 	Difficulty string             `json:"difficulty"`
 	Mode       string             `json:"mode"`
 	Consensus  string             `json:"consensus"`
-	Team       string             `json:"team"`
 }

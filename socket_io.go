@@ -215,7 +215,7 @@ func socketServer(a *ActionRouter) *socketio.Server {
 			r.ChangeTeam(ctx.PlayerID, req.Team)
 
 			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
-			s.Emit("gameState", r.PlayerGameState(ctx.PlayerID))
+			s.Emit("gameState", r.GameState())
 		})
 		if !ok {
 			s.Emit("reset")
@@ -260,7 +260,7 @@ func socketServer(a *ActionRouter) *socketio.Server {
 			r.NewGame()
 
 			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
-			s.Emit("gameState", r.PlayerGameState(ctx.PlayerID))
+			s.Emit("gameState", r.GameState())
 		})
 		if !ok {
 			s.Emit("reset")
@@ -296,7 +296,7 @@ func socketServer(a *ActionRouter) *socketio.Server {
 			})
 
 			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
-			s.Emit("gameState", r.PlayerGameState(ctx.PlayerID))
+			s.Emit("gameState", r.GameState())
 		})
 		if !ok {
 			s.Emit("reset")
