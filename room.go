@@ -65,7 +65,7 @@ func NewRoom(name, password string) *Room {
 }
 
 func (r *Room) Join(playerID, name string) bool {
-	if _, ok := r.Players[playerID]; ok {
+	if _, ok := r.Player(playerID); ok {
 		return true
 	}
 
@@ -398,6 +398,7 @@ func (r *Room) Player(playerID string) (*Player, bool) {
 	player, ok := r.Players[playerID]
 	return player, ok
 }
+
 func buildSet(elem ...string) map[string]struct{} {
 	result := map[string]struct{}{}
 	for _, e := range elem {
