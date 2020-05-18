@@ -420,6 +420,33 @@ func (r *Room) ChangeCards(playerID, pack string) {
 	r.Game.WordPool = wordpoolSize(r.boardType)
 }
 
+func (r *Room) GameState() *gameState {
+	return &gameState{
+		Room:       r.Name,
+		Game:       r.Game,
+		Difficulty: r.Difficulty,
+		Consensus:  r.Consesus,
+		Mode:       r.Mode,
+		Players:    r.Players,
+	}
+}
+
+func (r *Room) PlayerGameState(playerID string) *gameState {
+	p, ok := r.Players[playerID]
+	if !ok {
+		return r.GameState()
+	}
+	return &gameState{
+		Room:       r.Name,
+		Game:       r.Game,
+		Difficulty: r.Difficulty,
+		Consensus:  r.Consesus,
+		Mode:       r.Mode,
+		Players:    r.Players,
+		Team:       p.Team,
+	}
+}
+
 func (r *Room) ChangeTimer(playerID string, value float64) {
 	player := r.PlayerLogged(playerID, "player tried to change time zones but failed successfully")
 	if player.Role == PlayerRoleSpectator {

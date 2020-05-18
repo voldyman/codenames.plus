@@ -19,7 +19,7 @@ func main() {
 	flag.Parse()
 	log.Out = os.Stdout
 
-	server := socketServer(NewCodeNames())
+	server := socketServer(NewActionRouter())
 	go server.Serve()
 	defer server.Close()
 

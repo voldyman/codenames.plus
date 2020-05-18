@@ -11,7 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func socketServer(cn *CodeNames) *socketio.Server {
+func socketServer(a *ActionRouter) *socketio.Server {
 	server, err := socketio.NewServer(nil)
 	if err != nil {
 		log.Fatal(err)
@@ -44,19 +44,22 @@ func socketServer(cn *CodeNames) *socketio.Server {
 
 		s.Emit("reset")
 
-		s.Emit("serverStats", struct {
-			Players          int        `json:"players"`
-			Rooms            int        `json:"rooms"`
-			SessionID        string     `json:"sessionId"`
-			IsExistingPlayer bool       `json:"isExistingPlayer"`
-			GameState        *gameState `json:"gameState"`
-		}{
-			Players:          cn.Players(),
-			Rooms:            cn.Rooms(),
-			SessionID:        ctx.PlayerID,
-			IsExistingPlayer: false,
-			GameState:        nil,
+		a.CheckIfPlayerExists(playerID, func(players, rooms int, playerID string, isInRoom bool, gs *gameState) {
+			s.Emit("serverStats", struct {
+				Players          int        `json:"players"`
+				Rooms            int        `json:"rooms"`
+				SessionID        string     `json:"sessionId"`
+				IsExistingPlayer bool       `json:"isExistingPlayer"`
+				GameState        *gameState `json:"gameState"`
+			}{
+				Players:          players,
+				Rooms:            rooms,
+				SessionID:        playerID,
+				IsExistingPlayer: isInRoom,
+				GameState:        gs,
+			})
 		})
+
 		return nil
 	})
 
@@ -85,18 +88,20 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"Password":  req.Password,
 		}).Info("create room request received")
 
-		msg, success := cn.CreateRoom(ctx.PlayerID, req.Nickname, req.Room, req.Password)
-		s.Emit("createResponse", createRoomResponse{
-			Message: msg,
-			Success: success,
-		})
-		gs := cn.PlayerGameState(ctx.PlayerID)
+		a.CreateRoom(ctx.PlayerID, req.Nickname, req.Room, req.Password, ResEmitFunc(func(msg string, success bool) {
+			if success {
+				s.Join(req.Room)
+			}
+			s.Emit("createResponse", createRoomResponse{
+				Message: msg,
+				Success: success,
+			})
 
-		if success {
-			s.Join(req.Room)
-			s.Emit("gameState", gs)
-		}
-		server.BroadcastToRoom("/", cn.PlayerRoomName(ctx.PlayerID), "gameState", gs)
+			a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
+				server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+			})
+
+		}))
 	})
 
 	type joinRoomRequest struct {
@@ -122,17 +127,45 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"Password":  req.Password,
 		}).Info("join room request received")
 
-		msg, success := cn.JoinRoom(ctx.PlayerID, req.Room, req.Nickname, req.Password)
-		s.Emit("joinResponse", joinRoomResponse{
-			Message: msg,
-			Success: success,
-		})
-		gs := cn.PlayerGameState(ctx.PlayerID)
-		if success {
-			s.Join(req.Room)
-			s.Emit("gameState", gs)
+		if len(req.Nickname) == 0 {
+			s.Emit("joinResponse", joinRoomResponse{
+				Message: "invalid nickname",
+				Success: false,
+			})
 		}
-		server.BroadcastToRoom("/", cn.PlayerRoomName(ctx.PlayerID), "gameState", gs)
+
+		if len(req.Password) == 0 {
+			s.Emit("joinResponse", joinRoomResponse{
+				Message: "invalid password",
+				Success: false,
+			})
+		}
+
+		ok = a.JoinRoom(ctx.PlayerID, req.Nickname, req.Room, req.Password, func(r *Room) {
+			if r == nil {
+				s.Emit("joinResponse", joinRoomResponse{
+					Message: "cannot join room",
+					Success: false,
+				})
+				return
+			}
+
+			s.Emit("joinResponse", joinRoomResponse{
+				Message: "joined room",
+				Success: true,
+			})
+
+			s.Join(r.Name)
+			s.Emit("gameState", r.GameState())
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+		})
+		if !ok {
+			log.Warn("joining room failed")
+			s.Emit("joinResponse", joinRoomResponse{
+				Message: "room not found",
+				Success: false,
+			})
+		}
 	})
 
 	type leaveRoomResponse struct {
@@ -149,20 +182,17 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"PlayerID":  ctx.PlayerID,
 		}).Info("received leaveRoomRequest")
 
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
+		a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
+			r.Leave(ctx.PlayerID)
 
-		ok = cn.LeaveRoom(ctx.PlayerID)
-		if !ok {
-			s.Emit("reset")
-			return
-		}
+			s.Leave(r.Name)
 
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+		})
+		s.Emit("reset")
 		s.Emit("leaveResponse", leaveRoomResponse{
 			Success: true,
 		})
-
-		s.Leave(roomName)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.RoomNameGameState(roomName))
 	})
 
 	type joinTeamRequest struct {
@@ -178,16 +208,18 @@ func socketServer(cn *CodeNames) *socketio.Server {
 		log.WithFields(logrus.Fields{
 			"Operation": "joinTeam",
 			"PlayerID":  ctx.PlayerID,
-			"Team":      req.Team}).Info("received join team request")
+			"Team":      req.Team,
+		}).Info("received join team request")
 
-		ok = cn.JoinTeam(ctx.PlayerID, req.Team)
+		ok = a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
+			r.ChangeTeam(ctx.PlayerID, req.Team)
+
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+			s.Emit("gameState", r.PlayerGameState(ctx.PlayerID))
+		})
 		if !ok {
 			s.Emit("reset")
-			return
 		}
-
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
 
 	server.OnEvent("/", "randomizeTeams", func(s socketio.Conn, req map[string]interface{}) {
@@ -202,15 +234,16 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"PlayerID":  ctx.PlayerID,
 		}).Info("randomize teams request")
 
-		ok = cn.RandomizeTeams(ctx.PlayerID)
+		ok = a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
+			r.RandomizeTeams(ctx.PlayerID)
+
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+		})
 		if !ok {
 			s.Emit("reset")
-			return
 		}
-
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
+
 	server.OnEvent("/", "newGame", func(s socketio.Conn, vals map[string]interface{}) {
 		ctx, ok := s.Context().(connContext)
 		if !ok {
@@ -223,14 +256,15 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"PlayerID":  ctx.PlayerID,
 		}).Info("received new game request")
 
-		ok = cn.NewGame(ctx.PlayerID)
+		ok = a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
+			r.NewGame()
+
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+			s.Emit("gameState", r.PlayerGameState(ctx.PlayerID))
+		})
 		if !ok {
 			s.Emit("reset")
-			return
 		}
-
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
 	})
 
 	type switchRoleRequest struct {
@@ -253,15 +287,20 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"Role":      req.Role,
 		}).Info("received switch role request")
 
-		role, success := cn.SwitchRole(ctx.PlayerID, req.Role)
+		ok = a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
+			r.SwitchRole(ctx.PlayerID, req.Role)
 
-		s.Emit("switchRoleResponse", switchRoleResponse{
-			Role:    role,
-			Success: success,
+			s.Emit("switchRoleResponse", switchRoleResponse{
+				Role:    req.Role,
+				Success: true,
+			})
+
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+			s.Emit("gameState", r.PlayerGameState(ctx.PlayerID))
 		})
-
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
+		if !ok {
+			s.Emit("reset")
+		}
 	})
 
 	type switchDifficultyRequest struct {
@@ -281,10 +320,14 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"Difficulty": req.Difficulty,
 		}).Info("received request to switch difficulty")
 
-		cn.SwitchDifficulty(ctx.PlayerID, req.Difficulty)
+		ok = a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
+			r.ChangeDifficulty(ctx.PlayerID, req.Difficulty)
 
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+		})
+		if !ok {
+			s.Emit("reset")
+		}
 	})
 
 	type switchModeRequest struct {
@@ -303,10 +346,14 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"Mode":      req.Mode,
 		}).Info("received request to switch mode")
 
-		cn.SwitchMode(ctx.PlayerID, req.Mode)
+		ok = a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
+			r.SwitchMode(ctx.PlayerID, req.Mode)
 
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+		})
+		if !ok {
+			s.Emit("reset")
+		}
 	})
 
 	type switchConsensusRequest struct {
@@ -326,12 +373,16 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"Room":      req.Room,
 			"Consensus": req.Consensus,
 		}).Info("received request to switch consensus")
+		ok = a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
+			r.SwitchConsensus(ctx.PlayerID, req.Consensus)
 
-		cn.SwitchConsensus(ctx.PlayerID, req.Room, req.Consensus)
-
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+		})
+		if !ok {
+			s.Emit("reset")
+		}
 	})
+
 	server.OnEvent("/", "endTurn", func(s socketio.Conn) {
 		ctx, ok := s.Context().(connContext)
 		if !ok {
@@ -344,10 +395,14 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"PlayerID":  ctx.PlayerID,
 		}).Info("received request to end turn")
 
-		cn.EndTurn(ctx.PlayerID)
+		ok = a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
+			r.EndTurn(ctx.PlayerID)
 
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+		})
+		if !ok {
+			s.Emit("reset")
+		}
 	})
 
 	type clickTileRequest struct {
@@ -367,11 +422,14 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"I":         req.I,
 			"J":         req.J,
 		}).Info("received click tile request")
+		ok = a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
+			r.SelectTile(ctx.PlayerID, req.I, req.J)
 
-		cn.ClickTile(ctx.PlayerID, req.I, req.J)
-
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+		})
+		if !ok {
+			s.Emit("reset")
+		}
 	})
 
 	type declareClueRequest struct {
@@ -397,10 +455,15 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			log.WithField("Count", req.Count).Warn("could not convert count to integer, using 1 as default")
 			count = 1
 		}
-		cn.DeclareClue(ctx.PlayerID, req.Word, count)
 
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
+		ok = a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
+			r.DeclareClue(ctx.PlayerID, req.Word, count)
+
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+		})
+		if !ok {
+			s.Emit("reset")
+		}
 	})
 
 	type changeCardsRequest struct {
@@ -419,10 +482,14 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			"Pack":      req.Pack,
 		}).Info("received change cards pack request")
 
-		cn.ChangeCards(ctx.PlayerID, req.Pack)
+		ok = a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
+			r.ChangeCards(ctx.PlayerID, req.Pack)
 
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+		})
+		if !ok {
+			s.Emit("reset")
+		}
 	})
 
 	type timeSliderRequest struct {
@@ -446,10 +513,15 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			log.Warn("unable to parse time, using default")
 			val = 5
 		}
-		cn.UpdateTimeSlider(ctx.PlayerID, val)
 
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		server.BroadcastToRoom("/", roomName, "gameState", cn.PlayerGameState(ctx.PlayerID))
+		ok = a.RoomForPlayer(ctx.PlayerID, func(r *Room) {
+			r.ChangeTimer(ctx.PlayerID, val)
+
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+		})
+		if !ok {
+			s.Emit("reset")
+		}
 	})
 
 	server.OnError("/", func(s socketio.Conn, e error) {
@@ -459,17 +531,19 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			return
 		}
 
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
+		ok = a.LeaveRoom(ctx.PlayerID, func(r *Room) {
+			log.WithFields(logrus.Fields{
+				"PlayerID": ctx.PlayerID,
+				"RoomName": r.Name,
+			}).Warnf("error while handling socket.io request: %+v", e)
 
-		if len(roomName) > 0 {
-			s.Leave(roomName)
-			cn.LeaveRoom(ctx.PlayerID)
+			s.Leave(r.Name)
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+		})
+		if !ok {
+			s.Emit("reset")
 		}
-		server.BroadcastToRoom("/", roomName, "gameState", cn.RoomNameGameState(roomName))
-		log.WithFields(logrus.Fields{
-			"PlayerID": ctx.PlayerID,
-			"RoomName": roomName,
-		}).Warnf("error while handling socket.io request: %+v", e)
+
 	})
 	server.OnDisconnect("/", func(s socketio.Conn, reason string) {
 		ctx, ok := s.Context().(connContext)
@@ -478,18 +552,20 @@ func socketServer(cn *CodeNames) *socketio.Server {
 			return
 		}
 
-		roomName := cn.PlayerRoomName(ctx.PlayerID)
-		if len(roomName) > 0 {
-			s.Leave(roomName)
-			cn.LeaveRoom(ctx.PlayerID)
-		}
-		server.BroadcastToRoom("/", roomName, "gameState", cn.RoomNameGameState(roomName))
+		ok = a.LeaveRoom(ctx.PlayerID, func(r *Room) {
+			log.WithFields(logrus.Fields{
+				"PlayerID": ctx.PlayerID,
+				"RoomName": r.Name,
+				"Reason":   reason,
+			}).Info("closed connection")
 
-		log.WithFields(logrus.Fields{
-			"PlayerID": ctx.PlayerID,
-			"RoomName": roomName,
-			"Reason":   reason,
-		}).Info("closed connection")
+			s.Leave(r.Name)
+			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
+		})
+		if !ok {
+			s.Emit("reset")
+		}
+
 	})
 	return server
 }
