@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/markbates/pkger"
 	"github.com/sirupsen/logrus"
 )
 
@@ -18,6 +19,8 @@ var log = logrus.New()
 func main() {
 	flag.Parse()
 	log.Out = os.Stdout
+	pkger.Include("/server/")
+	pkger.Include("/public/")
 
 	server := socketServer(NewActionRouter())
 	go server.Serve()
@@ -28,7 +31,7 @@ func main() {
 		// original API pinged, keep it?
 		w.WriteHeader(http.StatusOK)
 	})
-	http.Handle("/", http.FileServer(http.Dir("public/")))
+	http.Handle("/", http.FileServer(pkger.Dir("/public")))
 
 	fmt.Printf("Listening on http://localhost:%d\n", *portFlag)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *portFlag), nil))

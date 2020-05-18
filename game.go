@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"strings"
+
+	"github.com/markbates/pkger"
 )
 
 var (
@@ -17,11 +19,11 @@ var (
 )
 
 func init() {
-	DefaultWords = readWords("server/words.txt")
-	NsfwWords = readWords("server/nsfw-words.txt")
-	DuetWords = readWords("server/duet-words.txt")
-	UndercoverWords = readWords("server/duet-words.txt")
-	CustomWords = readWords("server/custom-words.txt")
+	DefaultWords = readWords("/server/words.txt")
+	NsfwWords = readWords("/server/nsfw-words.txt")
+	DuetWords = readWords("/server/duet-words.txt")
+	UndercoverWords = readWords("/server/duet-words.txt")
+	CustomWords = readWords("/server/custom-words.txt")
 
 	BoardTypeToWordSet = map[BoardType]*[]string{
 		BoardTypeDefault:    &DefaultWords,
@@ -33,7 +35,12 @@ func init() {
 }
 
 func readWords(file string) []string {
-	txt, err := ioutil.ReadFile(file)
+	f, err := pkger.Open(file)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+	txt, err := ioutil.ReadAll(f)
 	if err != nil {
 		fmt.Println("unable to read file", file)
 		panic(err)
