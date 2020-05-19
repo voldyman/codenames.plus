@@ -152,6 +152,8 @@ func (r *Room) SwitchRole(playerID, role string) (string, bool) {
 	p.Role = role
 	if role == PlayerRoleSpectator {
 		p.Team = "undecided"
+	} else {
+		p.Team = r.Game.Turn
 	}
 	return role, true
 }
@@ -198,6 +200,7 @@ func (r *Room) EndTurn(playerID string) {
 		r.Game.Turn = TeamBlue
 		logEntry.Team = TeamBlue
 	}
+	r.Game.Clue = nil
 	r.Game.Log = append(r.Game.Log, logEntry)
 }
 
@@ -440,7 +443,7 @@ func (r *Room) GameState() gameState {
 
 	return gameState{
 		Room:       r.Name,
-		Game:       game,
+		Game:       &game,
 		Difficulty: r.Difficulty,
 		Consensus:  r.Consesus,
 		Mode:       r.Mode,
@@ -519,7 +522,7 @@ func buildSet(elem ...string) map[string]struct{} {
 type gameState struct {
 	Room       string            `json:"room"`
 	Players    map[string]Player `json:"players"`
-	Game       Game              `json:"game,omitempty"`
+	Game       *Game             `json:"game,omitempty"`
 	Difficulty string            `json:"difficulty"`
 	Mode       string            `json:"mode"`
 	Consensus  string            `json:"consensus"`

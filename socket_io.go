@@ -295,7 +295,6 @@ func socketServer(a *ActionRouter) *socketio.Server {
 			})
 
 			server.BroadcastToRoom("/", r.Name, "gameState", r.GameState())
-			s.Emit("gameState", r.GameState())
 		})
 		if !ok {
 			s.Emit("reset")

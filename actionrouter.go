@@ -188,11 +188,12 @@ func (a *ActionRouter) TimedPlayerRoomAction(playerID string, action func(*Room)
 }
 
 func (a *ActionRouter) LeaveRoom(playerID string, action RoomAction) bool {
-	if rr := a.PlayerRoomReceiver(playerID); rr != nil {
+	a.Lock()
+	defer a.Unlock()
+
+	if rr, ok := a.playerRooms[playerID]; ok {
 		rr <- action
 		rr <- func(r *Room) {
-			a.Lock()
-			defer a.Unlock()
 
 			r.Leave(playerID)
 			delete(a.playerRooms, playerID)
