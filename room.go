@@ -154,8 +154,6 @@ func (r *Room) SwitchRole(playerID, role string) (string, bool) {
 	p.Role = role
 	if role == PlayerRoleSpectator {
 		p.Team = "undecided"
-	} else {
-		p.Team = r.Game.Turn
 	}
 	return role, true
 }
