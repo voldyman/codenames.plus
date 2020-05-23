@@ -123,6 +123,7 @@ func (r *Room) RandomizeTeams(playerID string) {
 	for _, p := range r.Players {
 		if p.Role != PlayerRoleSpectator {
 			players = append(players, p)
+			p.GuessProposal = nil
 		}
 	}
 
@@ -139,6 +140,11 @@ func (r *Room) RandomizeTeams(playerID string) {
 
 func (r *Room) NewGame() {
 	r.Game = NewGame(r.boardType, r.timerAmount)
+	for _, p := range r.Players {
+		if p.Role == PlayerRoleSpyMaster {
+			p.Role = PlayerRoleGuesser
+		}
+	}
 }
 
 func (r *Room) SwitchRole(playerID, role string) (string, bool) {
