@@ -140,6 +140,9 @@ func (r *Room) RandomizeTeams(playerID string) {
 
 func (r *Room) NewGame() {
 	r.Game = NewGame(r.boardType, r.timerAmount)
+
+	r.clearGuessProposals()
+
 	for _, p := range r.Players {
 		if p.Role == PlayerRoleSpyMaster {
 			p.Role = PlayerRoleGuesser
@@ -336,6 +339,15 @@ func (r *Room) SelectTile(playerID string, i, j int) {
 		r.switchTurns()
 		logEntry.EndedTurn = true
 	}
+
+	if r.Game.Blue == 0 {
+		r.Game.Winner = &TeamBlue
+		r.Game.Over = true
+	} else if r.Game.Red == 0 {
+		r.Game.Winner = &TeamRed
+		r.Game.Over = true
+	}
+
 	r.Game.Log = append(r.Game.Log, logEntry)
 }
 
