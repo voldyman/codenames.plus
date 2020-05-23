@@ -121,7 +121,9 @@ func (r *Room) ChangeTeam(playerID, team string) {
 func (r *Room) RandomizeTeams(playerID string) {
 	players := []*Player{}
 	for _, p := range r.Players {
-		players = append(players, p)
+		if p.Role != PlayerRoleSpectator {
+			players = append(players, p)
+		}
 	}
 
 	for i := 0; i < len(players)/2; i++ {
