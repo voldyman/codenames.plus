@@ -191,17 +191,13 @@ func (r *Room) SwitchConsensus(playerID, consensus string) {
 
 func (r *Room) EndTurn(playerID string) {
 	logEntry := GameLog{
-		Event: "endTurn",
+		Event:     "endTurn",
+		Team:      r.Game.Turn,
+		EndedTurn: true,
 	}
-	if r.Game.Turn == TeamBlue {
-		r.Game.Turn = TeamRed
-		logEntry.Team = TeamRed
-	} else {
-		r.Game.Turn = TeamBlue
-		logEntry.Team = TeamBlue
-	}
-	r.Game.Clue = nil
+	r.clearGuessProposals()
 	r.Game.Log = append(r.Game.Log, logEntry)
+	r.switchTurns()
 }
 
 func (r *Room) SelectTile(playerID string, i, j int) {
@@ -364,6 +360,7 @@ func (r *Room) switchTurns() {
 		"ToTeam":   otherTeam(r.Game.Turn),
 	}).Info("Switching teams")
 
+	r.clearGuessProposals()
 	r.Game.Timer = r.Game.TimerAmount
 	r.Game.Turn = otherTeam(r.Game.Turn)
 	r.Game.turnsTaken = 0
