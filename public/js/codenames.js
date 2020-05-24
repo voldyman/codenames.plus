@@ -328,22 +328,7 @@ socket.on("switchRoleResponse", data => {
   // Response to Switching Role
   if (data.success) {
     playerRole = data.role;
-    if (playerRole === "guesser") {
-      buttonRoleGuesser.disabled = true;
-      buttonRoleSpectator.disabled = false;
-      buttonRoleSpymaster.disabled = false;
-      toggleDifficulty.style.display = "none";
-    } else if (playerRole === "spectator") {
-      buttonRoleGuesser.disabled = false;
-      buttonRoleSpectator.disabled = true;
-      buttonRoleSpymaster.disabled = false;
-      toggleDifficulty.style.display = "none";
-    } else {
-      buttonRoleGuesser.disabled = false;
-      buttonRoleSpectator.disabled = false;
-      buttonRoleSpymaster.disabled = true;
-      toggleDifficulty.style.display = "block";
-    }
+    updateRole(playerRole);
     wipeBoard();
   }
 });
@@ -384,8 +369,31 @@ function sessionId() {
   return sessionStorage.getItem("sessionId")
 }
 
+function updateRole(playerRole) {
+  if (playerRole === "guesser") {
+    buttonRoleGuesser.disabled = true;
+    buttonRoleSpectator.disabled = false;
+    buttonRoleSpymaster.disabled = false;
+    toggleDifficulty.style.display = "none";
+  } else if (playerRole === "spectator") {
+    buttonRoleGuesser.disabled = false;
+    buttonRoleSpectator.disabled = true;
+    buttonRoleSpymaster.disabled = false;
+    toggleDifficulty.style.display = "none";
+  } else {
+    buttonRoleGuesser.disabled = false;
+    buttonRoleSpectator.disabled = false;
+    buttonRoleSpymaster.disabled = true;
+    toggleDifficulty.style.display = "block";
+  }
+
+}
 function findTeam(players) {
   return players[sessionId()].team;
+}
+
+function findRole(players) {
+  return players[sessionId()].role;
 }
 
 function updateGameState(data) {
@@ -411,6 +419,8 @@ function updateGameState(data) {
     }
   }
 
+  playerRole = findRole(data.players);
+  updateRole(playerRole);
   // Update the board display
   updateBoard(data.game.board, proposals, data.game.over);
   updateLog(data.game.log);
