@@ -339,6 +339,7 @@ socket.on("reset", () => {
 
 socket.on("gameState", data => {
   // Response to gamestate update
+  playerRole = findRole(data.players);
   updateGameState(data);
 });
 

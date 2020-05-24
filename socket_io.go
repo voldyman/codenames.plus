@@ -541,11 +541,11 @@ func socketServer(a *ActionRouter) *socketio.Server {
 	})
 
 	server.OnError("/", func(s socketio.Conn, e error) {
-		stx := s.Context()
-		if stx == nil {
+		if s == nil || s.Context() == nil {
 			return
 		}
-		ctx, ok := stx.(connContext)
+
+		ctx, ok := s.Context().(connContext)
 		if !ok {
 			log.WithField("Error", err).Warn("client context not found while handling error")
 			return
