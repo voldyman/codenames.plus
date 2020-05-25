@@ -353,6 +353,12 @@ func (r *Room) SelectTile(playerID string, i, j int) {
 
 func (r *Room) playerHasConsensus(p *Player, i, j int) bool {
 	word := r.Game.Board[i][j].Word
+
+	if p.GuessProposal != nil && *p.GuessProposal == word {
+		p.GuessProposal = nil
+		return false
+	}
+
 	p.GuessProposal = &word
 	for _, tp := range r.teamPlayers(p.Team) {
 		if tp.Role == PlayerRoleSpyMaster || tp.Role == PlayerRoleSpectator {
