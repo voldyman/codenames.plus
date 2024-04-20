@@ -12,10 +12,7 @@ import (
 )
 
 func socketServer(a *ActionRouter) *socketio.Server {
-	server, err := socketio.NewServer(nil)
-	if err != nil {
-		log.Fatal(err)
-	}
+	server := socketio.NewServer(nil)
 
 	type connContext struct {
 		PlayerID string
@@ -547,7 +544,7 @@ func socketServer(a *ActionRouter) *socketio.Server {
 
 		ctx, ok := s.Context().(connContext)
 		if !ok {
-			log.WithField("Error", err).Warn("client context not found while handling error")
+			log.Warn("client context not found while handling error")
 			return
 		}
 
